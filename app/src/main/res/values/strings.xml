@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Wamboo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="intro">Video is the type of data that we consume the most and the most complicated to process in electronic devices, leading to tons of CO2 emissions every year. </string>
+	<string name="body">By using Wamboo, you can reduce the size of your videos up to 90%, to save memory not only in your phone, but also in the social media servers (big PCs that store of digital information) if you share them. This way, with smaller videos, you will reduce your carbon footprint. In addition, Wamboo is efficient because it minimizes the battery usage of the phone while compressing the videos and it shows the associated pollution when some battery is wasted. In traditional compression methods the phone’s resources are not used efficiently and the battery usage is maximized leading to pollution as the phone needs to be charged more often, consuming more electrical energy (with the associated costs of electricity for the users). </string>
+    <string name="body2">This way, you\'ll also save money in storage (hard drives, the Cloud ...) and in electricity!</string>
+	<string name="end">We encourage you and everyone who use video to compress them using Wamboo before sharing them, specially if you think your video can be shared multiple times or go viral: we will avoid tons of CO2 emissions a year</string>
+    <string name="contact">Contact us: contact.harmonyvalley@gmail.com</string>
+	<string name="select_video">Select Video</string>
+    <string name="ultrafast">Ultrafast</string>
+    <string name="good">Good</string>
+    <string name="best">Best but slow</string>
+    <string name="compress_video">Compress Video</string>
+    <string name="share_compressed_video">Share Compressed Video</string>
+    <string name="None">None</string>
+    <string name="initial_size">Initial size = </string>
+    <string name="compressed_size">Compressed size = </string>
+    <string name="conversion_time">Conversion time = </string>
+	<string name="initial_battery">Initial battery = </string>
+    <string name="remaining_battery">Remaining battery = </string>
+    <string name="co2">Associated pollution = </string>
+    <string name="notification_title">Video Compression</string>
+    <string name="notification_message">Compression in progress…</string>
+    <string name="notification_message_success">Compression successfully completed.</string>
+    <string name="notification_message_failure">Compression failed.</string>
+</resources>
