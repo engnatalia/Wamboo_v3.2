@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor.services
+package wamboo.example.videocompressor.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,8 +18,8 @@ import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
 import com.arthenica.ffmpegkit.FFprobeKit
 import com.arthenica.ffmpegkit.ReturnCode
-import wamboo.eco.videocompressor.*
-import wamboo.eco.videocompressor.workers.ForegroundWorker
+import wamboo.example.videocompressor.*
+import wamboo.example.videocompressor.workers.ForegroundWorker
 import java.io.File
 import java.math.RoundingMode
 import kotlin.math.abs

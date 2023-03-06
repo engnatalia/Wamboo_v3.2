@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor
+package wamboo.example.videocompressor
 
 class Constants {
     companion object {

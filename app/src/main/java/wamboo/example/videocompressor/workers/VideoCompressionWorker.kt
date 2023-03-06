@@ -1,11 +1,11 @@
-package wamboo.eco.videocompressor.workers
+package wamboo.example.videocompressor.workers
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import wamboo.eco.videocompressor.services.VideoCompressionService
+import wamboo.example.videocompressor.services.VideoCompressionService
 
 
 class VideoCompressionWorker(private val context: Context, workerParams: WorkerParameters) :

@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor
+package wamboo.example.videocompressor
 
 import android.app.*
 import android.content.*
@@ -26,9 +26,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.coroutines.*
-import wamboo.eco.videocompressor.databinding.FragmentHomeBinding
-import wamboo.eco.videocompressor.workers.ForegroundWorker
-import wamboo.eco.videocompressor.workers.VideoCompressionWorker
+import wamboo.example.videocompressor.databinding.FragmentHomeBinding
+import wamboo.example.videocompressor.workers.ForegroundWorker
+import wamboo.example.videocompressor.workers.VideoCompressionWorker
 
 
 @Suppress("DEPRECATION")
@@ -50,7 +50,7 @@ class HomeFragment : Fragment() {
             if (intent?.action == Constants.WORK_COMPLETED_ACTION) {
                 progressDialog.dismiss()
                 // Do something when the WorkManager completes its work
-                // For eco, update UI, show a notification, etc.
+                // For example, update UI, show a notification, etc.
 
                 Log.d("Service", "Broadcast run")
 
@@ -79,7 +79,7 @@ class HomeFragment : Fragment() {
             if (intent?.action == Constants.WORK_PROGRESS_ACTION) {
 
                 // Do something when the WorkManager completes its work
-                // For eco, update UI, show a notification, etc.
+                // For example, update UI, show a notification, etc.
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
                     val percentage = intent?.getStringExtra("percentage")
                     progressDialog.setMessage("Please wait...$percentage")

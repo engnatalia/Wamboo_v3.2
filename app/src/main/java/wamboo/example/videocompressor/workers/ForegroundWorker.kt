@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor.workers
+package wamboo.example.videocompressor.workers
 
 import android.content.Context
 import androidx.work.CoroutineWorker

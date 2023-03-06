@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor
+package wamboo.example.videocompressor
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import wamboo.eco.videocompressor.databinding.FragmentInfoBinding
+import wamboo.example.videocompressor.databinding.FragmentInfoBinding
 
 class InfoFragment : Fragment() {
     private lateinit var mAdView2 : AdView

@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor
+package wamboo.example.videocompressor
 
 import android.content.ContentResolver
 import android.net.Uri

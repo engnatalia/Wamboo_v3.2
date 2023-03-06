@@ -1,11 +1,11 @@
-package wamboo.eco.videocompressor
+package wamboo.example.videocompressor
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.ActionBar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import wamboo.eco.videocompressor.databinding.ActivityMainBinding
+import wamboo.example.videocompressor.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

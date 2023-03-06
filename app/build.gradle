@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'wamboo.eco.videocompressor'
+    namespace 'wamboo.example.videocompressor'
     compileSdk 33
 
     defaultConfig {
-        applicationId "wamboo.eco.videocompressor"
+        applicationId "wamboo.example.videocompressor"
         minSdk 30
         targetSdk 33
         versionCode 2

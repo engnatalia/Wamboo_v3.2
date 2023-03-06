@@ -1,4 +1,4 @@
-package wamboo.eco.videocompressor
+package wamboo.example.videocompressor
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
