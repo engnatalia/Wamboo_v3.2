@@ -269,7 +269,7 @@ class HomeFragment : Fragment() {
     private fun showAlertDialog() {
         AlertDialog.Builder(requireActivity()).apply {
             setTitle("Allow Background Compression!")
-            setMessage("In Settings, please select \"Battery usage\" option and enable \"Allow background\" (the compression may be slower in the background, so you can keep Wamboo opened too!)").setPositiveButton(
+            setMessage("In Settings, please select \"Battery usage\" option and enable \"Allow background\" (keep Wamboo opened to compress faster!!)").setPositiveButton(
                 "OK"
             ) { _, _ -> openBatteryUsagePage(requireActivity()) }
         }.create().show()
