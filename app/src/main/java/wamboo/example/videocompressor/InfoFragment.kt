@@ -12,10 +12,6 @@ import wamboo.example.videocompressor.databinding.FragmentInfoBinding
 
 class InfoFragment : Fragment() {
     private lateinit var mAdView2 : AdView
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
     lateinit var binding: FragmentInfoBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -55,12 +55,15 @@ class HomeFragment : Fragment() {
                 Log.d("Service", "Broadcast run")
 
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
-                    Toast.makeText(context, "Compression completed", Toast.LENGTH_SHORT).show()
+                    var msg1 = getString(R.string.notification_message_success)
+                    Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
 
                     showDataFromPref()
-                    Toast.makeText(context, "Scroll down.", Toast.LENGTH_SHORT).show()
+                    var msg2 = getString(R.string.scroll)
+                    Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(context, "Compression failed", Toast.LENGTH_SHORT).show()
+                    var msg1 = getString(R.string.notification_message_failure)
+                    Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
                 }
                 if (compressedFilePath.equals(intent.getStringExtra(URI_PATH))) {
 
@@ -81,13 +84,16 @@ class HomeFragment : Fragment() {
                 // Do something when the WorkManager completes its work
                 // For example, update UI, show a notification, etc.
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
-                    val percentage = intent?.getStringExtra("percentage")
-                    progressDialog.setMessage("Please wait...$percentage")
+                    val percentage = intent.getStringExtra("percentage")
+                    //progressDialog.setMessage("Please wait...$percentage")
+                    var msg = getString(R.string.waiting)
+                    progressDialog.setMessage("$msg" + "$percentage")
                     if (progressDialog.isShowing.not()) {
                         progressDialog.show()
                     }
                 } else {
-                    Toast.makeText(context, "Compression failed", Toast.LENGTH_SHORT).show()
+                    var msg2 = getString(R.string.notification_message_failure)
+                    Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -112,11 +118,11 @@ class HomeFragment : Fragment() {
         val pollution= co2!!.toDouble()
         if (pollution > 0) {
             binding.co2TV.setTextColor(Color.parseColor("#FF0000"))
-            binding.co2TV.text = "Associated pollution = " +co2+ "kgCO2"
+            binding.co2TV.text = co2+ "kgCO2"
 
         }else{
             binding.co2TV.setTextColor(Color.parseColor("#6F9F3A"))
-            binding.co2TV.text ="Associated pollution = " +co2+ "kgCO2"
+            binding.co2TV.text = co2+ "kgCO2"
         }
         //displaying the share button
         binding.shareVideo.visibility = View.VISIBLE
@@ -268,8 +274,10 @@ class HomeFragment : Fragment() {
 
     private fun showAlertDialog() {
         AlertDialog.Builder(requireActivity()).apply {
-            setTitle("Allow Background Compression!")
-            setMessage("In Settings, please select \"Battery usage\" option and enable \"Allow background\" (keep Wamboo opened to compress faster!!)").setPositiveButton(
+            var msg1 = getString(R.string.notification_background_title)
+            var msg2 = getString(R.string.notification_background_body)
+            setTitle("$msg1")
+            setMessage("$msg2").setPositiveButton(
                 "OK"
             ) { _, _ -> openBatteryUsagePage(requireActivity()) }
         }.create().show()
@@ -328,8 +336,14 @@ class HomeFragment : Fragment() {
                     binding.dataTV.text = "Best quality vs. compression speed and size reduction"
                 "Best but slow" ->
                     binding.dataTV.text = "Best size reduction and quality but it's the slowest"
-                else ->
+                "Ultrafast" ->
                     binding.dataTV.text = "Fastest and smallest video, loosing some quality"
+                "Bueno" ->
+                    binding.dataTV.text = "Mejor relación calidad-velocidad de procesamiento y reducción del tamaño"
+                "El mejor, pero lento" ->
+                    binding.dataTV.text = "Mejor reducción del tamaño y calidad, pero más lento"
+                "Ultra-rápido" ->
+                    binding.dataTV.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
             }
         }
 

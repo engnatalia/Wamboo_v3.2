@@ -85,7 +85,7 @@ class VideoCompressionService : Service() {
             .setContentText(getText(R.string.notification_message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
         //intent which opens app's launcher activity when user clicks on the notification
-        val intent = Intent(this, MainActivity::class.java);
+        val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             this, 12, intent, PendingIntent.FLAG_IMMUTABLE
         )
@@ -203,6 +203,30 @@ class VideoCompressionService : Service() {
                     )
                 } -movflags faststart -c:v libx265 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
             }
+            "Ultra-rápido" -> {
+                command = "-y -i ${
+                    FFmpegKitConfig.getSafParameterForRead(
+                        applicationContext,
+                        videoUri
+                    )
+                } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
+            }
+            "Bueno" -> {
+                command = "-y -i ${
+                    FFmpegKitConfig.getSafParameterForRead(
+                        applicationContext,
+                        videoUri
+                    )
+                } -movflags faststart -c:v libx264 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
+            }
+            "El mejor, pero lento" -> {
+                command = "-y -i ${
+                    FFmpegKitConfig.getSafParameterForRead(
+                        applicationContext,
+                        videoUri
+                    )
+                } -movflags faststart -c:v libx265 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
+            }
         }
 
         Log.d("MyFFMPEG", command)
@@ -240,7 +264,7 @@ class VideoCompressionService : Service() {
                 intent.putExtra(HomeFragment.CONVERSION_TIME, getTime(session.duration / 1000))
                 intent.putExtra(HomeFragment.BAT, "$finalcapacity")*/
 
-                pref.edit().apply() {
+                pref.edit().apply {
                     putString(HomeFragment.RETURN_CODE, returnCode.toString()).commit()
                     //putString(HomeFragment.INITIAL_SIZE, initialSize).commit()
                     putString(HomeFragment.COMPRESS_SZE, compressedSize).commit()
@@ -315,7 +339,4 @@ class VideoCompressionService : Service() {
         ) + ":" + String.format("%02d", sec)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }

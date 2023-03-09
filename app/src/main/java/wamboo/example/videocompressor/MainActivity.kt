@@ -14,6 +14,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /// list of tab title
+    //private var hometab: String = getText(string.title_information).toString()
+    //private var infotab = getText(string.title_information)
     private var tabTitles = arrayOf("Home", "Information")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +59,4 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setCustomView(R.layout.actionbar_title)
     }
 
-    override fun onStop() {
-        super.onStop()
-
-
-    }
 }
