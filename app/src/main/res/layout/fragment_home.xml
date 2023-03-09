@@ -43,8 +43,9 @@
 
             <RadioGroup
                 android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="horizontal">
 
                 <RadioButton
@@ -69,6 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/best" />			
             </RadioGroup>

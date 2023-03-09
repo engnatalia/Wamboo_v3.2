@@ -13,14 +13,14 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    /// list of tab title
-    //private var hometab: String = getText(string.title_information).toString()
-    //private var infotab = getText(string.title_information)
-    private var tabTitles = arrayOf("Home", "Information")
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        var hometab = getString(R.string.title_home)
+        var infotab = getString(R.string.title_information)
+        var tabTitles = arrayOf(hometab, infotab)
         setContentView(binding.root)
 
         /* adapter for viewpager to display tabs */
