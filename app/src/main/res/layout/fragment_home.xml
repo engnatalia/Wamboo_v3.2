@@ -33,20 +33,20 @@
                 android:textFontWeight="700" />
 
 
-            <VideoView
+            <!--<VideoView
                 android:id="@+id/videoView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp" />-->
 
 
             <RadioGroup
                 android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:layout_gravity="left"
+                android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/rdOne"
@@ -57,6 +57,14 @@
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/ultrafast" />
 
+                <TextView
+                    android:id="@+id/infou"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
                 <RadioButton
                     android:id="@+id/rdTwo"
                     android:layout_width="wrap_content"
@@ -65,14 +73,39 @@
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/good" />
 
-				<RadioButton			
+                <TextView
+                    android:id="@+id/infog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
                     android:id="@+id/rdThree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/best" />			
+                    android:text="@string/best" />
+
+                <TextView
+                    android:id="@+id/infob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/rdFour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:fontFamily="@font/bauhausitalic"
+                    android:text="@string/best" />
             </RadioGroup>
 
 
@@ -87,13 +120,7 @@
                 android:text="@string/compress_video"
                 android:textColor="@color/white"
                 android:textFontWeight="700" />
-            <TextView
-                android:id="@+id/dataTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
+
 
             <LinearLayout
                 android:id="@+id/statsContainer"

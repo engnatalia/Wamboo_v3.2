@@ -10,6 +10,7 @@
     <string name="ultrafast">Ultra-rápido</string>
     <string name="good">Bueno</string>
     <string name="best">El mejor, pero lento</string>
+    <string name="custom">Customizado</string>
     <string name="compress_video">Comprime el vídeo</string>
     <string name="share_compressed_video">Comparte tu vídeo comprimido</string>
     <string name="None">Ninguno</string>

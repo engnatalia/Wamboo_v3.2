@@ -10,6 +10,7 @@
     <string name="ultrafast">Ultrafast</string>
     <string name="good">Good</string>
     <string name="best">Best but slow</string>
+    <string name="custom">Custom</string>
     <string name="compress_video">Compress Video</string>
     <string name="share_compressed_video">Share Compressed Video</string>
     <string name="None">None</string>

@@ -324,7 +324,7 @@ class HomeFragment : Fragment() {
         }
 
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
-        videoView.setMediaController(MediaController(requireActivity()))
+        //videoView.setMediaController(MediaController(requireActivity()))
 
         // Handling what will happen when user tap on video compression formats Radio Buttons
         radioGroup.setOnCheckedChangeListener { radioGroup, i ->
@@ -332,18 +332,42 @@ class HomeFragment : Fragment() {
                 requireActivity().findViewById<RadioButton>(radioGroup.checkedRadioButtonId)
             selectedtype = checked.text.toString()
             when (selectedtype) {
-                "Good" ->
-                    binding.dataTV.text = "Best quality vs. compression speed and size reduction"
-                "Best but slow" ->
-                    binding.dataTV.text = "Best size reduction and quality but it's the slowest"
-                "Ultrafast" ->
-                    binding.dataTV.text = "Fastest and smallest video, loosing some quality"
-                "Bueno" ->
-                    binding.dataTV.text = "Mejor relación calidad-velocidad de procesamiento y reducción del tamaño"
-                "El mejor, pero lento" ->
-                    binding.dataTV.text = "Mejor reducción del tamaño y calidad, pero más lento"
-                "Ultra-rápido" ->
-                    binding.dataTV.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
+                "Good" ->{
+                    binding.infog.text = "Best quality vs. compression speed and size reduction"
+                    binding.infog.visibility = View.VISIBLE
+                    binding.infob.visibility = View.GONE
+                    binding.infou.visibility = View.GONE
+                }
+                "Best but slow" ->{
+                    binding.infob.text = "Best size reduction and quality but it's the slowest"
+                    binding.infob.visibility = View.VISIBLE
+                    binding.infog.visibility = View.GONE
+                    binding.infou.visibility = View.GONE
+                }
+                "Ultrafast" ->{
+                    binding.infou.text = "Fastest and smallest video, loosing some quality"
+                    binding.infou.visibility = View.VISIBLE
+                    binding.infob.visibility = View.GONE
+                    binding.infog.visibility = View.GONE
+                }
+                "Bueno" ->{
+                    binding.infog.text = "Mejor relación calidad-velocidad de procesamiento y reducción del tamaño"
+                    binding.infog.visibility = View.VISIBLE
+                    binding.infob.visibility = View.GONE
+                    binding.infou.visibility = View.GONE
+                }
+                "El mejor, pero lento" ->{
+                    binding.infob.text = "Mejor reducción del tamaño y calidad, pero más lento"
+                    binding.infob.visibility = View.VISIBLE
+                    binding.infou.visibility = View.GONE
+                    binding.infog.visibility = View.GONE
+                }
+                "Ultra-rápido" ->{
+                    binding.infou.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
+                    binding.infou.visibility = View.VISIBLE
+                    binding.infob.visibility = View.GONE
+                    binding.infog.visibility = View.GONE
+                }
             }
         }
 
@@ -362,9 +386,9 @@ class HomeFragment : Fragment() {
                 //progressDialog.show()
 
                 // When the compress video button is clicked we check if video is already playing then we pause it
-                if (videoView.isPlaying) {
+                /*if (videoView.isPlaying) {
                     videoView.pause()
-                }
+                }*/
 
                 // Set up the input data for the worker
                 val data2 =
@@ -415,12 +439,12 @@ class HomeFragment : Fragment() {
                         //   val video_file: File? = uri?.let { FileUtils().getFileFromUri(this, it) }
 
                         // now set the video uri in the VideoView
-                        binding.videoView.setVideoURI(uri)
+                        //binding.videoView.setVideoURI(uri)
 
                         // after successful retrieval of the video and properly
                         // setting up the retried video uri in
                         // VideoView, Start the VideoView to play that video
-                        binding.videoView.start()
+                        //binding.videoView.start()
 
                     } catch (e: Exception) {
                         Toast.makeText(requireActivity(), "Error", Toast.LENGTH_SHORT).show()
