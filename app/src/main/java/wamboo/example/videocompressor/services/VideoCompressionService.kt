@@ -46,7 +46,8 @@ class VideoCompressionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val videoUri = intent?.getStringExtra(ForegroundWorker.VideoURI)
         val selectedtype = intent?.getStringExtra(ForegroundWorker.SELECTION_TYPE)
-        compressVideo(Uri.parse(videoUri), selectedtype.toString())
+        val videoResolution =intent?.getStringExtra(ForegroundWorker.VIDEO_RESOLUTION)
+        compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution)
 
         return START_NOT_STICKY
     }
@@ -93,7 +94,6 @@ class VideoCompressionService : Service() {
 
 
 
-
         startForeground(NOTIFICATION_ID, builder2.build())
     }
 
@@ -110,7 +110,11 @@ class VideoCompressionService : Service() {
      If the compression is successful, the statistics of the compression, such as the initial size,
       conversion time, and compressed size, are displayed in a text view. */
 
-    private fun compressVideo(videoUri: Uri, selectedtype: String) {
+    private fun compressVideo(
+        videoUri: Uri,
+        selectedtype: String,
+        videoResolution: String?
+    ) {
         val root: String = Environment.getExternalStorageDirectory().toString()
         val appFolder = "$root/GFG/"
         var outPutSafeUri = ""
@@ -179,7 +183,7 @@ class VideoCompressionService : Service() {
 
 
         when (selectedtype) {
-            "Ultrafast" -> {
+            getString(R.string.ultrafast) -> {
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
@@ -187,7 +191,7 @@ class VideoCompressionService : Service() {
                     )
                 } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
             }
-            "Good" -> {
+            getString(R.string.good) -> {
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
@@ -195,7 +199,7 @@ class VideoCompressionService : Service() {
                     )
                 } -movflags faststart -c:v libx264 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
             }
-            "Best but slow" -> {
+            getString(R.string.best) -> {
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
@@ -203,29 +207,13 @@ class VideoCompressionService : Service() {
                     )
                 } -movflags faststart -c:v libx265 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
             }
-            "Ultra-rápido" -> {
+            else -> {
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
-            }
-            "Bueno" -> {
-                command = "-y -i ${
-                    FFmpegKitConfig.getSafParameterForRead(
-                        applicationContext,
-                        videoUri
-                    )
-                } -movflags faststart -c:v libx264 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
-            }
-            "El mejor, pero lento" -> {
-                command = "-y -i ${
-                    FFmpegKitConfig.getSafParameterForRead(
-                        applicationContext,
-                        videoUri
-                    )
-                } -movflags faststart -c:v libx265 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx265 -s $videoResolution -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
             }
         }
 

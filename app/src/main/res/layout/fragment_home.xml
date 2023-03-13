@@ -33,26 +33,26 @@
                 android:textFontWeight="700" />
 
 
-            <!--<VideoView
+            <VideoView
                 android:id="@+id/videoView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp" />-->
+                android:layout_marginTop="10dp" />
 
 
             <RadioGroup
                 android:id="@+id/radioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:orientation="vertical">
 
                 <RadioButton
                     android:id="@+id/rdOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:checked="true"
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/ultrafast" />
@@ -61,15 +61,15 @@
                     android:id="@+id/infou"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <RadioButton
                     android:id="@+id/rdTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/good" />
 
@@ -77,16 +77,15 @@
                     android:id="@+id/infog"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <RadioButton
                     android:id="@+id/rdThree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/best" />
 
@@ -94,18 +93,23 @@
                     android:id="@+id/infob"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:textColor="@color/black"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
                 <RadioButton
                     android:id="@+id/rdFour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="10dp"
                     android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/best" />
+                    android:text="@string/custom" />
+<!--  https://www.geeksforgeeks.org/spinner-in-kotlin/-->
+                <!--<Spinner
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/compressVideo"/>-->
             </RadioGroup>
 
 
@@ -140,7 +144,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/initial_size"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -165,7 +169,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/compressed_size"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -190,7 +194,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/conversion_time"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -214,7 +218,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/initial_battery"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -238,7 +242,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/remaining_battery"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -262,7 +266,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginStart="10dp"
                         android:text="@string/co2"
                         android:textColor="@color/black"
                         android:textSize="15sp"
@@ -272,7 +276,7 @@
                         android:id="@+id/co2TV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                       android:layout_marginLeft="10dp"
+                       android:layout_marginStart="10dp"
                         android:textFontWeight="300"
                         android:textSize="20sp" />
 
@@ -314,7 +318,5 @@
         android:layout_centerInParent="true"
         android:background="@color/white"
         android:src="@drawable/logo" />
-
-
 
 </RelativeLayout>

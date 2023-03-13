@@ -11,6 +11,9 @@
     <string name="good">Good</string>
     <string name="best">Best but slow</string>
     <string name="custom">Custom</string>
+    <string name="ultrafast_description">"Fastest and smallest video, loosing some quality"</string>
+    <string name="good_description">"Best quality vs. compression speed and size reduction"</string>
+    <string name="best_description">"Best size reduction and quality but it's the slowest"</string>
     <string name="compress_video">Compress Video</string>
     <string name="share_compressed_video">Share Compressed Video</string>
     <string name="None">None</string>
@@ -30,4 +33,9 @@
     <string name="notification_background_body">In Settings, please select "Battery usage" option and enable "Allow background" (keep Wamboo opened to compress faster!!)</string>
     <string name="title_home">Eco-compressor</string>
     <string name="title_information">Information</string>
+    <string name="selected_resolution">Selected resolution:</string>
+    <string name="select_resolution">Select resolution</string>
+    <string name="no_selected_resolution">No selected resolution</string>
+    <string name="selected_quality">Selected quality:</string>
+    <string name="selected_fps">Selected fps:</string>
 </resources>

@@ -8,20 +8,22 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.MediaStore
+import android.provider.MediaStore.Video.Media
 import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
-import android.widget.RadioButton
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.work.*
+import com.arthenica.ffmpegkit.FFmpegKitConfig
+import com.arthenica.ffmpegkit.FFprobeKit
+import com.arthenica.ffmpegkit.MediaInformationSession
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
@@ -29,6 +31,7 @@ import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
+import kotlin.math.round
 
 
 @Suppress("DEPRECATION")
@@ -38,7 +41,13 @@ class HomeFragment : Fragment() {
     private var compressedFilePath = ""
     lateinit var pref: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
-
+    lateinit var spinner: Spinner
+    lateinit var spinner2: Spinner
+    lateinit var mediaInformation : MediaInformationSession
+    private lateinit var videoHeight : String
+    private lateinit var  videoWidth : String
+    private lateinit var  videoResolution : String
+    private lateinit var  videoQuality : String
     //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
@@ -319,12 +328,14 @@ class HomeFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
                 resultLauncher.launch(intent)
+
             }
 
         }
 
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
-        //videoView.setMediaController(MediaController(requireActivity()))
+        videoView.setMediaController(MediaController(requireActivity()))
+
 
         // Handling what will happen when user tap on video compression formats Radio Buttons
         radioGroup.setOnCheckedChangeListener { radioGroup, i ->
@@ -332,41 +343,44 @@ class HomeFragment : Fragment() {
                 requireActivity().findViewById<RadioButton>(radioGroup.checkedRadioButtonId)
             selectedtype = checked.text.toString()
             when (selectedtype) {
-                "Good" ->{
-                    binding.infog.text = "Best quality vs. compression speed and size reduction"
+                getString(R.string.good) ->{
+                    binding.infog.text = getString(R.string.good_description)
                     binding.infog.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infou.visibility = View.GONE
-                }
-                "Best but slow" ->{
-                    binding.infob.text = "Best size reduction and quality but it's the slowest"
+                    if (::spinner.isInitialized){
+                        hideSpinner(spinner)
+                        hideSpinner(spinner2)
+                    }                }
+                getString(R.string.best) ->{
+                    binding.infob.text = getString(R.string.best_description)
                     binding.infob.visibility = View.VISIBLE
                     binding.infog.visibility = View.GONE
                     binding.infou.visibility = View.GONE
-                }
-                "Ultrafast" ->{
-                    binding.infou.text = "Fastest and smallest video, loosing some quality"
+                    if (::spinner.isInitialized){
+                        hideSpinner(spinner)
+                        hideSpinner(spinner2)
+                    }                }
+                getString(R.string.ultrafast) ->{
+                    binding.infou.text = getString(R.string.ultrafast_description)
                     binding.infou.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
-                }
-                "Bueno" ->{
-                    binding.infog.text = "Mejor relación calidad-velocidad de procesamiento y reducción del tamaño"
-                    binding.infog.visibility = View.VISIBLE
-                    binding.infob.visibility = View.GONE
+                    if (::spinner.isInitialized){
+                        hideSpinner(spinner)
+                        hideSpinner(spinner2)
+                    }                }
+                else ->{
+                    if (::spinner.isInitialized){
+                        hideSpinner(spinner)
+                        hideSpinner(spinner2)
+                    }
                     binding.infou.visibility = View.GONE
-                }
-                "El mejor, pero lento" ->{
-                    binding.infob.text = "Mejor reducción del tamaño y calidad, pero más lento"
-                    binding.infob.visibility = View.VISIBLE
-                    binding.infou.visibility = View.GONE
-                    binding.infog.visibility = View.GONE
-                }
-                "Ultra-rápido" ->{
-                    binding.infou.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
-                    binding.infou.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
+                    spinner = addSpinnerResolution()
+                    spinner2 = addSpinnerQuality()
+
                 }
             }
         }
@@ -386,14 +400,15 @@ class HomeFragment : Fragment() {
                 //progressDialog.show()
 
                 // When the compress video button is clicked we check if video is already playing then we pause it
-                /*if (videoView.isPlaying) {
+                if (videoView.isPlaying) {
                     videoView.pause()
-                }*/
+                }
 
                 // Set up the input data for the worker
                 val data2 =
                     Data.Builder().putString(ForegroundWorker.VideoURI, videoUrl?.toString())
-                        .putString(ForegroundWorker.SELECTION_TYPE, selectedtype).build()
+                        .putString(ForegroundWorker.SELECTION_TYPE, selectedtype)
+                        .putString(ForegroundWorker.VIDEO_RESOLUTION, videoResolution).build()
                 // Create the work request
                 val myWorkRequest =
                     OneTimeWorkRequestBuilder<VideoCompressionWorker>().setInputData(data2).build()
@@ -403,7 +418,7 @@ class HomeFragment : Fragment() {
 
             } else {
                 // If picked video is null or video is not picked
-                Toast.makeText(context, "Please select a video.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Please, select a video.", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -414,9 +429,155 @@ class HomeFragment : Fragment() {
                 .setType("video/mp4").setChooserTitle("Share video...").startChooser()
         }
     }
+    private fun addSpinnerQuality():Spinner {
 
 
-    /* This code is using the registerForActivityResult method to launch an activity for a result,
+        val spinner = Spinner(requireContext())
+        spinner.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        var qualitySpinner =arrayOf("")
+
+        when (videoUrl) {
+            null -> {
+                Toast.makeText(context, "Please, select a video.", Toast.LENGTH_SHORT).show()
+
+                binding.infou.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
+                binding.infou.visibility = View.VISIBLE
+                binding.rdOne.isChecked= true
+                binding.infob.visibility = View.GONE
+                binding.infog.visibility = View.GONE
+                if (::spinner.isInitialized){
+                    hideSpinner(spinner)
+                }
+
+            }
+            else -> {
+
+                qualitySpinner = arrayOf("0","17","23","51")
+            }
+        }
+
+        val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, qualitySpinner)
+        spinner.adapter = arrayAdapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) { videoQuality =qualitySpinner[position]
+                Toast.makeText(
+                    requireActivity(),
+                    getString(R.string.selected_resolution) + " " + qualitySpinner[position],
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+
+            }
+
+        }
+        // Add Spinner to LinearLayout
+        binding.radioGroup.addView(spinner)
+        return spinner
+
+    }
+    private fun addSpinnerResolution():Spinner {
+
+
+        val spinner = Spinner(requireContext())
+        spinner.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        var resolutionSpinner =arrayOf("")
+        var resolutionValues =arrayOf("")
+        when (videoUrl) {
+            null -> {
+                Toast.makeText(context, "Please, select a video.", Toast.LENGTH_SHORT).show()
+
+                    binding.infou.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
+                    binding.infou.visibility = View.VISIBLE
+                    binding.rdOne.isChecked= true
+                    binding.infob.visibility = View.GONE
+                    binding.infog.visibility = View.GONE
+                    if (::spinner.isInitialized){
+                        hideSpinner(spinner)
+                    }
+
+            }
+            else -> {
+                mediaInformation = FFprobeKit.getMediaInformation(
+                    FFmpegKitConfig.getSafParameterForRead(
+                        activity,
+                        videoUrl
+                    )
+                )
+                videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
+                videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
+                resolutionSpinner = arrayOf(
+                    getString(R.string.select_resolution),
+                    "$videoWidth" + "x" + "$videoHeight" + "(Original)",
+                    "${(round((videoWidth.toDouble() * 0.7)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.7)/2)*2).toInt()}" + " (70%)",
+                    "${(round((videoWidth.toDouble() * 0.5)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.5)/2)*2).toInt()}" + " (50%)",
+                    "${(round((videoWidth.toDouble() * 0.25)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.25)/2)*2).toInt()}" + " (25%)",
+                    "${(round((videoWidth.toDouble() * 0.05)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.05)/2)*2).toInt()}" + " (5%)"
+                )
+                resolutionValues = arrayOf(
+                    "$videoWidth" + "x" + "$videoHeight",
+                    "$videoWidth" + "x" + "$videoHeight",
+                    "${(round((videoWidth.toDouble() * 0.7)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.7)/2)*2).toInt()}",
+                    "${(round((videoWidth.toDouble() * 0.5)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.5)/2)*2).toInt()}",
+                    "${(round((videoWidth.toDouble() * 0.25)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.25)/2)*2).toInt()}",
+                    "${(round((videoWidth.toDouble() * 0.05)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.05)/2)*2).toInt()}"
+                )
+            }
+        }
+
+        val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resolutionSpinner)
+        spinner.adapter = arrayAdapter
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) { videoResolution =resolutionValues[position]
+                when (position) {
+                    0->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.no_selected_resolution),
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                    else ->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.selected_resolution) + " " + resolutionSpinner[position],
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                }
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+
+        }
+        // Add Spinner to LinearLayout
+        binding.radioGroup.addView(spinner)
+        return spinner
+
+    }
+    private fun hideSpinner(spinner: Spinner) {
+        spinner.visibility= View.GONE
+    }
+
+
+            /* This code is using the registerForActivityResult method to launch an activity for a result,
     specifically to select a video file. If the result code is Activity.RESULT_OK, it means a video has been successfully selected.
      The selected video's Uri is extracted from the Intent returned from the launched activity.
       The code then sets the Uri to the VideoView and starts playing the video.
@@ -439,12 +600,12 @@ class HomeFragment : Fragment() {
                         //   val video_file: File? = uri?.let { FileUtils().getFileFromUri(this, it) }
 
                         // now set the video uri in the VideoView
-                        //binding.videoView.setVideoURI(uri)
+                        binding.videoView.setVideoURI(uri)
 
                         // after successful retrieval of the video and properly
                         // setting up the retried video uri in
                         // VideoView, Start the VideoView to play that video
-                        //binding.videoView.start()
+                        binding.videoView.start()
 
                     } catch (e: Exception) {
                         Toast.makeText(requireActivity(), "Error", Toast.LENGTH_SHORT).show()
