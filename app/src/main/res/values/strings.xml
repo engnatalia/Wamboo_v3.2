@@ -35,7 +35,9 @@
     <string name="title_information">Information</string>
     <string name="selected_resolution">Selected resolution:</string>
     <string name="select_resolution">Select resolution</string>
+    <!--<string name="select_bitrate">Select bitrate (the lower, the smaller size)</string>-->
     <string name="no_selected_resolution">No selected resolution</string>
-    <string name="selected_quality">Selected quality:</string>
-    <string name="selected_fps">Selected fps:</string>
+    <!--<string name="no_selected_bitrate">No selected bitrate</string>
+    <string name="selected_bitrate">Selected bitrate:</string>
+    <string name="estimated_percentage">of estimated compression</string>-->
 </resources>

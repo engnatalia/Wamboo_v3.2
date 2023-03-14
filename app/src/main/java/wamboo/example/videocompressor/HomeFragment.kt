@@ -31,7 +31,9 @@ import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
+import java.math.RoundingMode
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 
 @Suppress("DEPRECATION")
@@ -42,12 +44,15 @@ class HomeFragment : Fragment() {
     lateinit var pref: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     lateinit var spinner: Spinner
-    lateinit var spinner2: Spinner
+    //lateinit var spinner2: Spinner
     lateinit var mediaInformation : MediaInformationSession
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
-    private lateinit var  videoResolution : String
-    private lateinit var  videoQuality : String
+    private var  videoResolution =""
+    //private var  videoBitrate = ""
+    private lateinit var  originalVideoBitrate : String
+    //private var bitratePercentage: Double = 1.0
+    private var resolutionPercentage: Double = 1.0
     //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
@@ -348,38 +353,46 @@ class HomeFragment : Fragment() {
                     binding.infog.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infou.visibility = View.GONE
+                    //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        hideSpinner(spinner2)
+                        //hideSpinner(spinner2)
                     }                }
                 getString(R.string.best) ->{
                     binding.infob.text = getString(R.string.best_description)
                     binding.infob.visibility = View.VISIBLE
                     binding.infog.visibility = View.GONE
                     binding.infou.visibility = View.GONE
+                    //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        hideSpinner(spinner2)
+                        //hideSpinner(spinner2)
                     }                }
                 getString(R.string.ultrafast) ->{
                     binding.infou.text = getString(R.string.ultrafast_description)
                     binding.infou.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
+                    //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        hideSpinner(spinner2)
+                        //hideSpinner(spinner2)
                     }                }
                 else ->{
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        hideSpinner(spinner2)
+                        //hideSpinner(spinner2)
                     }
                     binding.infou.visibility = View.GONE
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
+                    /*var estimatedPercentage = (1- bitratePercentage*resolutionPercentage)*100
+                    binding.infoc.text ="${estimatedPercentage.toBigDecimal().setScale(2,
+                        RoundingMode.UP).toDouble()}"+"%"+getString(R.string.estimated_percentage)
+                    binding.infoc.visibility = View.VISIBLE*/
                     spinner = addSpinnerResolution()
-                    spinner2 = addSpinnerQuality()
+                    //spinner2 = addSpinnerBitrate()
+
 
                 }
             }
@@ -409,6 +422,7 @@ class HomeFragment : Fragment() {
                     Data.Builder().putString(ForegroundWorker.VideoURI, videoUrl?.toString())
                         .putString(ForegroundWorker.SELECTION_TYPE, selectedtype)
                         .putString(ForegroundWorker.VIDEO_RESOLUTION, videoResolution).build()
+                        //.putString(ForegroundWorker.VIDEO_BITRATE, videoBitrate)
                 // Create the work request
                 val myWorkRequest =
                     OneTimeWorkRequestBuilder<VideoCompressionWorker>().setInputData(data2).build()
@@ -418,7 +432,7 @@ class HomeFragment : Fragment() {
 
             } else {
                 // If picked video is null or video is not picked
-                Toast.makeText(context, "Please, select a video.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -426,10 +440,10 @@ class HomeFragment : Fragment() {
 
         binding.shareVideo.setOnClickListener {
             ShareCompat.IntentBuilder(requireActivity()).setStream(Uri.parse(compressedFilePath))
-                .setType("video/mp4").setChooserTitle("Share video...").startChooser()
+                .setType("video/mp4").setChooserTitle(getString(R.string.share_compressed_video)).startChooser()
         }
     }
-    private fun addSpinnerQuality():Spinner {
+    /*private fun addSpinnerBitrate():Spinner {
 
 
         val spinner = Spinner(requireContext())
@@ -437,13 +451,14 @@ class HomeFragment : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        var qualitySpinner =arrayOf("")
-
+        var bitrateSpinner =arrayOf("")
+        var bitrateValuesSpinner =arrayOf("")
+        var bitratePercentages = arrayOf(1.0,1.0,0.7,0.5,0.25,0.05)
         when (videoUrl) {
             null -> {
-                Toast.makeText(context, "Please, select a video.", Toast.LENGTH_SHORT).show()
 
-                binding.infou.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
+
+                binding.infou.text = getString(R.string.ultrafast)
                 binding.infou.visibility = View.VISIBLE
                 binding.rdOne.isChecked= true
                 binding.infob.visibility = View.GONE
@@ -454,26 +469,67 @@ class HomeFragment : Fragment() {
 
             }
             else -> {
+                Toast.makeText(context, getString(R.string.scroll), Toast.LENGTH_SHORT).show()
+                mediaInformation = FFprobeKit.getMediaInformation(
+                    FFmpegKitConfig.getSafParameterForRead(
+                        activity,
+                        videoUrl
+                    )
+                )
+                originalVideoBitrate = ((mediaInformation.mediaInformation.bitrate.toDouble()/1000).roundToInt()).toString()
+                videoBitrate=((originalVideoBitrate.toDouble()/1000).roundToInt()).toString()
 
-                qualitySpinner = arrayOf("0","17","23","51")
+                        bitrateSpinner = arrayOf(getString(R.string.select_bitrate),"$originalVideoBitrate"+"kbps"+"(Original)",
+                            "${(round((originalVideoBitrate.toDouble() * 0.7)/2)*2).toInt()}"+"kbps" + " (70%)",
+                            "${(round((originalVideoBitrate.toDouble() * 0.5)/2)*2).toInt()}" +"kbps"+ " (50%)",
+                            "${(round((originalVideoBitrate.toDouble() * 0.25)/2)*2).toInt()}" +"kbps"+ " (25%)",
+                            "${(round((originalVideoBitrate.toDouble() * 0.05)/2)*2).toInt()}" +"kbps"+ " (5%)"
+                        )
+                        bitrateValuesSpinner = arrayOf("$originalVideoBitrate","$originalVideoBitrate",
+                            "${(round((originalVideoBitrate.toDouble() * 0.7)/2)*2).toInt()}",
+                            "${(round((originalVideoBitrate.toDouble() * 0.5)/2)*2).toInt()}",
+                            "${(round((originalVideoBitrate.toDouble() * 0.25)/2)*2).toInt()}",
+                            "${(round((originalVideoBitrate.toDouble() * 0.05)/2)*2).toInt()}"
+                        )
+
+
+
+
             }
         }
 
-        val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, qualitySpinner)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, bitrateSpinner)
         spinner.adapter = arrayAdapter
-
+        with(spinner)
+        {setSelection(0, false)}
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
                 position: Int,
                 id: Long
-            ) { videoQuality =qualitySpinner[position]
-                Toast.makeText(
-                    requireActivity(),
-                    getString(R.string.selected_resolution) + " " + qualitySpinner[position],
-                    Toast.LENGTH_SHORT
-                ).show()
+            ) { videoBitrate =((bitrateValuesSpinner[position].toDouble()/1000).roundToInt()).toString()
+                bitratePercentage = bitratePercentages[position]
+                when (position) {
+                    0->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.no_selected_bitrate),
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                    else ->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.selected_bitrate) + " " + bitrateSpinner[position],
+                        Toast.LENGTH_SHORT
+                    ).show()
+                        var estimatedPercentage = (1- bitratePercentage*resolutionPercentage)*100
+
+                        when (estimatedPercentage) {
+                            0.0 -> {estimatedPercentage=estimatedPercentage}
+
+                        }
+
+                        binding.infoc.text ="${estimatedPercentage.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()}"+"%"+getString(R.string.estimated_percentage)}
+                }
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
@@ -483,11 +539,12 @@ class HomeFragment : Fragment() {
         }
         // Add Spinner to LinearLayout
         binding.radioGroup.addView(spinner)
+
         return spinner
 
     }
+*/
     private fun addSpinnerResolution():Spinner {
-
 
         val spinner = Spinner(requireContext())
         spinner.layoutParams = LinearLayout.LayoutParams(
@@ -496,11 +553,12 @@ class HomeFragment : Fragment() {
         )
         var resolutionSpinner =arrayOf("")
         var resolutionValues =arrayOf("")
+        var resolutionPercentages = arrayOf(1.0,1.0,0.7,0.5,0.25,0.05)
         when (videoUrl) {
             null -> {
-                Toast.makeText(context, "Please, select a video.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
 
-                    binding.infou.text = "El más rápido y menor tamaño posible, perdiendo algo de calidad"
+                    binding.infou.text = getString(R.string.ultrafast)
                     binding.infou.visibility = View.VISIBLE
                     binding.rdOne.isChecked= true
                     binding.infob.visibility = View.GONE
@@ -519,6 +577,7 @@ class HomeFragment : Fragment() {
                 )
                 videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
                 videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
+                videoResolution="$videoWidth" + "x" + "$videoHeight"
                 resolutionSpinner = arrayOf(
                     getString(R.string.select_resolution),
                     "$videoWidth" + "x" + "$videoHeight" + "(Original)",
@@ -535,12 +594,14 @@ class HomeFragment : Fragment() {
                     "${(round((videoWidth.toDouble() * 0.25)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.25)/2)*2).toInt()}",
                     "${(round((videoWidth.toDouble() * 0.05)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.05)/2)*2).toInt()}"
                 )
+
             }
         }
 
-        val arrayAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, resolutionSpinner)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, resolutionSpinner)
         spinner.adapter = arrayAdapter
-
+        with(spinner)
+        {setSelection(0, false)}
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
@@ -548,6 +609,7 @@ class HomeFragment : Fragment() {
                 position: Int,
                 id: Long
             ) { videoResolution =resolutionValues[position]
+                resolutionPercentage = resolutionPercentages[position]
                 when (position) {
                     0->{Toast.makeText(
                         requireActivity(),
@@ -558,7 +620,15 @@ class HomeFragment : Fragment() {
                         requireActivity(),
                         getString(R.string.selected_resolution) + " " + resolutionSpinner[position],
                         Toast.LENGTH_SHORT
-                    ).show()}
+                    ).show()
+                        /*var estimatedPercentage = (1- bitratePercentage*resolutionPercentage)*100
+
+                        when (estimatedPercentage) {
+                           0.0 -> {estimatedPercentage=estimatedPercentage}
+
+
+                        }
+                        binding.infoc.text ="${estimatedPercentage.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()}"+"%"+getString(R.string.estimated_percentage)*/}
                 }
 
             }
@@ -568,10 +638,12 @@ class HomeFragment : Fragment() {
 
         }
         // Add Spinner to LinearLayout
+
         binding.radioGroup.addView(spinner)
         return spinner
 
     }
+
     private fun hideSpinner(spinner: Spinner) {
         spinner.visibility= View.GONE
     }

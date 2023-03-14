@@ -34,8 +34,7 @@
     <string name="title_home">Eco-compresor</string>
     <string name="title_information">Información</string>
     <string name="selected_resolution">Resolución seleccionada:</string>
-    <string name="selected_quality">Calidad seleccionada:</string>
-    <string name="selected_fps">fps seleccionadas:</string>
     <string name="select_resolution">Selecciona resolución</string>
     <string name="no_selected_resolution">Resolución no seleccionada</string>
+    <string name="select_bitrate">Selecciona tasa de bits (más baja, mayor compresión)</string>
 </resources>

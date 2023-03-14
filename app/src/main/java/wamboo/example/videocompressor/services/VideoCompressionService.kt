@@ -47,6 +47,7 @@ class VideoCompressionService : Service() {
         val videoUri = intent?.getStringExtra(ForegroundWorker.VideoURI)
         val selectedtype = intent?.getStringExtra(ForegroundWorker.SELECTION_TYPE)
         val videoResolution =intent?.getStringExtra(ForegroundWorker.VIDEO_RESOLUTION)
+        //val videoBitrate =intent?.getStringExtra(ForegroundWorker.VIDEO_BITRATE)
         compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution)
 
         return START_NOT_STICKY
@@ -114,6 +115,7 @@ class VideoCompressionService : Service() {
         videoUri: Uri,
         selectedtype: String,
         videoResolution: String?
+        //videoBitrate: String?
     ) {
         val root: String = Environment.getExternalStorageDirectory().toString()
         val appFolder = "$root/GFG/"
@@ -213,8 +215,8 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx265 -s $videoResolution -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
-            }
+                } -movflags faststart -c:v libx265 -crf 23 -c:a copy -s $videoResolution -preset ultrafast $outPutSafeUri"
+            }//-movflags faststart -c:v libx265 -crf 23 -c:a copy -s $videoResolution -b:v ${videoBitrate}k -preset ultrafast $outPutSafeUri"
         }
 
         Log.d("MyFFMPEG", command)
