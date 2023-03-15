@@ -31,7 +31,7 @@
     <string name="waiting">Please wait...</string>
     <string name="scroll">Scroll down.</string>
     <string name="notification_background_title">Allow Background Compression!</string>
-    <string name="notification_background_body">In Settings, please select "Battery usage" option and enable "Allow background" (keep Wamboo opened to compress faster!!)</string>
+    <string name="notification_background_body">Tap "OK" and the settings will open; go to the "Battery" option and select "Unrestricted" so the compression keeps working even if you close the app (keep Wamboo opened to compress faster!!)</string>
     <string name="title_home">Eco-compressor</string>
     <string name="title_information">Information</string>
     <string name="selected_resolution">Selected resolution:</string>

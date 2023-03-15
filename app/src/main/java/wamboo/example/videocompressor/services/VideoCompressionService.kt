@@ -231,7 +231,12 @@ class VideoCompressionService : Service() {
         }
 
         Log.d("MyFFMPEG", command)
-
+        var ssim = FFmpegKit.execute("-y -i ${
+            FFmpegKitConfig.getSafParameterForRead(
+                applicationContext,
+                videoUri
+            )
+        } -i $outPutSafeUri -lavfi ssim -f null -")
         FFmpegKit.executeAsync(command,
             { session ->
 

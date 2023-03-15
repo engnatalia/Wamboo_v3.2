@@ -55,6 +55,7 @@ class HomeFragment : Fragment() {
     private var  videoCodec =""
     private var  compressSpeed =""
     private var index = 7
+    private var no_battery = false
 
     //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
@@ -283,9 +284,15 @@ class HomeFragment : Fragment() {
         if (powerManager.isIgnoringBatteryOptimizations(requireActivity().packageName)) {
             return true
         } else {
-            showAlertDialog()
-            return false
-
+            when (no_battery) {
+                false -> {
+                    showAlertDialog()
+                    return false
+                }
+                true -> {
+                    return true
+                }
+            }
         }
     }
 
@@ -298,6 +305,7 @@ class HomeFragment : Fragment() {
                 "OK"
             ) { _, _ -> openBatteryUsagePage(requireActivity()) }
         }.create().show()
+        no_battery = true
     }
 
     fun openBatteryUsagePage(ctx: Context) {
@@ -331,7 +339,7 @@ class HomeFragment : Fragment() {
     private fun initUI() = with(binding) {
         pickVideo.setOnClickListener {
             videoUrl=null
-            binding.infou.text = getString(R.string.ultrafast)
+            binding.infou.text = getString(R.string.ultrafast_description)
             binding.infou.visibility = View.VISIBLE
             binding.rdOne.isChecked= true
             binding.infob.visibility = View.GONE
@@ -344,6 +352,7 @@ class HomeFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_PICK)
                 intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
                 resultLauncher.launch(intent)
+
 
             }
 
