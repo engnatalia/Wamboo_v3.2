@@ -44,15 +44,18 @@ class HomeFragment : Fragment() {
     lateinit var pref: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     lateinit var spinner: Spinner
-    //lateinit var spinner2: Spinner
+    lateinit var spinner2: Spinner
+    lateinit var spinner3: Spinner
     lateinit var mediaInformation : MediaInformationSession
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
     private var  videoResolution =""
-    //private var  videoBitrate = ""
-    private lateinit var  originalVideoBitrate : String
-    //private var bitratePercentage: Double = 1.0
-    private var resolutionPercentage: Double = 1.0
+    private var  showSpeed =""
+    private var  showCodec =""
+    private var  videoCodec =""
+    private var  compressSpeed =""
+    private var index = 7
+
     //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
@@ -327,7 +330,15 @@ class HomeFragment : Fragment() {
     // When the user tap on pick video button and other buttons
     private fun initUI() = with(binding) {
         pickVideo.setOnClickListener {
-
+            videoUrl=null
+            binding.infou.text = getString(R.string.ultrafast)
+            binding.infou.visibility = View.VISIBLE
+            binding.rdOne.isChecked= true
+            binding.infob.visibility = View.GONE
+            binding.infog.visibility = View.GONE
+            if (::spinner.isInitialized){
+                hideSpinner(spinner)
+            }
             if (isBatteryOptimizationDisabled()) {
                 shareVideo.visibility = View.GONE
                 val intent = Intent(Intent.ACTION_PICK)
@@ -356,7 +367,8 @@ class HomeFragment : Fragment() {
                     //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        //hideSpinner(spinner2)
+                        hideSpinner(spinner2)
+                        hideSpinner(spinner3)
                     }                }
                 getString(R.string.best) ->{
                     binding.infob.text = getString(R.string.best_description)
@@ -366,7 +378,8 @@ class HomeFragment : Fragment() {
                     //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        //hideSpinner(spinner2)
+                        hideSpinner(spinner2)
+                        hideSpinner(spinner3)
                     }                }
                 getString(R.string.ultrafast) ->{
                     binding.infou.text = getString(R.string.ultrafast_description)
@@ -376,23 +389,37 @@ class HomeFragment : Fragment() {
                     //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        //hideSpinner(spinner2)
+                        hideSpinner(spinner2)
+                        hideSpinner(spinner3)
                     }                }
-                else ->{
+                getString(R.string.custom_h) ->{
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
-                        //hideSpinner(spinner2)
+                        hideSpinner(spinner2)
+                        hideSpinner(spinner3)
                     }
                     binding.infou.visibility = View.GONE
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
-                    /*var estimatedPercentage = (1- bitratePercentage*resolutionPercentage)*100
-                    binding.infoc.text ="${estimatedPercentage.toBigDecimal().setScale(2,
-                        RoundingMode.UP).toDouble()}"+"%"+getString(R.string.estimated_percentage)
-                    binding.infoc.visibility = View.VISIBLE*/
+                    index=7
                     spinner = addSpinnerResolution()
-                    //spinner2 = addSpinnerBitrate()
+                    spinner2 = addSpinnerSpeed()
+                    spinner3 = addSpinnerCodec()
 
+                }
+                getString(R.string.custom_l) ->{
+                    if (::spinner.isInitialized){
+                        hideSpinner(spinner)
+                        hideSpinner(spinner2)
+                        hideSpinner(spinner3)
+                    }
+                    binding.infou.visibility = View.GONE
+                    binding.infob.visibility = View.GONE
+                    binding.infog.visibility = View.GONE
+                    index=8
+                    spinner = addSpinnerResolution()
+                    spinner2 = addSpinnerSpeed()
+                    spinner3 = addSpinnerCodec()
 
                 }
             }
@@ -418,11 +445,14 @@ class HomeFragment : Fragment() {
                 }
 
                 // Set up the input data for the worker
+
                 val data2 =
                     Data.Builder().putString(ForegroundWorker.VideoURI, videoUrl?.toString())
                         .putString(ForegroundWorker.SELECTION_TYPE, selectedtype)
-                        .putString(ForegroundWorker.VIDEO_RESOLUTION, videoResolution).build()
-                        //.putString(ForegroundWorker.VIDEO_BITRATE, videoBitrate)
+                        .putString(ForegroundWorker.VIDEO_RESOLUTION, videoResolution)
+                        .putString(ForegroundWorker.COMPRESS_SPEED, compressSpeed)
+                        .putString(ForegroundWorker.VIDEO_CODEC, videoCodec).build()
+
                 // Create the work request
                 val myWorkRequest =
                     OneTimeWorkRequestBuilder<VideoCompressionWorker>().setInputData(data2).build()
@@ -443,107 +473,7 @@ class HomeFragment : Fragment() {
                 .setType("video/mp4").setChooserTitle(getString(R.string.share_compressed_video)).startChooser()
         }
     }
-    /*private fun addSpinnerBitrate():Spinner {
 
-
-        val spinner = Spinner(requireContext())
-        spinner.layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        var bitrateSpinner =arrayOf("")
-        var bitrateValuesSpinner =arrayOf("")
-        var bitratePercentages = arrayOf(1.0,1.0,0.7,0.5,0.25,0.05)
-        when (videoUrl) {
-            null -> {
-
-
-                binding.infou.text = getString(R.string.ultrafast)
-                binding.infou.visibility = View.VISIBLE
-                binding.rdOne.isChecked= true
-                binding.infob.visibility = View.GONE
-                binding.infog.visibility = View.GONE
-                if (::spinner.isInitialized){
-                    hideSpinner(spinner)
-                }
-
-            }
-            else -> {
-                Toast.makeText(context, getString(R.string.scroll), Toast.LENGTH_SHORT).show()
-                mediaInformation = FFprobeKit.getMediaInformation(
-                    FFmpegKitConfig.getSafParameterForRead(
-                        activity,
-                        videoUrl
-                    )
-                )
-                originalVideoBitrate = ((mediaInformation.mediaInformation.bitrate.toDouble()/1000).roundToInt()).toString()
-                videoBitrate=((originalVideoBitrate.toDouble()/1000).roundToInt()).toString()
-
-                        bitrateSpinner = arrayOf(getString(R.string.select_bitrate),"$originalVideoBitrate"+"kbps"+"(Original)",
-                            "${(round((originalVideoBitrate.toDouble() * 0.7)/2)*2).toInt()}"+"kbps" + " (70%)",
-                            "${(round((originalVideoBitrate.toDouble() * 0.5)/2)*2).toInt()}" +"kbps"+ " (50%)",
-                            "${(round((originalVideoBitrate.toDouble() * 0.25)/2)*2).toInt()}" +"kbps"+ " (25%)",
-                            "${(round((originalVideoBitrate.toDouble() * 0.05)/2)*2).toInt()}" +"kbps"+ " (5%)"
-                        )
-                        bitrateValuesSpinner = arrayOf("$originalVideoBitrate","$originalVideoBitrate",
-                            "${(round((originalVideoBitrate.toDouble() * 0.7)/2)*2).toInt()}",
-                            "${(round((originalVideoBitrate.toDouble() * 0.5)/2)*2).toInt()}",
-                            "${(round((originalVideoBitrate.toDouble() * 0.25)/2)*2).toInt()}",
-                            "${(round((originalVideoBitrate.toDouble() * 0.05)/2)*2).toInt()}"
-                        )
-
-
-
-
-            }
-        }
-
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, bitrateSpinner)
-        spinner.adapter = arrayAdapter
-        with(spinner)
-        {setSelection(0, false)}
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) { videoBitrate =((bitrateValuesSpinner[position].toDouble()/1000).roundToInt()).toString()
-                bitratePercentage = bitratePercentages[position]
-                when (position) {
-                    0->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.no_selected_bitrate),
-                        Toast.LENGTH_SHORT
-                    ).show()}
-                    else ->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.selected_bitrate) + " " + bitrateSpinner[position],
-                        Toast.LENGTH_SHORT
-                    ).show()
-                        var estimatedPercentage = (1- bitratePercentage*resolutionPercentage)*100
-
-                        when (estimatedPercentage) {
-                            0.0 -> {estimatedPercentage=estimatedPercentage}
-
-                        }
-
-                        binding.infoc.text ="${estimatedPercentage.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()}"+"%"+getString(R.string.estimated_percentage)}
-                }
-            }
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Code to perform some action when nothing is selected
-
-            }
-
-        }
-        // Add Spinner to LinearLayout
-        binding.radioGroup.addView(spinner)
-
-        return spinner
-
-    }
-*/
     private fun addSpinnerResolution():Spinner {
 
         val spinner = Spinner(requireContext())
@@ -553,19 +483,20 @@ class HomeFragment : Fragment() {
         )
         var resolutionSpinner =arrayOf("")
         var resolutionValues =arrayOf("")
-        var resolutionPercentages = arrayOf(1.0,1.0,0.7,0.5,0.25,0.05)
+
         when (videoUrl) {
             null -> {
                 Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
 
-                    binding.infou.text = getString(R.string.ultrafast)
+                    binding.infou.text = getString(R.string.ultrafast_description)
                     binding.infou.visibility = View.VISIBLE
                     binding.rdOne.isChecked= true
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
-                    if (::spinner.isInitialized){
-                        hideSpinner(spinner)
-                    }
+                if (::spinner.isInitialized){
+                    hideSpinner(spinner)
+                }
+            index=0
 
             }
             else -> {
@@ -609,7 +540,7 @@ class HomeFragment : Fragment() {
                 position: Int,
                 id: Long
             ) { videoResolution =resolutionValues[position]
-                resolutionPercentage = resolutionPercentages[position]
+
                 when (position) {
                     0->{Toast.makeText(
                         requireActivity(),
@@ -621,14 +552,7 @@ class HomeFragment : Fragment() {
                         getString(R.string.selected_resolution) + " " + resolutionSpinner[position],
                         Toast.LENGTH_SHORT
                     ).show()
-                        /*var estimatedPercentage = (1- bitratePercentage*resolutionPercentage)*100
-
-                        when (estimatedPercentage) {
-                           0.0 -> {estimatedPercentage=estimatedPercentage}
-
-
                         }
-                        binding.infoc.text ="${estimatedPercentage.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()}"+"%"+getString(R.string.estimated_percentage)*/}
                 }
 
             }
@@ -639,13 +563,162 @@ class HomeFragment : Fragment() {
         }
         // Add Spinner to LinearLayout
 
-        binding.radioGroup.addView(spinner)
+        if (index > 0) {
+            binding.radioGroup.addView(spinner, index)
+        }
+        return spinner
+
+    }
+    private fun addSpinnerSpeed():Spinner {
+
+        val spinner = Spinner(requireContext())
+        spinner.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        var speedsSpinner = arrayOf("")
+        var speedValues = arrayOf("")
+        when (videoUrl) {
+            null -> {
+                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
+
+                binding.infou.text = getString(R.string.ultrafast_description)
+                binding.infou.visibility = View.VISIBLE
+                binding.rdOne.isChecked= true
+                binding.infob.visibility = View.GONE
+                binding.infog.visibility = View.GONE
+                if (::spinner.isInitialized){
+                    hideSpinner(spinner)
+                }
+                index=0
+
+            }
+            else -> {
+                compressSpeed ="ultrafast"
+                speedsSpinner = arrayOf(getString(R.string.select_speed),getString(R.string.speed1),getString(R.string.speed2),getString(R.string.speed3),getString(R.string.speed4),getString(R.string.speed5),getString(R.string.speed6),getString(R.string.speed7),getString(R.string.speed8),getString(R.string.speed9))
+                speedValues = arrayOf("ultrafast","ultrafast", "superfast", "veryfast", "faster", "fast", "medium", "slow", "slower", "veryslow")
+
+            }
+        }
+
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, speedsSpinner)
+        spinner.adapter = arrayAdapter
+        with(spinner)
+        {setSelection(0, false)}
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) { compressSpeed =speedValues[position]
+                showSpeed = speedsSpinner[position]
+                when (position) {
+                    0->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.no_selected_speed),
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                    else ->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.selected_speed) + " " + showSpeed,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    }
+                }
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+
+        }
+        // Add Spinner to LinearLayout
+
+        //binding.radioGroup.addView(spinner)
+        if (index > 0) {
+            binding.radioGroup.addView(spinner, index)
+        }
+        return spinner
+
+    }
+
+    private fun addSpinnerCodec():Spinner {
+
+        val spinner = Spinner(requireContext())
+        spinner.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        var codecSpinner = arrayOf("")
+        var codecValues = arrayOf("")
+        when (videoUrl) {
+            null -> {
+                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
+
+                binding.infou.text = getString(R.string.ultrafast_description)
+                binding.infou.visibility = View.VISIBLE
+                binding.rdOne.isChecked= true
+                binding.infob.visibility = View.GONE
+                binding.infog.visibility = View.GONE
+                if (::spinner.isInitialized){
+                    hideSpinner(spinner)
+                }
+                index=0
+
+            }
+            else -> {
+                videoCodec="libx265"
+                codecSpinner = arrayOf(getString(R.string.select_codec),"H.264","H.265")
+                codecValues = arrayOf("libx265","libx264","libx265")
+
+            }
+        }
+
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, codecSpinner)
+        spinner.adapter = arrayAdapter
+        with(spinner)
+        {setSelection(0, false)}
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) { videoCodec =codecValues[position]
+                showCodec = codecSpinner[position]
+                when (position) {
+                    0->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.no_selected_codec),
+                        Toast.LENGTH_SHORT
+                    ).show()}
+                    else ->{Toast.makeText(
+                        requireActivity(),
+                        getString(R.string.selected_codec) + " " + showCodec,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    }
+                }
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+
+        }
+        // Add Spinner to LinearLayout
+        if (index > 0) {
+            binding.radioGroup.addView(spinner, index)
+        }
         return spinner
 
     }
 
     private fun hideSpinner(spinner: Spinner) {
         spinner.visibility= View.GONE
+        binding.radioGroup.removeView(spinner)
+
     }
 
 

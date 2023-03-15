@@ -10,7 +10,8 @@
     <string name="ultrafast">Ultrafast</string>
     <string name="good">Good</string>
     <string name="best">Best but slow</string>
-    <string name="custom">Custom</string>
+    <string name="custom_h">Custom (high quality)</string>
+    <string name="custom_l">Custom (low quality)</string>
     <string name="ultrafast_description">"Fastest and smallest video, loosing some quality"</string>
     <string name="good_description">"Best quality vs. compression speed and size reduction"</string>
     <string name="best_description">"Best size reduction and quality but it's the slowest"</string>
@@ -35,9 +36,21 @@
     <string name="title_information">Information</string>
     <string name="selected_resolution">Selected resolution:</string>
     <string name="select_resolution">Select resolution</string>
-    <!--<string name="select_bitrate">Select bitrate (the lower, the smaller size)</string>-->
-    <string name="no_selected_resolution">No selected resolution</string>
-    <!--<string name="no_selected_bitrate">No selected bitrate</string>
-    <string name="selected_bitrate">Selected bitrate:</string>
-    <string name="estimated_percentage">of estimated compression</string>-->
+    <string name="no_selected_resolution">No resolution selected</string>
+    <string name="no_selected_speed">No speed selected</string>
+    <string name="selected_speed">Selected speed:</string>
+    <string name="select_speed">Select speed</string>
+    <string name="no_selected_codec">No codec selected</string>
+    <string name="selected_codec">Selected codec:</string>
+    <string name="select_codec">Select codec</string>
+    <string name="speed1">ultrafast</string>
+    <string name="speed2">superfast</string>
+    <string name="speed3">very fast</string>
+    <string name="speed4">faster</string>
+    <string name="speed5">fast</string>
+    <string name="speed6">medium</string>
+    <string name="speed7">slow</string>
+    <string name="speed8">slower</string>
+    <string name="speed9">very slow</string>
+
 </resources>

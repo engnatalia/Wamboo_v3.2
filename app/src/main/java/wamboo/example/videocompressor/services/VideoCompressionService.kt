@@ -47,8 +47,9 @@ class VideoCompressionService : Service() {
         val videoUri = intent?.getStringExtra(ForegroundWorker.VideoURI)
         val selectedtype = intent?.getStringExtra(ForegroundWorker.SELECTION_TYPE)
         val videoResolution =intent?.getStringExtra(ForegroundWorker.VIDEO_RESOLUTION)
-        //val videoBitrate =intent?.getStringExtra(ForegroundWorker.VIDEO_BITRATE)
-        compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution)
+        val videoCodec =intent?.getStringExtra(ForegroundWorker.VIDEO_CODEC)
+        val compressSpeed =intent?.getStringExtra(ForegroundWorker.COMPRESS_SPEED)
+        compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution, videoCodec, compressSpeed)
 
         return START_NOT_STICKY
     }
@@ -114,8 +115,10 @@ class VideoCompressionService : Service() {
     private fun compressVideo(
         videoUri: Uri,
         selectedtype: String,
-        videoResolution: String?
-        //videoBitrate: String?
+        videoResolution: String?,
+        videoCodec: String?,
+        compressSpeed: String?
+
     ) {
         val root: String = Environment.getExternalStorageDirectory().toString()
         val appFolder = "$root/GFG/"
@@ -209,14 +212,22 @@ class VideoCompressionService : Service() {
                     )
                 } -movflags faststart -c:v libx265 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
             }
+            getString(R.string.custom_h) -> {
+                command = "-y -i ${
+                    FFmpegKitConfig.getSafParameterForRead(
+                        applicationContext,
+                        videoUri
+                    )
+                } -movflags faststart -c:v $videoCodec -crf 23 -c:a copy -s $videoResolution -preset $compressSpeed $outPutSafeUri"
+            }
             else -> {
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx265 -crf 23 -c:a copy -s $videoResolution -preset ultrafast $outPutSafeUri"
-            }//-movflags faststart -c:v libx265 -crf 23 -c:a copy -s $videoResolution -b:v ${videoBitrate}k -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v $videoCodec -crf 40 -c:a copy -s $videoResolution -preset $compressSpeed $outPutSafeUri"
+            }
         }
 
         Log.d("MyFFMPEG", command)
