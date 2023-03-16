@@ -52,5 +52,7 @@
     <string name="speed7">slow</string>
     <string name="speed8">slower</string>
     <string name="speed9">very slow</string>
+    <string name="congrats"><b>AWESOME!!</b></string>
+    <string name="audio">Remove audio</string>
 
 </resources>

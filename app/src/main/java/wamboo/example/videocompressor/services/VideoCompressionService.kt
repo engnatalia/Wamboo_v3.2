@@ -196,6 +196,14 @@ class VideoCompressionService : Service() {
                     )
                 } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
             }
+            "Ultrafast" -> {
+                command = "-y -i ${
+                    FFmpegKitConfig.getSafParameterForRead(
+                        applicationContext,
+                        videoUri
+                    )
+                } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
+            }
             getString(R.string.good) -> {
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
@@ -231,12 +239,7 @@ class VideoCompressionService : Service() {
         }
 
         Log.d("MyFFMPEG", command)
-        var ssim = FFmpegKit.execute("-y -i ${
-            FFmpegKitConfig.getSafParameterForRead(
-                applicationContext,
-                videoUri
-            )
-        } -i $outPutSafeUri -lavfi ssim -f null -")
+
         FFmpegKit.executeAsync(command,
             { session ->
 
@@ -324,6 +327,7 @@ class VideoCompressionService : Service() {
     private fun updateNotificationMessage(returnCode: ReturnCode) {
         if (ReturnCode.isSuccess(returnCode)) {
             builder2.setContentText(getText(R.string.notification_message_success))
+
         } else {
             builder2.setContentText(getText(R.string.notification_message_failure))
         }

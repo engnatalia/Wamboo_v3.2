@@ -3,13 +3,14 @@ package wamboo.example.videocompressor
 import android.app.*
 import android.content.*
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.MediaStore
-import android.provider.MediaStore.Video.Media
 import android.provider.Settings
+import android.text.Html
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -31,9 +32,7 @@ import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
-import java.math.RoundingMode
 import kotlin.math.round
-import kotlin.math.roundToInt
 
 
 @Suppress("DEPRECATION")
@@ -55,7 +54,7 @@ class HomeFragment : Fragment() {
     private var  videoCodec =""
     private var  compressSpeed =""
     private var index = 7
-    private var no_battery = false
+    private var noBattery = false
 
     //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
@@ -140,7 +139,8 @@ class HomeFragment : Fragment() {
 
         }else{
             binding.co2TV.setTextColor(Color.parseColor("#6F9F3A"))
-            binding.co2TV.text = co2+ "kgCO2"
+            binding.co2TV.text = co2+ "kgCO2"+ "\n"+getString(R.string.congrats)
+
         }
         //displaying the share button
         binding.shareVideo.visibility = View.VISIBLE
@@ -284,7 +284,7 @@ class HomeFragment : Fragment() {
         if (powerManager.isIgnoringBatteryOptimizations(requireActivity().packageName)) {
             return true
         } else {
-            when (no_battery) {
+            when (noBattery) {
                 false -> {
                     showAlertDialog()
                     return false
@@ -305,7 +305,7 @@ class HomeFragment : Fragment() {
                 "OK"
             ) { _, _ -> openBatteryUsagePage(requireActivity()) }
         }.create().show()
-        no_battery = true
+        noBattery = true
     }
 
     fun openBatteryUsagePage(ctx: Context) {
@@ -471,7 +471,7 @@ class HomeFragment : Fragment() {
 
             } else {
                 // If picked video is null or video is not picked
-                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
+               Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -495,7 +495,6 @@ class HomeFragment : Fragment() {
 
         when (videoUrl) {
             null -> {
-                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
 
                     binding.infou.text = getString(R.string.ultrafast_description)
                     binding.infou.visibility = View.VISIBLE
@@ -589,7 +588,7 @@ class HomeFragment : Fragment() {
         var speedValues = arrayOf("")
         when (videoUrl) {
             null -> {
-                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
                 binding.infou.text = getString(R.string.ultrafast_description)
                 binding.infou.visibility = View.VISIBLE
@@ -663,7 +662,6 @@ class HomeFragment : Fragment() {
         var codecValues = arrayOf("")
         when (videoUrl) {
             null -> {
-                Toast.makeText(context, getString(R.string.select_video), Toast.LENGTH_SHORT).show()
 
                 binding.infou.text = getString(R.string.ultrafast_description)
                 binding.infou.visibility = View.VISIBLE

@@ -40,6 +40,10 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp" />
 
+            <CheckBox android:id="@+id/checkbox_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/audio"/>
 
             <RadioGroup
                 android:id="@+id/radioGroup"
@@ -276,7 +280,7 @@
 
                    <TextView
                         android:id="@+id/co2TV"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                        android:layout_marginStart="10dp"
                         android:textFontWeight="300"
