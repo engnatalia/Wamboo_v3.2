@@ -54,5 +54,8 @@
     <string name="speed9">muy lento</string>
     <string name="congrats"><b>GENIAL!</b></string>
     <string name="audio">Eliminar audio</string>
+    <string name="quality">Calidad perdida =</string>
+    <string name="reduction">"Reducción del tamaño = "</string>
+    <string name="poor_quality">Mala calidad; cambia los parámeteros de compresión!</string>
 
 </resources>

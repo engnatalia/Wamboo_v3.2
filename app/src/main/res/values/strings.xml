@@ -24,6 +24,9 @@
 	<string name="initial_battery">Initial battery = </string>
     <string name="remaining_battery">Remaining battery = </string>
     <string name="co2">Associated pollution = </string>
+    <string name="quality">Quality loss = </string>
+    <string name="poor_quality">Bad quality; change compression parameters</string>
+    <string name="reduction">Size reduction = </string>
     <string name="notification_title">Video Compression</string>
     <string name="notification_message">Compression in progress…</string>
     <string name="notification_message_success">Compression successfully completed.</string>

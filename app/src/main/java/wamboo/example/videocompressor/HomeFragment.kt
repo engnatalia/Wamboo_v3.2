@@ -22,6 +22,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
 import androidx.work.*
+import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
 import com.arthenica.ffmpegkit.FFprobeKit
 import com.arthenica.ffmpegkit.MediaInformationSession
@@ -33,6 +34,8 @@ import org.json.JSONObject
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
+import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.math.round
 
 
@@ -75,10 +78,8 @@ class HomeFragment : Fragment() {
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
                     var msg1 = getString(R.string.notification_message_success)
                     Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
-
                     showDataFromPref()
-                    var msg2 = getString(R.string.scroll)
-                    Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
+
                 } else {
                     var msg1 = getString(R.string.notification_message_failure)
                     Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
@@ -88,6 +89,31 @@ class HomeFragment : Fragment() {
                 }else
                 {
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
+
+
+                    if (videoUrl != null){
+                        var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
+                            activity,
+                            videoUrl
+                        )} -i ${FFmpegKitConfig.getSafParameterForRead(
+                            activity,
+                            Uri.parse(compressedFilePath)
+                        )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
+                        var hola=FFmpegKit.execute(command2)
+                        var indexSsim = hola.logs.lastIndex
+                        var ssimLine = hola.logs.get(indexSsim-1)
+                        var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
+                        if (ssim.contains("0.")){
+                            var quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
+                            RoundingMode.UP).toDouble()
+                            binding.quality.text = quality.toString()+"%"}
+                        else{
+                            binding.quality.text =getString(R.string.poor_quality)
+                        }
+                        var msg2 = getString(R.string.scroll)
+                        Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }
 
@@ -113,7 +139,6 @@ class HomeFragment : Fragment() {
                     var msg2 = getString(R.string.notification_message_failure)
                     Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
                 }
-
             }
         }
     }
@@ -142,6 +167,22 @@ class HomeFragment : Fragment() {
             binding.co2TV.setTextColor(Color.parseColor("#6F9F3A"))
             binding.co2TV.text = co2+ "kgCO2"+ "\n"+getString(R.string.congrats)
 
+        }
+        if (compressedSize != null && initialSize != null) {
+
+            var finalSize = compressedSize.substringBefore(" ")
+            var finalS = finalSize.replace(",",".").toDouble()
+            var final = finalS
+            if ((compressedSize.contains("k") && initialSize.contains("M") )||(compressedSize.contains("M") && initialSize.contains("G") ) ||(compressedSize.contains("B") && initialSize.contains("k") )){
+                final=finalS/1000
+            }
+            var initSize = initialSize.substringBefore(" ")
+            var init = initSize.replace(",",".")
+            var sizeReduction = (100- (final?.times(100)?.div(init.toDouble())?.toBigDecimal()?.setScale(2,
+                RoundingMode.UP))?.toDouble()!!).toBigDecimal()?.setScale(2,
+                RoundingMode.UP)
+
+            binding.reduction.text = sizeReduction.toString()+"%"
         }
         //displaying the share button
         binding.shareVideo.visibility = View.VISIBLE
@@ -535,7 +576,7 @@ class HomeFragment : Fragment() {
                     }
                 }
 //check if video is rotated and swap resolution
-                if (side != "null") {
+                if (side != null) {
                     var rotation = side.substringAfter("rotation\":").substringBefore('}')
                     if (rotation == "-90" || rotation == "270"){
                         videoHeight = mediaInformation.mediaInformation.streams[0].width.toString()
