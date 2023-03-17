@@ -57,5 +57,6 @@
     <string name="quality">Calidad perdida =</string>
     <string name="reduction">"Reducción del tamaño = "</string>
     <string name="poor_quality">Mala calidad; cambia los parámeteros de compresión!</string>
+    <string name="get_quality">Calcula la diferencia en la calidad</string>
 
 </resources>

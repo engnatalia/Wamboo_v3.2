@@ -78,7 +78,10 @@ class HomeFragment : Fragment() {
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
                     var msg1 = getString(R.string.notification_message_success)
                     Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
+                    var msg2 = getString(R.string.scroll)
+                    Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
                     showDataFromPref()
+
 
                 } else {
                     var msg1 = getString(R.string.notification_message_failure)
@@ -90,29 +93,35 @@ class HomeFragment : Fragment() {
                 {
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
 
+                    binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
+                        val checked: Boolean = binding.checkboxQuality.isChecked
+                        if (checked) {
+                            if (videoUrl != null){
+                                var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
+                                    activity,
+                                    videoUrl
+                                )} -i ${FFmpegKitConfig.getSafParameterForRead(
+                                    activity,
+                                    Uri.parse(compressedFilePath)
+                                )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
+                                Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+                                var hola=FFmpegKit.execute(command2)
+                                binding.quality.visibility = View.VISIBLE
+                                var indexSsim = hola.logs.lastIndex
+                                var ssimLine = hola.logs.get(indexSsim-1)
+                                var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
+                                if (ssim.contains("0.")){
+                                    var quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
+                                        RoundingMode.UP).toDouble()
+                                    binding.quality.text = quality.toString()+"%"}
+                                else{
+                                    binding.quality.text =getString(R.string.poor_quality)
+                                }
 
-                    if (videoUrl != null){
-                        var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
-                            activity,
-                            videoUrl
-                        )} -i ${FFmpegKitConfig.getSafParameterForRead(
-                            activity,
-                            Uri.parse(compressedFilePath)
-                        )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-                        var hola=FFmpegKit.execute(command2)
-                        var indexSsim = hola.logs.lastIndex
-                        var ssimLine = hola.logs.get(indexSsim-1)
-                        var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
-                        if (ssim.contains("0.")){
-                            var quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
-                            RoundingMode.UP).toDouble()
-                            binding.quality.text = quality.toString()+"%"}
-                        else{
-                            binding.quality.text =getString(R.string.poor_quality)
+                            }
                         }
-                        var msg2 = getString(R.string.scroll)
-                        Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
                     }
+
 
                 }
             }
@@ -386,6 +395,7 @@ class HomeFragment : Fragment() {
             binding.rdOne.isChecked= true
             binding.infob.visibility = View.GONE
             binding.infog.visibility = View.GONE
+            binding.videoView.visibility = View.VISIBLE
             if (::spinner.isInitialized){
                 hideSpinner(spinner)
             }
@@ -487,7 +497,7 @@ class HomeFragment : Fragment() {
             clearPref()
             statsContainer.visibility = View.GONE
             shareVideo.visibility = View.GONE
-
+            binding.checkboxQuality.isChecked = false
             if (videoUrl != null) {
 
                 val value =
@@ -529,6 +539,8 @@ class HomeFragment : Fragment() {
         binding.shareVideo.setOnClickListener {
             ShareCompat.IntentBuilder(requireActivity()).setStream(Uri.parse(compressedFilePath))
                 .setType("video/mp4").setChooserTitle(getString(R.string.share_compressed_video)).startChooser()
+            binding.videoView.visibility = View.GONE
+
         }
     }
 
@@ -741,6 +753,7 @@ class HomeFragment : Fragment() {
                 binding.infou.text = getString(R.string.ultrafast_description)
                 binding.infou.visibility = View.VISIBLE
                 binding.rdOne.isChecked= true
+                binding.quality.text = ""
                 binding.infob.visibility = View.GONE
                 binding.infog.visibility = View.GONE
                 if (::spinner.isInitialized){

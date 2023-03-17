@@ -38,12 +38,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp" />
+                android:layout_marginTop="10dp"
+                android:visibility="gone"/>
 
             <CheckBox android:id="@+id/checkbox_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/audio"/>
+
 
             <RadioGroup
                 android:id="@+id/radioGroup"
@@ -108,6 +110,7 @@
                     android:layout_marginStart="10dp"
                     android:fontFamily="@font/bauhausitalic"
                     android:text="@string/custom_h" />
+
                 <RadioButton
                     android:id="@+id/rdFive"
                     android:layout_width="wrap_content"
@@ -117,7 +120,6 @@
                     android:text="@string/custom_l" />
 
             </RadioGroup>
-
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/compressVideo"
@@ -287,6 +289,10 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
+                <CheckBox android:id="@+id/checkboxQuality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/get_quality"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
