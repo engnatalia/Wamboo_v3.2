@@ -10,8 +10,8 @@
     <string name="ultrafast">Ultrafast</string>
     <string name="good">Good</string>
     <string name="best">Best but slow</string>
-    <string name="custom_h">Custom (high quality)</string>
-    <string name="custom_l">Custom (low quality)</string>
+    <string name="custom_h">Custom (high quality: slower+less compression)</string>
+    <string name="custom_l">Custom (low quality: faster+smaller)</string>
     <string name="ultrafast_description">"Fastest and smallest video, loosing some quality"</string>
     <string name="good_description">"Best quality vs. compression speed and size reduction"</string>
     <string name="best_description">"Best size reduction and quality but it's the slowest"</string>

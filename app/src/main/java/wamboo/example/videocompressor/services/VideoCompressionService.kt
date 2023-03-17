@@ -49,7 +49,8 @@ class VideoCompressionService : Service() {
         val videoResolution =intent?.getStringExtra(ForegroundWorker.VIDEO_RESOLUTION)
         val videoCodec =intent?.getStringExtra(ForegroundWorker.VIDEO_CODEC)
         val compressSpeed =intent?.getStringExtra(ForegroundWorker.COMPRESS_SPEED)
-        compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution, videoCodec, compressSpeed)
+        val audio =intent?.getStringExtra(ForegroundWorker.VIDEO_AUDIO)
+        compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution, videoCodec, compressSpeed,audio)
 
         return START_NOT_STICKY
     }
@@ -117,7 +118,8 @@ class VideoCompressionService : Service() {
         selectedtype: String,
         videoResolution: String?,
         videoCodec: String?,
-        compressSpeed: String?
+        compressSpeed: String?,
+        audio: String?
 
     ) {
         val root: String = Environment.getExternalStorageDirectory().toString()
@@ -189,12 +191,18 @@ class VideoCompressionService : Service() {
 
         when (selectedtype) {
             getString(R.string.ultrafast) -> {
+                /*command = "-y -i ${
+                    FFmpegKitConfig.getSafParameterForRead(
+                        applicationContext,
+                        videoUri
+                    )
+                } -movflags faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"*/
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             "Ultrafast" -> {
                 command = "-y -i ${
@@ -202,7 +210,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 40 -c:a copy -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.good) -> {
                 command = "-y -i ${
@@ -210,7 +218,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx264 -crf 30 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.best) -> {
                 command = "-y -i ${
@@ -218,7 +226,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx265 -crf 30 -c:a copy -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx265 -crf 30 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.custom_h) -> {
                 command = "-y -i ${
@@ -226,7 +234,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v $videoCodec -crf 23 -c:a copy -s $videoResolution -preset $compressSpeed $outPutSafeUri"
+                } -movflags faststart -c:v $videoCodec -crf 23 $audio -s $videoResolution -preset $compressSpeed $outPutSafeUri"
             }
             else -> {
                 command = "-y -i ${
@@ -234,7 +242,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v $videoCodec -crf 40 -c:a copy -s $videoResolution -preset $compressSpeed $outPutSafeUri"
+                } -movflags faststart -c:v $videoCodec -crf 40 $audio -s $videoResolution -preset $compressSpeed $outPutSafeUri"
             }
         }
 

@@ -18,6 +18,7 @@ class ForegroundWorker(
     companion object {
 
         const val VIDEO_CODEC = "videoCodec"
+        const val VIDEO_AUDIO = "audio"
         const val COMPRESS_SPEED = "compressSpeed"
         const val VIDEO_RESOLUTION = "videoResolution"
         const val VideoURI = "videoURI"

@@ -29,6 +29,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
@@ -55,7 +56,7 @@ class HomeFragment : Fragment() {
     private var  compressSpeed =""
     private var index = 7
     private var noBattery = false
-
+    private var audio = "-c:a copy"
     //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
@@ -338,7 +339,7 @@ class HomeFragment : Fragment() {
     // When the user tap on pick video button and other buttons
     private fun initUI() = with(binding) {
         pickVideo.setOnClickListener {
-            videoUrl=null
+
             binding.infou.text = getString(R.string.ultrafast_description)
             binding.infou.visibility = View.VISIBLE
             binding.rdOne.isChecked= true
@@ -360,8 +361,14 @@ class HomeFragment : Fragment() {
 
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
         videoView.setMediaController(MediaController(requireActivity()))
-
-
+        checkboxAudio.setOnCheckedChangeListener{checkboxAudio, i ->
+        val checked: Boolean = checkboxAudio.isChecked
+        if (checked) {
+            audio = "-an"
+        } else {
+            audio = "-c:a copy"
+        }
+        }
         // Handling what will happen when user tap on video compression formats Radio Buttons
         radioGroup.setOnCheckedChangeListener { radioGroup, i ->
             val checked =
@@ -411,9 +418,9 @@ class HomeFragment : Fragment() {
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
                     index=7
-                    spinner = addSpinnerResolution()
                     spinner2 = addSpinnerSpeed()
                     spinner3 = addSpinnerCodec()
+                    spinner = addSpinnerResolution()
 
                 }
                 getString(R.string.custom_l) ->{
@@ -426,9 +433,9 @@ class HomeFragment : Fragment() {
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
                     index=8
-                    spinner = addSpinnerResolution()
                     spinner2 = addSpinnerSpeed()
                     spinner3 = addSpinnerCodec()
+                    spinner = addSpinnerResolution()
 
                 }
             }
@@ -460,7 +467,8 @@ class HomeFragment : Fragment() {
                         .putString(ForegroundWorker.SELECTION_TYPE, selectedtype)
                         .putString(ForegroundWorker.VIDEO_RESOLUTION, videoResolution)
                         .putString(ForegroundWorker.COMPRESS_SPEED, compressSpeed)
-                        .putString(ForegroundWorker.VIDEO_CODEC, videoCodec).build()
+                        .putString(ForegroundWorker.VIDEO_CODEC, videoCodec)
+                        .putString(ForegroundWorker.VIDEO_AUDIO, audio).build()
 
                 // Create the work request
                 val myWorkRequest =
@@ -514,8 +522,34 @@ class HomeFragment : Fragment() {
                         videoUrl
                     )
                 )
+
+
                 videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
                 videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
+                var side = mediaInformation.mediaInformation.streams[0].getStringProperty("side_data_list")
+                when (videoHeight){
+                    "null" ->{
+                        videoHeight = mediaInformation.mediaInformation.streams[1].height.toString()
+                        videoWidth = mediaInformation.mediaInformation.streams[1].width.toString()
+                        side = mediaInformation.mediaInformation.streams[1].getStringProperty("side_data_list")
+                    }
+                }
+//check if video is rotated and swap resolution
+                if (side != "null") {
+                    var rotation = side.substringAfter("rotation\":").substringBefore('}')
+                    if (rotation == "-90" || rotation == "270"){
+                        videoHeight = mediaInformation.mediaInformation.streams[0].width.toString()
+                        videoWidth = mediaInformation.mediaInformation.streams[0].height.toString()
+                        when (videoHeight){
+                            "null" ->{
+                                videoHeight = mediaInformation.mediaInformation.streams[1].width.toString()
+                                videoWidth = mediaInformation.mediaInformation.streams[1].height.toString()
+                            }
+                        }
+                    }
+
+                }
+
                 videoResolution="$videoWidth" + "x" + "$videoHeight"
                 resolutionSpinner = arrayOf(
                     getString(R.string.select_resolution),
@@ -675,9 +709,9 @@ class HomeFragment : Fragment() {
 
             }
             else -> {
-                videoCodec="libx265"
+                videoCodec="libx264"
                 codecSpinner = arrayOf(getString(R.string.select_codec),"H.264","H.265")
-                codecValues = arrayOf("libx265","libx264","libx265")
+                codecValues = arrayOf("libx264","libx264","libx265")
 
             }
         }

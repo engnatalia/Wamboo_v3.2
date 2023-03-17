@@ -35,8 +35,8 @@
     <string name="selected_resolution">Resolución seleccionada:</string>
     <string name="select_resolution">Selecciona resolución</string>
     <string name="no_selected_resolution">Resolución no seleccionada</string>
-    <string name="custom_h">Customizado (calidad alta)</string>
-    <string name="custom_l">Customizado (calidad baja)</string>
+    <string name="custom_h">Customizado (calidad alta: más lento y menos compresión)</string>
+    <string name="custom_l">Customizado (calidad baja: más rápido y más compresión)</string>
     <string name="no_selected_speed">Velocidad no seleccionada</string>
     <string name="selected_speed">Velocidad seleccionada:</string>
     <string name="no_selected_codec">Códec no seleccionado</string>
