@@ -32,7 +32,7 @@
     <string name="notification_message_success">Compression successfully completed.</string>
     <string name="notification_message_failure">Compression failed.</string>
     <string name="waiting">Please wait...</string>
-    <string name="scroll">Scroll down.</string>
+    <string name="scroll">Scroll down to see the stats.</string>
     <string name="notification_background_title">Allow Background Compression!</string>
     <string name="notification_background_body">Tap "OK" and the settings will open; go to the "Battery" option and select "Unrestricted" so the compression keeps working even if you close the app (keep Wamboo opened to compress faster!!)</string>
     <string name="title_home">Eco-compressor</string>
@@ -58,5 +58,6 @@
     <string name="congrats"><b>AWESOME!!</b></string>
     <string name="audio">Remove audio</string>
     <string name="get_quality">Compute the quality difference</string>
+    <string name="quality_completed">Quality computed successfully. Difference of: </string>
 
 </resources>

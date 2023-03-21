@@ -3,7 +3,6 @@ package wamboo.example.videocompressor
 import android.app.*
 import android.content.*
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +11,7 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Html
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,11 +30,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.coroutines.*
-import org.json.JSONObject
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
-import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.math.round
 
@@ -78,8 +76,15 @@ class HomeFragment : Fragment() {
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
                     var msg1 = getString(R.string.notification_message_success)
                     Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
-                    var msg2 = getString(R.string.scroll)
-                    Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
+                    //var msg2 = getString(R.string.scroll)
+                    //Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
+                    AlertDialog.Builder(requireActivity()).apply {
+                        var msg2 = getString(R.string.scroll)
+
+                        setMessage("$msg2").setPositiveButton(
+                            "OK"
+                        ) { _, _ -> (requireActivity()) }
+                    }.create().show()
                     showDataFromPref()
 
 
@@ -104,26 +109,28 @@ class HomeFragment : Fragment() {
                                     activity,
                                     Uri.parse(compressedFilePath)
                                 )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-                                //Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
-                                AlertDialog.Builder(requireActivity()).apply {
-                                    var msg1 = getString(R.string.waiting)
+                                Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
-                                    setMessage("$msg1").setPositiveButton(
-                                        "OK"
-                                    ) { _, _ -> (requireActivity()) }
-                                }.create().show()
                                 var hola=FFmpegKit.execute(command2)
                                 binding.quality.visibility = View.VISIBLE
                                 var indexSsim = hola.logs.lastIndex
                                 var ssimLine = hola.logs.get(indexSsim-1)
                                 var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
+                                var quality = 0.0
                                 if (ssim.contains("0.")){
-                                    var quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
+                                    quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
                                         RoundingMode.UP).toDouble()
                                     binding.quality.text = quality.toString()+"%"}
                                 else{
                                     binding.quality.text =getString(R.string.poor_quality)
                                 }
+                                AlertDialog.Builder(requireActivity()).apply {
+                                    var msg1 = getString(R.string.quality_completed)
+
+                                    setMessage("$msg1"+quality.toString()+"%").setPositiveButton(
+                                        "OK"
+                                    ) { _, _ -> (requireActivity()) }
+                                }.create().show()
 
                             }
                         }
