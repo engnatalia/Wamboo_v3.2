@@ -29,6 +29,7 @@ import com.arthenica.ffmpegkit.MediaInformationSession
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
@@ -63,6 +64,7 @@ class HomeFragment : Fragment() {
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
 
+
     //this receiver will trigger when the compression is completed
     private val videoCompressionCompletedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -74,6 +76,7 @@ class HomeFragment : Fragment() {
                 Log.d("Service", "Broadcast run")
 
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
+
                     var msg1 = getString(R.string.notification_message_success)
                     Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
                     //var msg2 = getString(R.string.scroll)
@@ -97,44 +100,49 @@ class HomeFragment : Fragment() {
                 }else
                 {
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
-
+                    if ( (selectedtype != getString(R.string.custom_h)) && (selectedtype != getString(R.string.custom_l))) {
                     binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
                         val checked: Boolean = binding.checkboxQuality.isChecked
                         if (checked) {
-                            if (videoUrl != null){
-                                var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
-                                    activity,
-                                    videoUrl
-                                )} -i ${FFmpegKitConfig.getSafParameterForRead(
-                                    activity,
-                                    Uri.parse(compressedFilePath)
-                                )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-                                Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+                            /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
+                            snack.setAnchorView(binding.compressVideo)
+                            snack.show()*/
 
-                                var hola=FFmpegKit.execute(command2)
-                                binding.quality.visibility = View.VISIBLE
-                                var indexSsim = hola.logs.lastIndex
-                                var ssimLine = hola.logs.get(indexSsim-1)
-                                var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
-                                var quality = 0.0
-                                if (ssim.contains("0.")){
-                                    quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
-                                        RoundingMode.UP).toDouble()
-                                    binding.quality.text = quality.toString()+"%"}
-                                else{
-                                    binding.quality.text =getString(R.string.poor_quality)
+
+
+                            calculateQuality()
+
+                        }
+
+
+                        }
+                    }else if ((selectedtype == getString(R.string.custom_h)) || (selectedtype == getString(R.string.custom_l))) {
+                        var videoResolutionInit = "$videoWidth" + "x" + "$videoHeight"
+                        if (videoResolution == videoResolutionInit) {
+                            binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
+                                val checked: Boolean = binding.checkboxQuality.isChecked
+                                if (checked) {
+                                    /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
+                                    snack.setAnchorView(binding.compressVideo)
+                                    snack.show()*/
+
+
+
+                                    calculateQuality()
+
                                 }
-                                AlertDialog.Builder(requireActivity()).apply {
-                                    var msg1 = getString(R.string.quality_completed)
 
-                                    setMessage("$msg1"+quality.toString()+"%").setPositiveButton(
-                                        "OK"
-                                    ) { _, _ -> (requireActivity()) }
-                                }.create().show()
 
                             }
+                        } else {
+                            binding.quality.visibility= View.GONE
+                            binding.qualityDescription.visibility= View.GONE
+                            binding.checkboxQuality.visibility= View.GONE
+
                         }
                     }
+
+
 
 
                 }
@@ -165,7 +173,46 @@ class HomeFragment : Fragment() {
             }
         }
     }
+private fun calculateQuality(){
+    binding.quality.visibility= View.GONE
+    binding.qualityDescription.visibility= View.GONE
+    binding.checkboxQuality.visibility= View.GONE
+    var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
+        activity,
+        videoUrl
+    )} -i ${FFmpegKitConfig.getSafParameterForRead(
+        activity,
+        Uri.parse(compressedFilePath)
+    )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
+    Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
+    var hola=FFmpegKit.execute(command2)
+    binding.quality.visibility = View.VISIBLE
+    var indexSsim = hola.logs.lastIndex
+    var ssimLine = hola.logs.get(indexSsim-1)
+    var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
+    var quality = 0.0
+    var msg1 = ""
+    if (ssim.contains("0.")){
+        quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
+            RoundingMode.UP).toDouble()
+        binding.quality.text = quality.toString()+"%"
+        msg1 = getString(R.string.quality_completed)+quality.toString()+"%"}
+    else{
+        binding.quality.text =getString(R.string.poor_quality)
+        msg1=getString(R.string.poor_quality)
+    }
+    AlertDialog.Builder(requireActivity()).apply {
+
+
+        setMessage("$msg1").setPositiveButton(
+            "OK"
+        ) { _, _ -> (requireActivity()) }
+    }.create().show()
+    binding.quality.visibility= View.VISIBLE
+    binding.qualityDescription.visibility= View.VISIBLE
+    binding.checkboxQuality.visibility= View.VISIBLE
+}
     private fun showStats(
         initialSize: String?,
         compressedSize: String?,

@@ -57,7 +57,7 @@
     <string name="speed9">very slow</string>
     <string name="congrats"><b>AWESOME!!</b></string>
     <string name="audio">Remove audio</string>
-    <string name="get_quality">Compute the quality difference</string>
+    <string name="get_quality">Compute the quality difference (beta)</string>
     <string name="quality_completed">Quality computed successfully. Difference of: </string>
 
 </resources>
