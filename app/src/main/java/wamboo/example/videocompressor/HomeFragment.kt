@@ -104,7 +104,14 @@ class HomeFragment : Fragment() {
                                     activity,
                                     Uri.parse(compressedFilePath)
                                 )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-                                Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+                                //Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+                                AlertDialog.Builder(requireActivity()).apply {
+                                    var msg1 = getString(R.string.waiting)
+
+                                    setMessage("$msg1").setPositiveButton(
+                                        "OK"
+                                    ) { _, _ -> (requireActivity()) }
+                                }.create().show()
                                 var hola=FFmpegKit.execute(command2)
                                 binding.quality.visibility = View.VISIBLE
                                 var indexSsim = hola.logs.lastIndex
