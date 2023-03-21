@@ -272,7 +272,7 @@ class VideoCompressionService : Service() {
                 //val pollution = round(kwh*0.519)
                 val pollution = kwh*519
                 val co2 = pollution.toBigDecimal().setScale(5,RoundingMode.UP).toDouble()
-                //send broadcast to HomeFragment that the compression is completed															  
+                //send broadcast to HomeFragment that the compression is completed
                 val intent = Intent(Constants.WORK_COMPLETED_ACTION)
                 intent.putExtra(HomeFragment.RETURN_CODE, returnCode.toString())
                 intent.putExtra(HomeFragment.URI_PATH, uriPath.toString())

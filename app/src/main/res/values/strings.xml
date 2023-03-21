@@ -59,5 +59,6 @@
     <string name="audio">Remove audio</string>
     <string name="get_quality">Compute the quality difference (beta)</string>
     <string name="quality_completed">Quality computed successfully. Difference of: </string>
+    <string name="quality_progress">Please, wait until a new message pops up</string>
 
 </resources>

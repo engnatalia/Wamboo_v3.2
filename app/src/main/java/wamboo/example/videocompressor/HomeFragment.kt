@@ -101,18 +101,18 @@ class HomeFragment : Fragment() {
                 {
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
                     if ( (selectedtype != getString(R.string.custom_h)) && (selectedtype != getString(R.string.custom_l))) {
-                    binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
-                        val checked: Boolean = binding.checkboxQuality.isChecked
-                        if (checked) {
-                            /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
-                            snack.setAnchorView(binding.compressVideo)
-                            snack.show()*/
+                        binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
+                            val checked: Boolean = binding.checkboxQuality.isChecked
+                            if (checked) {
+                                /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
+                                snack.setAnchorView(binding.compressVideo)
+                                snack.show()*/
 
 
 
-                            calculateQuality()
+                                calculateQuality()
 
-                        }
+                            }
 
 
                         }
@@ -173,46 +173,46 @@ class HomeFragment : Fragment() {
             }
         }
     }
-private fun calculateQuality(){
-    binding.quality.visibility= View.GONE
-    binding.qualityDescription.visibility= View.GONE
-    binding.checkboxQuality.visibility= View.GONE
-    var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
-        activity,
-        videoUrl
-    )} -i ${FFmpegKitConfig.getSafParameterForRead(
-        activity,
-        Uri.parse(compressedFilePath)
-    )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-    Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+    private fun calculateQuality(){
+        binding.quality.visibility= View.GONE
+        binding.qualityDescription.visibility= View.GONE
+        binding.checkboxQuality.visibility= View.GONE
+        var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
+            activity,
+            videoUrl
+        )} -i ${FFmpegKitConfig.getSafParameterForRead(
+            activity,
+            Uri.parse(compressedFilePath)
+        )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
+        Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
-    var hola=FFmpegKit.execute(command2)
-    binding.quality.visibility = View.VISIBLE
-    var indexSsim = hola.logs.lastIndex
-    var ssimLine = hola.logs.get(indexSsim-1)
-    var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
-    var quality = 0.0
-    var msg1 = ""
-    if (ssim.contains("0.")){
-        quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
-            RoundingMode.UP).toDouble()
-        binding.quality.text = quality.toString()+"%"
-        msg1 = getString(R.string.quality_completed)+quality.toString()+"%"}
-    else{
-        binding.quality.text =getString(R.string.poor_quality)
-        msg1=getString(R.string.poor_quality)
+        var hola=FFmpegKit.execute(command2)
+        binding.quality.visibility = View.VISIBLE
+        var indexSsim = hola.logs.lastIndex
+        var ssimLine = hola.logs.get(indexSsim-1)
+        var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
+        var quality = 0.0
+        var msg1 = ""
+        if (ssim.contains("0.")){
+            quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
+                RoundingMode.UP).toDouble()
+            binding.quality.text = quality.toString()+"%"
+            msg1 = getString(R.string.quality_completed)+quality.toString()+"%"}
+        else{
+            binding.quality.text =getString(R.string.poor_quality)
+            msg1=getString(R.string.poor_quality)
+        }
+        AlertDialog.Builder(requireActivity()).apply {
+
+
+            setMessage("$msg1").setPositiveButton(
+                "OK"
+            ) { _, _ -> (requireActivity()) }
+        }.create().show()
+        binding.quality.visibility= View.VISIBLE
+        binding.qualityDescription.visibility= View.VISIBLE
+        binding.checkboxQuality.visibility= View.VISIBLE
     }
-    AlertDialog.Builder(requireActivity()).apply {
-
-
-        setMessage("$msg1").setPositiveButton(
-            "OK"
-        ) { _, _ -> (requireActivity()) }
-    }.create().show()
-    binding.quality.visibility= View.VISIBLE
-    binding.qualityDescription.visibility= View.VISIBLE
-    binding.checkboxQuality.visibility= View.VISIBLE
-}
     private fun showStats(
         initialSize: String?,
         compressedSize: String?,
@@ -474,12 +474,12 @@ private fun calculateQuality(){
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
         videoView.setMediaController(MediaController(requireActivity()))
         checkboxAudio.setOnCheckedChangeListener{checkboxAudio, i ->
-        val checked: Boolean = checkboxAudio.isChecked
-        if (checked) {
-            audio = "-an"
-        } else {
-            audio = "-c:a copy"
-        }
+            val checked: Boolean = checkboxAudio.isChecked
+            if (checked) {
+                audio = "-an"
+            } else {
+                audio = "-c:a copy"
+            }
         }
         // Handling what will happen when user tap on video compression formats Radio Buttons
         radioGroup.setOnCheckedChangeListener { radioGroup, i ->
@@ -619,15 +619,15 @@ private fun calculateQuality(){
         when (videoUrl) {
             null -> {
 
-                    binding.infou.text = getString(R.string.ultrafast_description)
-                    binding.infou.visibility = View.VISIBLE
-                    binding.rdOne.isChecked= true
-                    binding.infob.visibility = View.GONE
-                    binding.infog.visibility = View.GONE
+                binding.infou.text = getString(R.string.ultrafast_description)
+                binding.infou.visibility = View.VISIBLE
+                binding.rdOne.isChecked= true
+                binding.infob.visibility = View.GONE
+                binding.infog.visibility = View.GONE
                 if (::spinner.isInitialized){
                     hideSpinner(spinner)
                 }
-            index=0
+                index=0
 
             }
             else -> {
@@ -709,7 +709,7 @@ private fun calculateQuality(){
                         getString(R.string.selected_resolution) + " " + resolutionSpinner[position],
                         Toast.LENGTH_SHORT
                     ).show()
-                        }
+                    }
                 }
 
             }
@@ -880,11 +880,11 @@ private fun calculateQuality(){
     }
 
 
-            /* This code is using the registerForActivityResult method to launch an activity for a result,
-    specifically to select a video file. If the result code is Activity.RESULT_OK, it means a video has been successfully selected.
-     The selected video's Uri is extracted from the Intent returned from the launched activity.
-      The code then sets the Uri to the VideoView and starts playing the video.
-      If there is an error in the process, an error message is displayed to the user via a Toast. */
+    /* This code is using the registerForActivityResult method to launch an activity for a result,
+specifically to select a video file. If the result code is Activity.RESULT_OK, it means a video has been successfully selected.
+The selected video's Uri is extracted from the Intent returned from the launched activity.
+The code then sets the Uri to the VideoView and starts playing the video.
+If there is an error in the process, an error message is displayed to the user via a Toast. */
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {

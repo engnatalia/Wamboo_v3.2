@@ -241,7 +241,7 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
-				<LinearLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -333,11 +333,11 @@
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                   <TextView
+                    <TextView
                         android:id="@+id/co2TV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                       android:layout_marginStart="10dp"
+                        android:layout_marginStart="10dp"
                         android:textFontWeight="300"
                         android:textSize="20sp" />
 
