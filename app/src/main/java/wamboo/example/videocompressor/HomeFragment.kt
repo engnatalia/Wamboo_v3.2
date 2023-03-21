@@ -409,7 +409,7 @@ class HomeFragment : Fragment() {
             binding.rdOne.isChecked= true
             binding.infob.visibility = View.GONE
             binding.infog.visibility = View.GONE
-            binding.videoView.visibility = View.VISIBLE
+            //binding.videoView.visibility = View.VISIBLE
             if (::spinner.isInitialized){
                 hideSpinner(spinner)
             }
@@ -544,7 +544,8 @@ class HomeFragment : Fragment() {
 
             } else {
                 // If picked video is null or video is not picked
-               Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+                binding.videoView.visibility = View.GONE
+                Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -689,6 +690,7 @@ class HomeFragment : Fragment() {
         var speedValues = arrayOf("")
         when (videoUrl) {
             null -> {
+                binding.videoView.visibility = View.GONE
                 Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
                 binding.infou.text = getString(R.string.ultrafast_description)
@@ -852,7 +854,7 @@ class HomeFragment : Fragment() {
 
 
                         //   val video_file: File? = uri?.let { FileUtils().getFileFromUri(this, it) }
-
+                        binding.videoView.visibility=View.VISIBLE
                         // now set the video uri in the VideoView
                         binding.videoView.setVideoURI(uri)
 
