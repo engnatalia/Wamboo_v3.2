@@ -59,6 +59,6 @@
     <string name="poor_quality">Mala calidad; cambia los parámeteros de compresión!</string>
     <string name="get_quality">Calcula la diferencia en la calidad (beta)</string>
     <string name="quality_completed">"Calidad calculada correctamente. Diferencia de: "</string>
-    <string name="quality_progress">Por favor, espera a que aparezca el mensaje de finalización del cáculo.</string>
+    <string name="quality_progress">Por favor, espera a que aparezca el resultado.</string>
 
 </resources>

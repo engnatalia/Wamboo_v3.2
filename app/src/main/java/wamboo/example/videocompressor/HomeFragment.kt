@@ -101,6 +101,10 @@ class HomeFragment : Fragment() {
                 {
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
                     if ( (selectedtype != getString(R.string.custom_h)) && (selectedtype != getString(R.string.custom_l))) {
+                        binding.quality.text =""
+                        binding.quality.visibility= View.VISIBLE
+                        binding.qualityDescription.visibility= View.VISIBLE
+                        binding.checkboxQuality.visibility= View.VISIBLE
                         binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
                             val checked: Boolean = binding.checkboxQuality.isChecked
                             if (checked) {
@@ -119,6 +123,10 @@ class HomeFragment : Fragment() {
                     }else if ((selectedtype == getString(R.string.custom_h)) || (selectedtype == getString(R.string.custom_l))) {
                         var videoResolutionInit = "$videoWidth" + "x" + "$videoHeight"
                         if (videoResolution == videoResolutionInit) {
+                            binding.quality.text =""
+                            binding.quality.visibility= View.VISIBLE
+                            binding.qualityDescription.visibility= View.VISIBLE
+                            binding.checkboxQuality.visibility= View.VISIBLE
                             binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
                                 val checked: Boolean = binding.checkboxQuality.isChecked
                                 if (checked) {
@@ -138,7 +146,7 @@ class HomeFragment : Fragment() {
                             binding.quality.visibility= View.GONE
                             binding.qualityDescription.visibility= View.GONE
                             binding.checkboxQuality.visibility= View.GONE
-
+                            binding.quality.text =""
                         }
                     }
 
@@ -177,6 +185,7 @@ class HomeFragment : Fragment() {
         binding.quality.visibility= View.GONE
         binding.qualityDescription.visibility= View.GONE
         binding.checkboxQuality.visibility= View.GONE
+        binding.quality.text =""
         var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
             activity,
             videoUrl
@@ -184,7 +193,7 @@ class HomeFragment : Fragment() {
             activity,
             Uri.parse(compressedFilePath)
         )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-        Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.waiting)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+        Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.quality_progress)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
         var hola=FFmpegKit.execute(command2)
         binding.quality.visibility = View.VISIBLE
