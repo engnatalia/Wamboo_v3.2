@@ -197,8 +197,8 @@ class HomeFragment : Fragment() {
 
         var hola=FFmpegKit.execute(command2)
         binding.quality.visibility = View.VISIBLE
-        var indexSsim = hola.logs.lastIndex
-        var ssimLine = hola.logs.get(indexSsim-1)
+        var indexSsim = hola.logs.size
+        var ssimLine = hola.logs.get(indexSsim-2)
         var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
         var quality = 0.0
         var msg1 = ""
