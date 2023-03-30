@@ -39,12 +39,14 @@
                 android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:contentDescription="video view"/>
 
             <CheckBox android:id="@+id/checkbox_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/audio"/>
+                android:text="@string/audio"
+                android:contentDescription="remove audio"/>
 
 
             <RadioGroup
@@ -377,6 +379,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:background="@color/white"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo"
+        android:importantForAccessibility="no"/>
 
 </RelativeLayout>

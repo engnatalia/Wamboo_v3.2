@@ -2,7 +2,10 @@ package wamboo.example.videocompressor
 
 import android.app.*
 import android.content.*
+import android.content.pm.PackageManager
 import android.graphics.Color
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CaptureRequest
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +23,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.work.*
 import com.arthenica.ffmpegkit.FFmpegKit
@@ -36,7 +40,9 @@ import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
 import java.math.RoundingMode
 import kotlin.math.round
-
+import android.Manifest
+import android.webkit.PermissionRequest
+import androidx.core.app.ActivityCompat
 
 @Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
@@ -206,7 +212,7 @@ class HomeFragment : Fragment() {
             quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
                 RoundingMode.UP).toDouble()
             binding.quality.text = quality.toString()+"%"
-            msg1 = getString(R.string.quality_completed)+quality.toString()+"%"}
+            msg1 = getString(R.string.quality_completed)+" "+quality.toString()+"%"}
         else{
             binding.quality.text =getString(R.string.poor_quality)
             msg1=getString(R.string.poor_quality)
@@ -326,14 +332,17 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadAd()
         checkNotificationPermission()
+        checkCameraPermission()
         initUI()
         showLoader()
     }
 
     private fun checkNotificationPermission() {
+
         val notificationManager =
             requireActivity().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val areNotificationsEnabled = notificationManager.areNotificationsEnabled()
+
         if (!areNotificationsEnabled) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 // Create a channel for your notifications
@@ -356,6 +365,39 @@ class HomeFragment : Fragment() {
             }
 
         }
+
+    }
+    private fun checkCameraPermission() {
+        val requestPermissionLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.RequestPermission()
+            ) { isGranted: Boolean ->
+                if (isGranted) {
+                    Log.i("Permission: ", "Granted")
+                } else {
+                    Log.i("Permission: ", "Denied")
+                }
+            }
+
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // You can use the API that requires the permission.
+            }
+            else -> {
+                // You can directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+
+
+                requestPermissionLauncher.launch(
+                    Manifest.permission.CAMERA,
+                )
+
+            }
+        }
+
 
     }
 
@@ -470,10 +512,27 @@ class HomeFragment : Fragment() {
                 hideSpinner(spinner)
             }
             if (isBatteryOptimizationDisabled()) {
+
                 shareVideo.visibility = View.GONE
-                val intent = Intent(Intent.ACTION_PICK)
-                intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
-                resultLauncher.launch(intent)
+                when {
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
+                        val intent2 = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+                        val chooser = Intent.createChooser(intent, "Some text here")
+                        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(intent2))
+                        resultLauncher.launch(chooser)                    }
+                    else -> {
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.setDataAndType(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, "video/*")
+                        resultLauncher.launch(intent)
+
+                    }
+                }
+
 
 
             }
