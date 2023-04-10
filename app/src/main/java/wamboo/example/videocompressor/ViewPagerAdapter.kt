@@ -10,14 +10,15 @@ class ViewPagerAdapter(fragmentManager: FragmentActivity) : FragmentStateAdapter
 
     /// below function used to tell total number to tabs displyaed in viewpager
     override fun getItemCount(): Int {
-        return 2
+        return 3
     }
 
     /// return specific fragment based on index.
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> HomeFragment.newInstance()
-            else -> InfoFragment.newInstance()
+            1 -> InfoFragment.newInstance()
+            else -> HistoryFragment.newInstance()
         }
     }
 }

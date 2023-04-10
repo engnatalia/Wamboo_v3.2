@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Wamboo</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="intro">Video is the type of data that we consume the most and the most complicated to process in electronic devices, leading to tons of CO2 emissions every year. </string>
 	<string name="body">By using Wamboo, you can reduce the size of your videos up to 90%, to save memory not only in your phone, but also in the social media servers (big PCs that store of digital information) if you share them. This way, with smaller videos, you will reduce your carbon footprint. In addition, Wamboo is efficient because it minimizes the battery usage of the phone while compressing the videos and it shows the associated pollution when some battery is wasted. In traditional compression methods the phone’s resources are not used efficiently and the battery usage is maximized leading to pollution as the phone needs to be charged more often, consuming more electrical energy (with the associated costs of electricity for the users). </string>
     <string name="body2">This way, you\'ll also save money in storage (hard drives, the Cloud ...) and in electricity!</string>
@@ -31,12 +30,14 @@
     <string name="notification_message">Compression in progress…</string>
     <string name="notification_message_success">Compression successfully completed.</string>
     <string name="notification_message_failure">Compression failed.</string>
-    <string name="waiting">Please wait...</string>
+    <string name="select_compression">Select Compress option</string>
+	<string name="waiting">Please wait...</string>
     <string name="scroll">Scroll down to see the stats.</string>
     <string name="notification_background_title">Allow Background Compression!</string>
     <string name="notification_background_body">Tap "OK" and the settings will open; go to the "Battery" option and select "Unrestricted" so the compression keeps working even if you close the app (keep Wamboo opened to compress faster!!)</string>
     <string name="title_home">Eco-compressor</string>
     <string name="title_information">Information</string>
+    <string name="title_history">History</string>
     <string name="selected_resolution">Selected resolution:</string>
     <string name="select_resolution">Select resolution</string>
     <string name="no_selected_resolution">No resolution selected</string>
@@ -60,5 +61,13 @@
     <string name="get_quality">Compute the quality difference (beta)</string>
     <string name="quality_completed">Quality computed successfully. Difference of:</string>
     <string name="quality_progress">Please, wait until the result pops up</string>
+	<string name="reset">Reset</string>c
+    <string name="select_dates">Select dates</string>
+    <string name="delete_data">Delete data</string>
+    <string name="delete_all">Delete all</string>
+    <string name="daily_chart">Daily chart</string>
+    <string name="final_chart">History</string>
+    <string name="no_history">No History Available!</string>
+    <string name="no_record">No Record Found!</string>
 
 </resources>

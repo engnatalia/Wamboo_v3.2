@@ -5,11 +5,16 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CheckBox
 import android.widget.Toast
+import android.os.PowerManager								   
 import androidx.appcompat.app.ActionBar
+import androidx.activity.viewModels										   
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint											
 import wamboo.example.videocompressor.databinding.ActivityMainBinding
+import wamboo.example.videocompressor.vm.CompressViewModel														  
 
+@AndroidEntryPoint				  
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {
@@ -22,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         var hometab = getString(R.string.title_home)
         var infotab = getString(R.string.title_information)
-        var tabTitles = arrayOf(hometab, infotab)
+		var historytab = getString(R.string.title_history)
+        var tabTitles = arrayOf(hometab, infotab, historytab)
         setContentView(binding.root)
 
         /* adapter for viewpager to display tabs */
@@ -30,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
         /// set adapter to viewpager
         binding.viewPager.adapter = adapter
+		//binding.viewPager.isUserInputEnabled = false
 
         /* attach viewpager with tabLayout to update its label when page change
         *  assign tab labels
@@ -61,4 +68,9 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setCustomView(R.layout.actionbar_title)
     }
 
+	/*override fun onStop() {
+        super.onStop()
+
+
+    }*/
 }

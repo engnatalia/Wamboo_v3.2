@@ -46,11 +46,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/audio"
-                android:contentDescription="remove audio"/>
+                android:contentDescription="remove audio"
+				android:visibility="gone"/>
 
 
             <RadioGroup
                 android:id="@+id/radioGroup"
+				android:visibility="gone"																						
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
@@ -133,8 +135,29 @@
                 android:fontFamily="@font/bauhausregular"
                 android:text="@string/compress_video"
                 android:textColor="@color/white"
-                android:textFontWeight="700" />
+                android:textFontWeight="700" 
+				android:visibility="gone"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/shareVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/custum_button"
+                android:fontFamily="@font/bauhausregular"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/share_compressed_video"
+                android:textColor="@color/white"
+                android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/dataTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/black"
+                android:textSize="20dp" />										  
 
             <LinearLayout
                 android:id="@+id/statsContainer"
@@ -347,19 +370,17 @@
 
             </LinearLayout>
 
-
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/shareVideo"
-                android:layout_width="wrap_content"
+                android:id="@+id/reset"
+                android:layout_width="200dp"
                 android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/custum_button"
                 android:fontFamily="@font/bauhausregular"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:text="@string/share_compressed_video"
+                android:text="@string/reset"
                 android:textColor="@color/white"
+                android:textFontWeight="700"
                 android:visibility="gone" />
 
             <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"

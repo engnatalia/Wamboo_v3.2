@@ -1,10 +1,30 @@
 package wamboo.example.videocompressor
 
 import android.content.ContentResolver
+import android.content.Context
+import android.content.DialogInterface
+import android.content.DialogInterface.OnClickListener
+import android.graphics.DashPathEffect							  
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import wamboo.example.videocompressor.models.CompressChartView
+import wamboo.example.videocompressor.models.FinalChartData
 import java.text.DecimalFormat
-
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 // This function returns the file size in human readable format . Like it will take in size and return the size in kb or mb which can be
 // displayed to the user .
 fun fileSize(size2: Long): String {
@@ -56,4 +76,138 @@ fun Uri.length(contentResolver: ContentResolver): Long {
     } else {
         return -1L
     }
+}
+fun getCalenderObject(
+    year: Int,
+    month: Int,
+    Day: Int,
+    start: Boolean = true
+): Calendar {
+    return Calendar.getInstance().apply {
+        set(Calendar.YEAR, year)
+        set(Calendar.MONTH, month)
+        set(Calendar.DAY_OF_MONTH, Day)
+        if (start) {
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+        } else {
+            set(Calendar.HOUR_OF_DAY, 23)
+            set(Calendar.MINUTE, 59)
+        }
+    }
+}
+
+fun showMessage(context: Context, msg: String) {
+    Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+}
+
+fun showAlertDialog(context: Context, listener: OnClickListener) {
+    AlertDialog.Builder(context).setTitle("Delete!").setMessage("Are you sure you want to delete")
+        .setPositiveButton(
+            "Yes", listener
+        ).setNegativeButton("No") { p0, p1 ->
+            p0?.dismiss()
+        }.setCancelable(false).create().show()
+}
+
+const val fast = "Fast"
+const val medium = "Medium"
+
+fun setUpLineChart(
+    mChart: LineChart,
+    finalChartData: List<FinalChartData>,
+    isFileChart: Boolean = false
+) {
+
+    val min = finalChartData.minOfOrNull { it.value }
+    val max = finalChartData.maxOfOrNull { it.value }
+
+    val valuesList = ArrayList(finalChartData.mapIndexed { index, item ->
+        Entry(index.toFloat(), item.value.toFloat())
+    })
+
+
+    with(mChart) {
+        refreshDrawableState()
+        setTouchEnabled(false)
+        setPinchZoom(false)
+        extraRightOffset = 20f
+        extraLeftOffset = 5f
+        setScaleEnabled(false)
+        legend.isEnabled = false
+
+
+        val xAxis: XAxis = mChart.xAxis
+        xAxis.granularity = 1f
+        if (valuesList.size < 5) {
+            xAxis.setLabelCount(valuesList.size, true)
+        } else {
+            xAxis.setLabelCount(5, true)
+        }
+
+        xAxis.setCenterAxisLabels(valuesList.size == 1)
+
+        xAxis.spaceMax = 0.1f
+        xAxis.spaceMin = 0.1f
+        xAxis.textSize = 9f
+        xAxis.isEnabled = true
+        xAxis.setDrawGridLines(false)
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        val yAxis: YAxis = mChart.axisLeft
+        yAxis.setCenterAxisLabels(true)
+        yAxis.axisMinimum = if (valuesList.size == 1) 0f else min?.toFloat() ?: 0f
+        yAxis.axisMaximum = max?.toFloat() ?: 0f
+
+        if (valuesList.size < 5) {
+            yAxis.setLabelCount(valuesList.size, true)
+        } else {
+            yAxis.setLabelCount(5, true)
+        }
+
+        if (isFileChart) {
+            yAxis.valueFormatter = object : ValueFormatter() {
+                override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                    return "${String.format("%.2f", value)} MB"
+                }
+            }
+        }
+
+        xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                return try {
+                    finalChartData[value.toInt()].date
+                } catch (e: Exception) {
+                    ""
+                }
+            }
+        }
+    }
+
+
+    val set1 = LineDataSet(valuesList, "")
+    set1.setDrawIcons(false)
+    set1.enableDashedLine(10f, 5f, 0f)
+    set1.enableDashedHighlightLine(10f, 5f, 0f)
+    /*set1.color = Color.DKGRAY
+    set1.setCircleColor(Color.DKGRAY)*/
+    set1.lineWidth = 1f
+    set1.circleRadius = 3f
+    set1.setDrawCircleHole(false)
+    set1.valueTextSize = 9f
+    set1.setDrawFilled(false)
+    set1.formLineWidth = 1f
+    set1.formLineDashEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
+    set1.formSize = 15f
+
+    val dataSets: ArrayList<ILineDataSet> = ArrayList()
+    dataSets.add(set1)
+    val data = LineData(dataSets)
+
+    mChart.axisRight.isEnabled = false
+    mChart.description.isEnabled = false
+
+    mChart.data = data
+    mChart.notifyDataSetChanged();
+    mChart.invalidate();
 }

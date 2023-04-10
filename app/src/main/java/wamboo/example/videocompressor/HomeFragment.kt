@@ -19,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.isVisible									 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -65,7 +66,6 @@ class HomeFragment : Fragment() {
     private var index = 7
     private var noBattery = false
     private var audio = "-c:a copy"
-    //private lateinit var progressDialog: ProgressDialog
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
@@ -76,8 +76,6 @@ class HomeFragment : Fragment() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Constants.WORK_COMPLETED_ACTION) {
                 progressDialog.dismiss()
-                // Do something when the WorkManager completes its work
-                // For example, update UI, show a notification, etc.
 
                 Log.d("Service", "Broadcast run")
 
@@ -85,8 +83,6 @@ class HomeFragment : Fragment() {
 
                     var msg1 = getString(R.string.notification_message_success)
                     Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
-                    //var msg2 = getString(R.string.scroll)
-                    //Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
                     AlertDialog.Builder(requireActivity()).apply {
                         var msg2 = getString(R.string.scroll)
 
@@ -174,7 +170,6 @@ class HomeFragment : Fragment() {
                 // For example, update UI, show a notification, etc.
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
                     val percentage = intent.getStringExtra("percentage")
-                    //progressDialog.setMessage("Please wait...$percentage")
                     var msg = getString(R.string.waiting)
                     progressDialog.setMessage("$msg" + "$percentage")
                     if (progressDialog.isShowing.not()) {
@@ -236,7 +231,11 @@ class HomeFragment : Fragment() {
         remainingBattery: String?,
         co2: String?
     ) {
+
         //showing stats data in the textviews
+		binding.pickVideo.visibility = View.VISIBLE
+        binding.reset.visibility = View.VISIBLE
+        binding.shareVideo.visibility = View.VISIBLE
         binding.statsContainer.visibility = View.VISIBLE
         binding.initialSizeTV.text = initialSize
         binding.compressedSizeTV.text = compressedSize
@@ -269,8 +268,7 @@ class HomeFragment : Fragment() {
 
             binding.reduction.text = sizeReduction.toString()+"%"
         }
-        //displaying the share button
-        binding.shareVideo.visibility = View.VISIBLE
+
 
     }
 
@@ -299,7 +297,7 @@ class HomeFragment : Fragment() {
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
 
-                    clearPref()
+                    //clearPref()
                     requireActivity().finish()
                 }
 
@@ -320,7 +318,7 @@ class HomeFragment : Fragment() {
                 pref.getString(CO2, "")
             )
 
-            clearPref()
+            //clearPref()
 
         }
     }
@@ -473,15 +471,7 @@ class HomeFragment : Fragment() {
 
     fun openBatteryUsagePage(ctx: Context) {
         val powerUsageIntent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        /*val resolveInfo = ctx.packageManager.resolveActivity(powerUsageIntent, 0)
-        // check that the Battery app exists on this device
-        if (resolveInfo != null) {
-            ctx.startActivity(powerUsageIntent)
-        } else Toast.makeText(
-            ctx,
-            "Battery Setting not found in this device please manually go to setting and enable background task",
-            Toast.LENGTH_LONG
-        ).show()*/
+
 
         powerUsageIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         val uri = Uri.fromParts("package", requireActivity().packageName, null)
@@ -500,6 +490,9 @@ class HomeFragment : Fragment() {
     // Here we are initialising everything and setting click listeners on the code . Like what will happen
     // When the user tap on pick video button and other buttons
     private fun initUI() = with(binding) {
+		reset.setOnClickListener {
+            resetViews()
+        }						  
         pickVideo.setOnClickListener {
 
             binding.infou.text = getString(R.string.ultrafast_description)
@@ -507,7 +500,6 @@ class HomeFragment : Fragment() {
             binding.rdOne.isChecked= true
             binding.infob.visibility = View.GONE
             binding.infog.visibility = View.GONE
-            //binding.videoView.visibility = View.VISIBLE
             if (::spinner.isInitialized){
                 hideSpinner(spinner)
             }
@@ -560,7 +552,6 @@ class HomeFragment : Fragment() {
                     binding.infog.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infou.visibility = View.GONE
-                    //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
                         hideSpinner(spinner2)
@@ -571,7 +562,6 @@ class HomeFragment : Fragment() {
                     binding.infob.visibility = View.VISIBLE
                     binding.infog.visibility = View.GONE
                     binding.infou.visibility = View.GONE
-                    //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
                         hideSpinner(spinner2)
@@ -582,7 +572,6 @@ class HomeFragment : Fragment() {
                     binding.infou.visibility = View.VISIBLE
                     binding.infob.visibility = View.GONE
                     binding.infog.visibility = View.GONE
-                    //binding.infoc.visibility = View.GONE
                     if (::spinner.isInitialized){
                         hideSpinner(spinner)
                         hideSpinner(spinner2)
@@ -623,17 +612,17 @@ class HomeFragment : Fragment() {
 
         compressVideo.setOnClickListener {
 
-            clearPref()
+            //clearPref()
             statsContainer.visibility = View.GONE
             shareVideo.visibility = View.GONE
             binding.checkboxQuality.isChecked = false
             if (videoUrl != null) {
 
+				compressVideo.isVisible = false													 
                 val value =
                     fileSize(videoUrl!!.length(requireActivity().contentResolver))
                 editor.putString(INITIAL_SIZE, value)
                 editor.commit()
-                //progressDialog.show()
 
                 // When the compress video button is clicked we check if video is already playing then we pause it
                 if (videoView.isPlaying) {
@@ -658,6 +647,7 @@ class HomeFragment : Fragment() {
                 WorkManager.getInstance(requireContext()).enqueue(myWorkRequest)
 
             } else {
+
                 // If picked video is null or video is not picked
                 binding.videoView.visibility = View.GONE
                 Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
@@ -673,7 +663,20 @@ class HomeFragment : Fragment() {
 
         }
     }
+private fun resetViews() {
+    with(binding) {
 
+        clearPref()
+        pickVideo.isVisible = true
+        radioGroup.isVisible=false
+        statsContainer.isVisible = false
+        videoView.isVisible = false
+        checkboxAudio.isVisible=false
+        shareVideo.isVisible=false
+        compressVideo.isVisible = false
+        reset.isVisible = false
+    }
+}
     private fun addSpinnerResolution():Spinner {
 
         val spinner = Spinner(requireContext())
@@ -861,7 +864,6 @@ class HomeFragment : Fragment() {
         }
         // Add Spinner to LinearLayout
 
-        //binding.radioGroup.addView(spinner)
         if (index > 0) {
             binding.radioGroup.addView(spinner, index)
         }
@@ -940,7 +942,17 @@ class HomeFragment : Fragment() {
         return spinner
 
     }
+ private fun visibleViews() {
+        with(binding) {
+            pickVideo.isVisible = false
+            videoView.isVisible = true
+            radioGroup.isVisible=true
+            checkboxAudio.isVisible=true
+            compressVideo.isVisible = true
 
+			 
+        }
+		}
     private fun hideSpinner(spinner: Spinner) {
         spinner.visibility= View.GONE
         binding.radioGroup.removeView(spinner)
@@ -957,6 +969,7 @@ If there is an error in the process, an error message is displayed to the user v
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 // There are no request codes
+                visibleViews()
                 val data: Intent? = result.data
 
                 if (data != null) {
@@ -967,8 +980,6 @@ If there is an error in the process, an error message is displayed to the user v
                         // in FileUils.java
                         videoUrl = uri
 
-
-                        //   val video_file: File? = uri?.let { FileUtils().getFileFromUri(this, it) }
                         binding.videoView.visibility=View.VISIBLE
                         // now set the video uri in the VideoView
                         binding.videoView.setVideoURI(uri)

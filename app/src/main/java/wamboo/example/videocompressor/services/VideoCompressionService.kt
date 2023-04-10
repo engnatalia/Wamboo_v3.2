@@ -4,6 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ContentResolver									  
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -11,25 +12,41 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.provider.OpenableColumns									   
 import android.util.Log
+import androidx.appcompat.app.AlertDialog										 
 import androidx.core.app.NotificationCompat
 import androidx.core.net.toUri
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
 import com.arthenica.ffmpegkit.FFprobeKit
 import com.arthenica.ffmpegkit.ReturnCode
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch							
 import wamboo.example.videocompressor.*
+import wamboo.example.videocompressor.models.CompressData
+import wamboo.example.videocompressor.repository.CompressRepository															   
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import java.io.File
+import java.io.FileNotFoundException									
 import java.math.RoundingMode
 import kotlin.math.abs
-
-
+import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.concurrent.Executors
+import javax.inject.Inject								 
+@AndroidEntryPoint			  
 class VideoCompressionService : Service() {
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var builder2: NotificationCompat.Builder
     private var wakeLock: PowerManager.WakeLock? = null
+
+    @Inject
+    lateinit var compressRepo: CompressRepository		   
 
     companion object {
         const val NOTIFICATION_ID = 1
@@ -294,6 +311,18 @@ class VideoCompressionService : Service() {
                     putString(HomeFragment.CO2, co2.toString()).commit()
                 }
 
+				CoroutineScope(Dispatchers.IO).launch {
+                    val millisecond = System.currentTimeMillis()
+                    val date = SimpleDateFormat("dd/MM/yyyy").format(Date(millisecond))
+                    compressRepo.insert(
+                        CompressData(
+                            uriPath?.length(contentResolver)!!,
+                            finalcapacity,
+                            millisecond,
+                            date
+                        )
+                    )
+                }
                 Log.d("Service", "Service stopped data .")
 
                 sendBroadcast(intent)
@@ -356,5 +385,7 @@ class VideoCompressionService : Service() {
             mn
         ) + ":" + String.format("%02d", sec)
     }
-
+	override fun onDestroy() {
+        super.onDestroy()
+    }
 }

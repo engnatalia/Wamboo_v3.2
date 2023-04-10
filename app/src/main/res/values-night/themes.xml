@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+		<item name="android:datePickerDialogTheme">@style/AppCompatDialogStyle</item>																			 
         <!-- Customize your theme here. -->
     </style>
 
@@ -25,5 +26,12 @@
 
     <style name="MyCustomTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
+    </style>
+	<style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:datePickerStyle">@style/style_date_picker</item>
+    </style>
+
+    <style name="style_date_picker" parent="android:Widget.Material.Light.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
     </style>
 </resources>

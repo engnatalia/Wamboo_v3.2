@@ -27,4 +27,12 @@
         <item name="textAllCaps">false</item>
     </style>
 
+	 <style name="AppCompatDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:datePickerStyle">@style/style_date_picker</item>
+    </style>
+
+    <style name="style_date_picker" parent="android:Widget.Material.Light.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button</item>
+    </style>	
 </resources>
