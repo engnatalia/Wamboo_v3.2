@@ -34,11 +34,14 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
+import wamboo.example.videocompressor.models.CompressData
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
 import java.math.RoundingMode
 import kotlin.math.round
-
+import wamboo.example.videocompressor.repository.CompressRepository
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
@@ -62,7 +65,6 @@ class HomeFragment : Fragment() {
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
     var showViews = true
-
     //this receiver will trigger when the compression is completed
     private val videoCompressionCompletedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -269,6 +271,7 @@ class HomeFragment : Fragment() {
                 RoundingMode.UP)
 
             binding.reduction.text = sizeReduction.toString()+"%"
+
         }
 
 

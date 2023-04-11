@@ -33,7 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="pollution vs time"
+                android:text="@string/title_pollution_chart"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="size vs time"
+                android:text="@string/title_size_chart"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />

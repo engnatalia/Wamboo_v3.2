@@ -270,10 +270,26 @@ class VideoCompressionService : Service() {
 
                 val returnCode = session.returnCode
 
-                //val initialSize = fileSize(videoUri.length(contentResolver))
+                val initialSize = fileSize(videoUri.length(contentResolver))
                 val compressedSize = uriPath?.length(contentResolver)
                     ?.let { fileSize(it) }
+                var sizeReduction = 0?.toBigDecimal()
+                if (compressedSize != null && initialSize != null) {
 
+                    var finalSize = compressedSize.substringBefore(" ")
+                    var finalS = finalSize.replace(",",".").toDouble()
+                    var final = finalS
+                    if ((compressedSize.contains("k") && initialSize.contains("M") )||(compressedSize.contains("M") && initialSize.contains("G") ) ||(compressedSize.contains("B") && initialSize.contains("k") )){
+                        final=finalS/1000
+                    }
+                    var initSize = initialSize.substringBefore(" ")
+                    var init = initSize.replace(",",".")
+                    sizeReduction = (100- (final?.times(100)?.div(init.toDouble())?.toBigDecimal()?.setScale(2,
+                        RoundingMode.UP))?.toDouble()!!).toBigDecimal()?.setScale(2,
+                        RoundingMode.UP)
+
+
+                }
                 if (wakeLock?.isHeld == true)
                     wakeLock?.release()
 
@@ -316,8 +332,8 @@ class VideoCompressionService : Service() {
                     val date = SimpleDateFormat("dd/MM/yyyy").format(Date(millisecond))
                     compressRepo.insert(
                         CompressData(
-                            uriPath?.length(contentResolver)!!,
-                            finalcapacity,
+                            sizeReduction?.toLong()!!,
+                            co2.toInt(),
                             millisecond,
                             date
                         )

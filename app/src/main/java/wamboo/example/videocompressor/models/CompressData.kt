@@ -2,11 +2,12 @@ package wamboo.example.videocompressor.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.math.BigDecimal
 
 @Entity(tableName = "compression")
 class CompressData(
-    val fileSize: Long,
-    val pollution: Int,
+    val sizeReduction: Long,
+    val co2: Int,
     val milliSeconds: Long,
     val date: String,
     @PrimaryKey(autoGenerate = true)

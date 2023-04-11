@@ -69,5 +69,10 @@
     <string name="final_chart">History</string>
     <string name="no_history">No History Available!</string>
     <string name="no_record">No Record Found!</string>
-
+    <string name="delete_sucessful">Delete Successfully</string>
+    <string name="select_init_date">Select Initial Date</string>
+    <string name="select_final_date">Select End Date</string>
+    <string name="date_messages">End Date must be more or equal than initial Date</string>
+    <string name="title_pollution_chart">Associated Pollution (KgCO2)</string>
+    <string name="title_size_chart">Achieved Size Reduction (%)</string>
 </resources>

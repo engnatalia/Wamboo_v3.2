@@ -67,8 +67,14 @@
     <string name="delete_data">Borra los datos</string>
     <string name="delete_all">Borrar el historial</string>
     <string name="daily_chart">Gráficos de cada día</string>
+    <string name="delete_sucessful">Borrado correcto</string>
     <string name="final_chart">Historial completo</string>
     <string name="no_history">No existe un historial</string>
     <string name="no_record">No se han encontrado datos</string>
+    <string name="select_init_date">Selecciona fecha inicial</string>
+    <string name="select_final_date">Selecciona fecha final</string>
+    <string name="date_messages">La fecha final debe ser mayor o igual que la inicial</string>
+    <string name="title_pollution_chart">Contaminación asociada (KgCO2)</string>
+    <string name="title_size_chart">Reducción del tamaño conseguida (%)</string>
 
 </resources>

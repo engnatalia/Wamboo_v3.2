@@ -110,8 +110,7 @@ fun showAlertDialog(context: Context, listener: OnClickListener) {
         }.setCancelable(false).create().show()
 }
 
-const val fast = "Fast"
-const val medium = "Medium"
+
 
 fun setUpLineChart(
     mChart: LineChart,
@@ -168,7 +167,7 @@ fun setUpLineChart(
         if (isFileChart) {
             yAxis.valueFormatter = object : ValueFormatter() {
                 override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                    return "${String.format("%.2f", value)} MB"
+                    return "${String.format("%.2f", value)}"
                 }
             }
         }

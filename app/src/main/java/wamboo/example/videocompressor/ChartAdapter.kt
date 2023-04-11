@@ -19,10 +19,11 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import wamboo.example.videocompressor.models.CompressChartView
-import wamboo.example.videocompressor.models.CompressData
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToLong
 
 
 class ChartAdapter(
@@ -118,7 +119,8 @@ class ChartAdapter(
                 val leftAxis = mChart.axisLeft
                 leftAxis.valueFormatter = object : ValueFormatter() {
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                        return "$value MB"
+                        return "${value.toBigDecimal()?.setScale(2,
+                            RoundingMode.UP)}"
                     }
                 }
             }
@@ -138,11 +140,10 @@ class ChartAdapter(
         }
 
         val date = compressChartView.date
-
         val values = ArrayList(compressData.mapIndexed { index, item ->
             Entry(
                 index.toFloat(),
-                if (isFileChart) ((item.fileSize.toFloat()) / (1048576).toFloat()) else item.pollution.toFloat()
+                if (isFileChart) ((item.sizeReduction.toFloat())) else item.co2.toFloat()
             )
         })
 
@@ -166,7 +167,7 @@ class ChartAdapter(
 
         mChart.axisRight.isEnabled = false
         mChart.description.isEnabled = false
-
+        mChart.axisLeft.axisMinimum = "0".toFloat()
         mChart.data = data
     }
 
