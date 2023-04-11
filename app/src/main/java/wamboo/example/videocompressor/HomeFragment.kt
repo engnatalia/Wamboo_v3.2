@@ -1,11 +1,10 @@
 package wamboo.example.videocompressor
 
+import android.Manifest
 import android.app.*
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.hardware.camera2.CameraManager
-import android.hardware.camera2.CaptureRequest
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -14,17 +13,16 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Html
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.isVisible									 
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.work.*
 import com.arthenica.ffmpegkit.FFmpegKit
@@ -34,27 +32,22 @@ import com.arthenica.ffmpegkit.MediaInformationSession
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
 import java.math.RoundingMode
 import kotlin.math.round
-import android.Manifest
-import android.webkit.PermissionRequest
-import androidx.core.app.ActivityCompat
+
 
 @Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
     private lateinit var mAdView: AdView
     private var videoUrl: Uri? = null
     private var compressedFilePath = ""
+    private var typesSpinner=arrayOf("")
     lateinit var pref: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
-    lateinit var spinner: Spinner
-    lateinit var spinner2: Spinner
-    lateinit var spinner3: Spinner
     lateinit var mediaInformation : MediaInformationSession
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
@@ -63,13 +56,12 @@ class HomeFragment : Fragment() {
     private var  showCodec =""
     private var  videoCodec =""
     private var  compressSpeed =""
-    private var index = 7
     private var noBattery = false
     private var audio = "-c:a copy"
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
-
+    var showViews = true
 
     //this receiver will trigger when the compression is completed
     private val videoCompressionCompletedReceiver = object : BroadcastReceiver() {
@@ -229,11 +221,20 @@ class HomeFragment : Fragment() {
         conversionTime: String?,
         initialBattery: String?,
         remainingBattery: String?,
-        co2: String?
+        co2: String?,
+        showView: Boolean
     ) {
 
         //showing stats data in the textviews
-		binding.pickVideo.visibility = View.VISIBLE
+        if (!showView){
+            binding.videoView.visibility = View.GONE
+            binding.spinner.visibility = View.GONE
+            binding.spinner2.visibility = View.GONE
+            binding.spinner3.visibility = View.GONE
+            binding.spinner4.visibility = View.GONE
+            binding.checkboxAudio.visibility = View.GONE
+            }
+        binding.pickVideo.visibility = View.VISIBLE
         binding.reset.visibility = View.VISIBLE
         binding.shareVideo.visibility = View.VISIBLE
         binding.statsContainer.visibility = View.VISIBLE
@@ -242,6 +243,7 @@ class HomeFragment : Fragment() {
         binding.conversionTimeTV.text = conversionTime
         binding.initialBatteryTV.text = initialBattery
         binding.remainingBatteryTV.text = remainingBattery
+        showViews = false
         val pollution= co2!!.toDouble()
         if (pollution > 0) {
             binding.co2TV.setTextColor(Color.parseColor("#FF0000"))
@@ -309,17 +311,21 @@ class HomeFragment : Fragment() {
     private fun showDataFromPref() {
 
         if (pref.getString(RETURN_CODE, "")?.isNotEmpty() == true) {
+
             showStats(
                 pref.getString(INITIAL_SIZE, ""),
                 pref.getString(COMPRESS_SZE, ""),
                 pref.getString(CONVERSION_TIME, ""),
                 pref.getString(INITIAL_BATTERY, ""),
                 pref.getString(REMAINING_BATTERY, ""),
-                pref.getString(CO2, "")
+                pref.getString(CO2, ""),
+                showViews
             )
 
             //clearPref()
 
+        } else {
+            showViews = false
         }
     }
 
@@ -492,17 +498,19 @@ class HomeFragment : Fragment() {
     private fun initUI() = with(binding) {
 		reset.setOnClickListener {
             resetViews()
-        }						  
+        }
+
+
+        spinner.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        typesSpinner = arrayOf(getString(R.string.ultrafast),getString(R.string.good),getString(R.string.best),getString(R.string.custom_h),getString(R.string.custom_l))
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_row, typesSpinner)
+        spinner.adapter = arrayAdapter
         pickVideo.setOnClickListener {
 
-            binding.infou.text = getString(R.string.ultrafast_description)
-            binding.infou.visibility = View.VISIBLE
-            binding.rdOne.isChecked= true
-            binding.infob.visibility = View.GONE
-            binding.infog.visibility = View.GONE
-            if (::spinner.isInitialized){
-                hideSpinner(spinner)
-            }
+
             if (isBatteryOptimizationDisabled()) {
 
                 shareVideo.visibility = View.GONE
@@ -541,74 +549,72 @@ class HomeFragment : Fragment() {
                 audio = "-c:a copy"
             }
         }
-        // Handling what will happen when user tap on video compression formats Radio Buttons
-        radioGroup.setOnCheckedChangeListener { radioGroup, i ->
-            val checked =
-                requireActivity().findViewById<RadioButton>(radioGroup.checkedRadioButtonId)
-            selectedtype = checked.text.toString()
-            when (selectedtype) {
-                getString(R.string.good) ->{
-                    binding.infog.text = getString(R.string.good_description)
-                    binding.infog.visibility = View.VISIBLE
-                    binding.infob.visibility = View.GONE
-                    binding.infou.visibility = View.GONE
-                    if (::spinner.isInitialized){
-                        hideSpinner(spinner)
-                        hideSpinner(spinner2)
-                        hideSpinner(spinner3)
-                    }                }
-                getString(R.string.best) ->{
-                    binding.infob.text = getString(R.string.best_description)
-                    binding.infob.visibility = View.VISIBLE
-                    binding.infog.visibility = View.GONE
-                    binding.infou.visibility = View.GONE
-                    if (::spinner.isInitialized){
-                        hideSpinner(spinner)
-                        hideSpinner(spinner2)
-                        hideSpinner(spinner3)
-                    }                }
-                getString(R.string.ultrafast) ->{
-                    binding.infou.text = getString(R.string.ultrafast_description)
-                    binding.infou.visibility = View.VISIBLE
-                    binding.infob.visibility = View.GONE
-                    binding.infog.visibility = View.GONE
-                    if (::spinner.isInitialized){
-                        hideSpinner(spinner)
-                        hideSpinner(spinner2)
-                        hideSpinner(spinner3)
-                    }                }
-                getString(R.string.custom_h) ->{
-                    if (::spinner.isInitialized){
-                        hideSpinner(spinner)
-                        hideSpinner(spinner2)
-                        hideSpinner(spinner3)
-                    }
-                    binding.infou.visibility = View.GONE
-                    binding.infob.visibility = View.GONE
-                    binding.infog.visibility = View.GONE
-                    index=7
-                    spinner2 = addSpinnerSpeed()
-                    spinner3 = addSpinnerCodec()
-                    spinner = addSpinnerResolution()
 
-                }
-                getString(R.string.custom_l) ->{
-                    if (::spinner.isInitialized){
-                        hideSpinner(spinner)
-                        hideSpinner(spinner2)
-                        hideSpinner(spinner3)
-                    }
-                    binding.infou.visibility = View.GONE
-                    binding.infob.visibility = View.GONE
-                    binding.infog.visibility = View.GONE
-                    index=8
-                    spinner2 = addSpinnerSpeed()
-                    spinner3 = addSpinnerCodec()
-                    spinner = addSpinnerResolution()
 
-                }
+        when (videoUrl) {
+            null -> {
+                binding.videoView.visibility = View.GONE
+                Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
+
             }
+
         }
+
+
+      /*  with(spinner)
+        {setSelection(0, false)}*/
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) { selectedtype =typesSpinner[position]
+                var spinner2 =addSpinnerSpeed()
+                var spinner4 =addSpinnerCodec()
+                var spinner3 =addSpinnerResolution()
+                when (selectedtype) {
+                    getString(R.string.good) ->{
+
+                            hideSpinner(spinner2)
+                            hideSpinner(spinner3)
+                            hideSpinner(spinner4)
+                        }
+                    getString(R.string.best) ->{
+
+                            hideSpinner(spinner2)
+                            hideSpinner(spinner3)
+                            hideSpinner(spinner4)
+                        }
+                    getString(R.string.ultrafast) ->{
+
+                            hideSpinner(spinner2)
+                            hideSpinner(spinner3)
+                            hideSpinner(spinner4)
+                                        }
+                    getString(R.string.custom_h) ->{
+
+                    }
+                    getString(R.string.custom_l) ->{
+
+
+
+                    }
+                }
+
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+
+        }
+        // Add Spinner to LinearLayout
+
+
+          //  binding.spinner.visibility=View.VISIBLE
+
+
 
         compressVideo.setOnClickListener {
 
@@ -668,7 +674,10 @@ private fun resetViews() {
 
         clearPref()
         pickVideo.isVisible = true
-        radioGroup.isVisible=false
+        spinner.isVisible=false
+        spinner2.isVisible=false
+        spinner3.isVisible=false
+        spinner4.isVisible=false
         statsContainer.isVisible = false
         videoView.isVisible = false
         checkboxAudio.isVisible=false
@@ -679,8 +688,8 @@ private fun resetViews() {
 }
     private fun addSpinnerResolution():Spinner {
 
-        val spinner = Spinner(requireContext())
-        spinner.layoutParams = LinearLayout.LayoutParams(
+
+        binding.spinner3.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
@@ -690,15 +699,8 @@ private fun resetViews() {
         when (videoUrl) {
             null -> {
 
-                binding.infou.text = getString(R.string.ultrafast_description)
-                binding.infou.visibility = View.VISIBLE
-                binding.rdOne.isChecked= true
-                binding.infob.visibility = View.GONE
-                binding.infog.visibility = View.GONE
-                if (::spinner.isInitialized){
-                    hideSpinner(spinner)
-                }
-                index=0
+
+
 
             }
             else -> {
@@ -758,10 +760,10 @@ private fun resetViews() {
         }
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, resolutionSpinner)
-        spinner.adapter = arrayAdapter
-        with(spinner)
-        {setSelection(0, false)}
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner3.adapter = arrayAdapter
+        /*with(binding.spinner3)
+        {setSelection(0, false)}*/
+        binding.spinner3.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -791,16 +793,14 @@ private fun resetViews() {
         }
         // Add Spinner to LinearLayout
 
-        if (index > 0) {
-            binding.radioGroup.addView(spinner, index)
-        }
-        return spinner
+        binding.spinner3.visibility=View.VISIBLE
+        return binding.spinner3
 
     }
     private fun addSpinnerSpeed():Spinner {
 
-        val spinner = Spinner(requireContext())
-        spinner.layoutParams = LinearLayout.LayoutParams(
+
+        binding.spinner2.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
@@ -811,15 +811,8 @@ private fun resetViews() {
                 binding.videoView.visibility = View.GONE
                 Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
-                binding.infou.text = getString(R.string.ultrafast_description)
-                binding.infou.visibility = View.VISIBLE
-                binding.rdOne.isChecked= true
-                binding.infob.visibility = View.GONE
-                binding.infog.visibility = View.GONE
-                if (::spinner.isInitialized){
-                    hideSpinner(spinner)
-                }
-                index=0
+
+
 
             }
             else -> {
@@ -831,10 +824,10 @@ private fun resetViews() {
         }
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, speedsSpinner)
-        spinner.adapter = arrayAdapter
-        with(spinner)
-        {setSelection(0, false)}
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner2.adapter = arrayAdapter
+        /*with(spinner2)
+        {setSelection(0, false)}*/
+        binding.spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -864,17 +857,15 @@ private fun resetViews() {
         }
         // Add Spinner to LinearLayout
 
-        if (index > 0) {
-            binding.radioGroup.addView(spinner, index)
-        }
-        return spinner
+        binding.spinner2.visibility=View.VISIBLE
+        return binding.spinner2
 
     }
 
     private fun addSpinnerCodec():Spinner {
 
-        val spinner = Spinner(requireContext())
-        spinner.layoutParams = LinearLayout.LayoutParams(
+
+        binding.spinner4.layoutParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
@@ -883,16 +874,8 @@ private fun resetViews() {
         when (videoUrl) {
             null -> {
 
-                binding.infou.text = getString(R.string.ultrafast_description)
-                binding.infou.visibility = View.VISIBLE
-                binding.rdOne.isChecked= true
-                binding.quality.text = ""
-                binding.infob.visibility = View.GONE
-                binding.infog.visibility = View.GONE
-                if (::spinner.isInitialized){
-                    hideSpinner(spinner)
-                }
-                index=0
+
+
 
             }
             else -> {
@@ -904,10 +887,10 @@ private fun resetViews() {
         }
 
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_list, codecSpinner)
-        spinner.adapter = arrayAdapter
-        with(spinner)
-        {setSelection(0, false)}
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner4.adapter = arrayAdapter
+        /*with(binding.spinner4)
+        {setSelection(0, false)}*/
+        binding.spinner4.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
                 view: View,
@@ -936,26 +919,26 @@ private fun resetViews() {
 
         }
         // Add Spinner to LinearLayout
-        if (index > 0) {
-            binding.radioGroup.addView(spinner, index)
-        }
-        return spinner
+        binding.spinner4.visibility=View.VISIBLE
+
+        return binding.spinner4
 
     }
  private fun visibleViews() {
-        with(binding) {
+
+     with(binding) {
             pickVideo.isVisible = false
             videoView.isVisible = true
-            radioGroup.isVisible=true
+            spinner.isVisible=true
             checkboxAudio.isVisible=true
             compressVideo.isVisible = true
-
+            showViews=true
 			 
         }
 		}
     private fun hideSpinner(spinner: Spinner) {
         spinner.visibility= View.GONE
-        binding.radioGroup.removeView(spinner)
+
 
     }
 

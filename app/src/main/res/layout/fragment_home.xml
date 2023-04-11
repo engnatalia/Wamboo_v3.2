@@ -50,80 +50,26 @@
 				android:visibility="gone"/>
 
 
-            <RadioGroup
-                android:id="@+id/radioGroup"
-				android:visibility="gone"																						
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/rdOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:checked="true"
-                    android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/ultrafast" />
-
-                <TextView
-                    android:id="@+id/infou"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="#238000"
-                    android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/rdTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/good" />
-
-                <TextView
-                    android:id="@+id/infog"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="#238000"
-                    android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/rdThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/best" />
-
-                <TextView
-                    android:id="@+id/infob"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:textColor="#238000"
-                    android:textSize="20sp" />
-
-                <RadioButton
-                    android:id="@+id/rdFour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/custom_h" />
-
-                <RadioButton
-                    android:id="@+id/rdFive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/bauhausitalic"
-                    android:text="@string/custom_l" />
-
-            </RadioGroup>
+                android:visibility="gone"/>
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+            <Spinner
+                android:id="@+id/spinner4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/compressVideo"
