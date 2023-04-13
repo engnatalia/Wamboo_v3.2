@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomImage"
+        android:scrollbarThumbVertical="@color/red"
+        android:fadeScrollbars="false">
+    <LinearLayout
+        android:id="@+id/rootLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/fetch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/select_dates"
+                android:textAllCaps="false"
+                android:maxLines="2"></Button>
+
+            <Button
+                android:id="@+id/deleteSpec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="@string/delete_data"
+                android:textAllCaps="false"
+                android:maxLines="2"></Button>
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/delete_all"
+                android:textAllCaps="false"
+                android:maxLines="2"></Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chartLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <RadioGroup
+                android:id="@+id/rgTypes"
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:background="@drawable/round_border"
+                android:orientation="horizontal"
+                android:padding="1dp">
+
+                <RadioButton
+                    android:id="@+id/rbDaily"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_bg"
+                    android:button="@android:color/transparent"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/daily_chart"
+                    android:textColor="@color/text_colors"
+                    android:textSize="16sp" />
+
+
+                <RadioButton
+                    android:id="@+id/rbGreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/radio_bg"
+                    android:button="@android:color/transparent"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:text="@string/final_chart"
+                    android:textColor="@color/text_colors"
+                    android:textSize="16sp" />
+
+                
+            </RadioGroup>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:fadeScrollbars="false"
+                android:id="@+id/rvItems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:scrollbarSize="6dp"
+                android:scrollbarThumbHorizontal="@color/black"
+                android:scrollbars="horizontal" />
+
+            <RelativeLayout
+                android:id="@+id/finalLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <include layout="@layout/row_chart" />
+
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/equivalence"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:drawableLeft="@drawable/car"
+                android:drawablePadding="2dp"
+                ></TextView>
+        </LinearLayout>
+
+    </LinearLayout>
+    </ScrollView>
+    <TextView
+        android:id="@+id/tvNoData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_history"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:visibility="gone"></TextView>
+
+    <TextView
+        android:id="@+id/tvRecords"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_record"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:visibility="gone"></TextView>
+
+</RelativeLayout>

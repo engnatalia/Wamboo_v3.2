@@ -16,6 +16,7 @@ import android.provider.OpenableColumns
 import android.util.Log
 import androidx.appcompat.app.AlertDialog										 
 import androidx.core.app.NotificationCompat
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
@@ -24,6 +25,7 @@ import com.arthenica.ffmpegkit.ReturnCode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch							
 import wamboo.example.videocompressor.*
 import wamboo.example.videocompressor.models.CompressData
@@ -44,7 +46,8 @@ class VideoCompressionService : Service() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var builder2: NotificationCompat.Builder
     private var wakeLock: PowerManager.WakeLock? = null
-
+    private lateinit var  frames : String
+    private lateinit var  frames2 : Any
     @Inject
     lateinit var compressRepo: CompressRepository		   
 
@@ -263,6 +266,7 @@ class VideoCompressionService : Service() {
             }
         }
 
+
         Log.d("MyFFMPEG", command)
 
         FFmpegKit.executeAsync(command,
@@ -333,7 +337,7 @@ class VideoCompressionService : Service() {
                     compressRepo.insert(
                         CompressData(
                             sizeReduction?.toLong()!!,
-                            co2.toInt(),
+                            co2.toLong(),
                             millisecond,
                             date
                         )

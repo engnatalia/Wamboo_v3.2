@@ -76,5 +76,9 @@
     <string name="date_messages">La fecha final debe ser mayor o igual que la inicial</string>
     <string name="title_pollution_chart">Contaminación asociada (KgCO2)</string>
     <string name="title_size_chart">Reducción del tamaño conseguida (%)</string>
+    <string name="equivalences">"Equivalente a conducir: "</string>
+    <string name="delete_message">¿Seguro que quieres borrar la base de datos?</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
 
 </resources>

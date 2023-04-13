@@ -115,7 +115,7 @@ class ChartAdapter(
             xAxis.setDrawGridLines(false)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-            if (isFileChart) {
+
                 val leftAxis = mChart.axisLeft
                 leftAxis.valueFormatter = object : ValueFormatter() {
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
@@ -123,7 +123,6 @@ class ChartAdapter(
                             RoundingMode.UP)}"
                     }
                 }
-            }
 
             xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getAxisLabel(value: Float, axis: AxisBase?): String {

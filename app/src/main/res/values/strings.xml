@@ -65,6 +65,7 @@
     <string name="select_dates">Select dates</string>
     <string name="delete_data">Delete data</string>
     <string name="delete_all">Delete all</string>
+    <string name="delete_message">Are you sure you want to delete?</string>
     <string name="daily_chart">Daily chart</string>
     <string name="final_chart">History</string>
     <string name="no_history">No History Available!</string>
@@ -75,4 +76,7 @@
     <string name="date_messages">End Date must be more or equal than initial Date</string>
     <string name="title_pollution_chart">Associated Pollution (KgCO2)</string>
     <string name="title_size_chart">Achieved Size Reduction (%)</string>
+    <string name="equivalences">Equivalent to drive: </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

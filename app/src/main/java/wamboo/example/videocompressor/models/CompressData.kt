@@ -7,7 +7,7 @@ import java.math.BigDecimal
 @Entity(tableName = "compression")
 class CompressData(
     val sizeReduction: Long,
-    val co2: Int,
+    val co2: Long,
     val milliSeconds: Long,
     val date: String,
     @PrimaryKey(autoGenerate = true)

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8657652c-175c-4ae3-8120-7be546b5f0c9" name="Changes" comment="added car icon and equivalent driven km in chart views">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HistoryFragment.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/WambooApplication.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/car.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_history.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/assetWizardSettings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/code-comments.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/release/app-release.aab" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/app-release.aab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/AppUtils.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/AppUtils.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/ChartAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/ChartAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HomeFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/models/CompressData.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/models/CompressData.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/services/VideoCompressionService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/services/VideoCompressionService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" show_ignored="true" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[R5CRB314NDL]" />
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/app">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="VideoCompressor" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="VideoCompressor" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="VideoCompressor" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="VideoCompressor" type="f1a62948:ProjectNode" />
+                <item name="app" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="other" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="valueResourceFile" />
+        <option value="layoutResourceFile" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="EXPORT_PRIVATE_KEY" value="false" />
+    <option name="KEY_STORE_PATH" value="C:\Users\matlab\Documents\HV\Papers\GOAL 1\Paper 4\Wamboo MVP\Version1.1\key\wamboo.jks" />
+    <option name="KEY_ALIAS" value="wamboo" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2Md1TkmsfyRyMWp1xAJQiWNCJKK" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;BundleExportedModule&quot;: &quot;VideoCompressor.app&quot;,
+    &quot;ExportBundle.BundlePathForVideoCompressor.app&quot;: &quot;C:\\Users\\matlab\\Documents\\HV\\Papers\\GOAL 1\\Paper 4\\Wamboo MVP\\Version2.0\\Wamboo_v2.0\\app&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/matlab/Documents/HV/Papers/GOAL 1/Paper 4/Wamboo MVP/Version2.0/Wamboo_v2.0/app/src/main/res/drawable&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;ExportApk.BuildVariants&quot;: [
+      &quot;release&quot;
+    ]
+  }
+}</component>
+  <component name="PsdUISettings">
+    <option name="LAST_EDITED_BUILD_TYPE" value="release" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\matlab\Documents\HV\Papers\GOAL 1\Paper 4\Wamboo MVP\Version2.0\Wamboo_v2.0\app\src\main\res\drawable" />
+    </key>
+    <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="wamboo.example.videocompressor.services" />
+      <recent name="wamboo.example.videocompressor" />
+    </key>
+    <key name="android.template.523962523">
+      <recent name="wamboo.example.videocompressor" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="VideoCompressor.app.main" />
+      <option name="DEPLOY" value="true" />
+      <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
+      <option name="DEPLOY_AS_INSTANT" value="false" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ALL_USERS" value="false" />
+      <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
+      <option name="CLEAR_APP_STORAGE" value="false" />
+      <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="INSPECTION_WITHOUT_ACTIVITY_RESTART" value="false" />
+      <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
+      <option name="SELECTED_CLOUD_MATRIX_CONFIGURATION_ID" value="-1" />
+      <option name="SELECTED_CLOUD_MATRIX_PROJECT_ID" value="" />
+      <option name="DEBUGGER_TYPE" value="Auto" />
+      <Auto>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Auto>
+      <Hybrid>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Hybrid>
+      <Java />
+      <Native>
+        <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
+        <option name="SHOW_STATIC_VARS" value="true" />
+        <option name="WORKING_DIR" value="" />
+        <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+        <option name="SHOW_OPTIMIZED_WARNING" value="true" />
+      </Native>
+      <Profilers>
+        <option name="ADVANCED_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
+        <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Java/Kotlin Method Sample (legacy)" />
+        <option name="STARTUP_NATIVE_MEMORY_PROFILING_ENABLED" value="false" />
+        <option name="NATIVE_MEMORY_SAMPLE_RATE_BYTES" value="2048" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="SEARCH_ACTIVITY_IN_GLOBAL_SCOPE" value="false" />
+      <option name="SKIP_ACTIVITY_VALIDATION" value="false" />
+      <method v="2">
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8657652c-175c-4ae3-8120-7be546b5f0c9" name="Changes" comment="" />
+      <created>1678082654793</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678082654793</updated>
+    </task>
+    <task id="LOCAL-00001" summary="last version">
+      <created>1678092220445</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1678092220445</updated>
+    </task>
+    <task id="LOCAL-00002" summary="changed directory">
+      <created>1678096054139</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1678096054139</updated>
+    </task>
+    <task id="LOCAL-00003" summary="changed battery permissions message">
+      <created>1678120479035</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1678120479035</updated>
+    </task>
+    <task id="LOCAL-00004" summary="final version">
+      <created>1678121852807</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1678121852807</updated>
+    </task>
+    <task id="LOCAL-00005" summary="published version">
+      <created>1678341080617</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1678341080617</updated>
+    </task>
+    <task id="LOCAL-00006" summary="updated version">
+      <created>1678341335235</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1678341335235</updated>
+    </task>
+    <task id="LOCAL-00007" summary="tabs translated and radiobuttons margins fixed">
+      <created>1678385948927</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1678385948927</updated>
+    </task>
+    <task id="LOCAL-00008" summary="home frag-commented all videoview, xml-radiobuttons vertical, added button, changed buttons and text positions">
+      <created>1678519857516</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1678519857516</updated>
+    </task>
+    <task id="LOCAL-00009" summary="resolution spinner finished, quality spinner started">
+      <created>1678705203432</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1678705203432</updated>
+    </task>
+    <task id="LOCAL-00010" summary="resolution spinner finished and corrected, quality spinner commented">
+      <created>1678809502299</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1678809502299</updated>
+    </task>
+    <task id="LOCAL-00011" summary="added spinners for codec and speed with two radiobuttons (high and low quality)">
+      <created>1678881757061</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1678881757061</updated>
+    </task>
+    <task id="LOCAL-00012" summary="infinite battery notification removed (and text fixed) and started quality calculation">
+      <created>1678891493034</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1678891493034</updated>
+    </task>
+    <task id="LOCAL-00013" summary="added congrats message and started remove audio option">
+      <created>1678963240268</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1678963240268</updated>
+    </task>
+    <task id="LOCAL-00014" summary="remove audio option added and corrected Select button and not selecting new video, so it works with the previous">
+      <created>1679032258912</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1679032258912</updated>
+    </task>
+    <task id="LOCAL-00015" summary="added ssim and quality comparisson between compressed and original">
+      <created>1679056259479</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1679056259479</updated>
+    </task>
+    <task id="LOCAL-00016" summary="added botton to compute quality and removed videoView until selected">
+      <created>1679077660189</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1679077660189</updated>
+    </task>
+    <task id="LOCAL-00017" summary="added alert view when calculating the quality">
+      <created>1679384767735</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1679384767735</updated>
+    </task>
+    <task id="LOCAL-00018" summary="added alert view when compression finished to scroll down">
+      <created>1679389738750</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1679389738750</updated>
+    </task>
+    <task id="LOCAL-00019" summary="changed descriptions colour to green and improved video visibility">
+      <created>1679391107118</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1679391107118</updated>
+    </task>
+    <task id="LOCAL-00020" summary="corrected when to obtain quality (same resolution) visibility">
+      <created>1679409617967</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1679409617967</updated>
+    </task>
+    <task id="LOCAL-00021" summary="message added to computation">
+      <created>1679412776598</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1679412776598</updated>
+    </task>
+    <task id="LOCAL-00022" summary="message added to toast (waiting for quality computation) and corrected visibility and reset values">
+      <created>1679464354238</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1679464354238</updated>
+    </task>
+    <task id="LOCAL-00023" summary="version updated">
+      <created>1679482129427</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1679482129427</updated>
+    </task>
+    <task id="LOCAL-00024" summary="added obfuscation and tracing configs and files">
+      <created>1679727800975</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1679727800975</updated>
+    </task>
+    <task id="LOCAL-00025" summary="added camera in select video option plus permissions. added contentdescription in some elements of fragment_home.xml">
+      <created>1680194665013</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1680194665013</updated>
+    </task>
+    <task id="LOCAL-00026" summary="changed Home design, added database and history fragment with initial charts">
+      <created>1681136299831</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1681136299831</updated>
+    </task>
+    <task id="LOCAL-00027" summary="replaced radio buttons by spinner and hide video when showing resulta">
+      <created>1681203551335</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1681203551335</updated>
+    </task>
+    <task id="LOCAL-00028" summary="fixed charts to show pollution and size reduction">
+      <created>1681227539885</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1681227539885</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <ignored-roots>
+      <path value="$PROJECT_DIR$" />
+    </ignored-roots>
+    <MESSAGE value="tabs translated and radiobuttons margins fixed" />
+    <MESSAGE value="home frag-commented all videoview, xml-radiobuttons vertical, added button, changed buttons and text positions" />
+    <MESSAGE value="resolution spinner finished, quality spinner started" />
+    <MESSAGE value="resolution spinner finished and corrected, quality spinner commented" />
+    <MESSAGE value="added spinners for codec and speed with two radiobuttons (high and low quality)" />
+    <MESSAGE value="infinite battery notification removed and started quality calculation" />
+    <MESSAGE value="infinite battery notification removed (and text fixed) and started quality calculation" />
+    <MESSAGE value="added congrats message and started remove audio option" />
+    <MESSAGE value="remove audio option added and corrected Select button and not selecting new video, so it works with the previous" />
+    <MESSAGE value="added ssim and quality comparisson between compressed and original" />
+    <MESSAGE value="added botton to compute quality and removed videoView until selected" />
+    <MESSAGE value="added alert view when calculating the quality" />
+    <MESSAGE value="added alert view when compression finished to scroll down" />
+    <MESSAGE value="changed descriptions colour to green and improved video visibility" />
+    <MESSAGE value="corrected when to obtain quality (same resolution) visibility" />
+    <MESSAGE value="message added to computation" />
+    <MESSAGE value="message added to toast (waiting for quality computation)" />
+    <MESSAGE value="message added to toast (waiting for quality computation) and corrected visibility and reset values" />
+    <MESSAGE value="version updated" />
+    <MESSAGE value="added obfuscation and tracing configs and files" />
+    <MESSAGE value="added camera in select video option plus permissions. added contentdescription in some elements of fragment_home.xml" />
+    <MESSAGE value="changed Home design, added database and history fragment with initial charts" />
+    <MESSAGE value="replaced radio buttons by spinner and hide video when showing resulta" />
+    <MESSAGE value="fixed charts to show pollution and size reduction" />
+    <MESSAGE value="added car icon and equivalent driven km in chart views" />
+    <option name="LAST_COMMIT_MESSAGE" value="added car icon and equivalent driven km in chart views" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/AppUtils.kt</url>
+          <line>167</line>
+          <option name="timeStamp" value="174" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-line">
+          <url>file://$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HomeFragment.kt</url>
+          <line>684</line>
+          <option name="timeStamp" value="189" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="kotlin-function">
+          <url>file://$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/ChartAdapter.kt</url>
+          <line>28</line>
+          <properties class="wamboo.example.videocompressor.ChartAdapter" method="&lt;init&gt;">
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="164" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

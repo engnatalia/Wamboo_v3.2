@@ -2,12 +2,11 @@ package wamboo.example.videocompressor
 
 import android.content.ContentResolver
 import android.content.Context
-import android.content.DialogInterface
 import android.content.DialogInterface.OnClickListener
+import android.content.res.Resources
 import android.graphics.DashPathEffect							  
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.github.mikephil.charting.charts.LineChart
@@ -19,12 +18,11 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import wamboo.example.videocompressor.models.CompressChartView
 import wamboo.example.videocompressor.models.FinalChartData
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import wamboo.example.videocompressor.models.*
 // This function returns the file size in human readable format . Like it will take in size and return the size in kb or mb which can be
 // displayed to the user .
 fun fileSize(size2: Long): String {
@@ -102,10 +100,10 @@ fun showMessage(context: Context, msg: String) {
 }
 
 fun showAlertDialog(context: Context, listener: OnClickListener) {
-    AlertDialog.Builder(context).setTitle("Delete!").setMessage("Are you sure you want to delete")
+    AlertDialog.Builder(context).setTitle(Resources.getSystem().getString(R.string.delete_data)+"!").setMessage(Resources.getSystem().getString(R.string.delete_message))
         .setPositiveButton(
-            "Yes", listener
-        ).setNegativeButton("No") { p0, p1 ->
+            Resources.getSystem().getString(R.string.yes), listener
+        ).setNegativeButton(Resources.getSystem().getString(R.string.no)) { p0, p1 ->
             p0?.dismiss()
         }.setCancelable(false).create().show()
 }

@@ -22,6 +22,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.work.*
@@ -54,6 +55,8 @@ class HomeFragment : Fragment() {
     lateinit var mediaInformation : MediaInformationSession
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
+    private lateinit var  frames : String
+    private lateinit var  frames2 : Any
     private var  videoResolution =""
     private var  showSpeed =""
     private var  showCodec =""
@@ -671,6 +674,18 @@ class HomeFragment : Fragment() {
             binding.videoView.visibility = View.GONE
 
         }
+
+            Thread.sleep(5000L)
+            val mediaInformation2 = FFprobeKit.getMediaInformation(
+                FFmpegKitConfig.getSafParameterForRead(
+                    activity,
+                    compressedFilePath.toUri()
+                )
+            )
+            frames2=mediaInformation2.mediaInformation.allProperties
+            frames = mediaInformation2.mediaInformation.streams[0].realFrameRate
+            frames2 = mediaInformation2.mediaInformation.streams[0].getStringProperty("nb_frames")
+
     }
 private fun resetViews() {
     with(binding) {
@@ -717,6 +732,8 @@ private fun resetViews() {
 
                 videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
                 videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
+                frames = mediaInformation.mediaInformation.streams[0].realFrameRate
+                frames2 = mediaInformation.mediaInformation.streams[0].getStringProperty("nb_frames")
                 var side = mediaInformation.mediaInformation.streams[0].getStringProperty("side_data_list")
                 when (videoHeight){
                     "null" ->{
