@@ -219,6 +219,7 @@ class HomeFragment : Fragment() {
         binding.quality.visibility= View.VISIBLE
         binding.qualityDescription.visibility= View.VISIBLE
         binding.checkboxQuality.visibility= View.VISIBLE
+
     }
     private fun showStats(
         initialSize: String?,
@@ -517,7 +518,7 @@ class HomeFragment : Fragment() {
         pickVideo.setOnClickListener {
 
 
-            if (isBatteryOptimizationDisabled()) {
+           // if (isBatteryOptimizationDisabled()) {
 
                 shareVideo.visibility = View.GONE
                 when {
@@ -541,7 +542,7 @@ class HomeFragment : Fragment() {
 
 
 
-            }
+          //  }
 
         }
 
@@ -675,16 +676,6 @@ class HomeFragment : Fragment() {
 
         }
 
-            Thread.sleep(5000L)
-            val mediaInformation2 = FFprobeKit.getMediaInformation(
-                FFmpegKitConfig.getSafParameterForRead(
-                    activity,
-                    compressedFilePath.toUri()
-                )
-            )
-            frames2=mediaInformation2.mediaInformation.allProperties
-            frames = mediaInformation2.mediaInformation.streams[0].realFrameRate
-            frames2 = mediaInformation2.mediaInformation.streams[0].getStringProperty("nb_frames")
 
     }
 private fun resetViews() {
@@ -732,8 +723,6 @@ private fun resetViews() {
 
                 videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
                 videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
-                frames = mediaInformation.mediaInformation.streams[0].realFrameRate
-                frames2 = mediaInformation.mediaInformation.streams[0].getStringProperty("nb_frames")
                 var side = mediaInformation.mediaInformation.streams[0].getStringProperty("side_data_list")
                 when (videoHeight){
                     "null" ->{
@@ -940,7 +929,6 @@ private fun resetViews() {
         }
         // Add Spinner to LinearLayout
         binding.spinner4.visibility=View.VISIBLE
-
         return binding.spinner4
 
     }
@@ -953,7 +941,7 @@ private fun resetViews() {
             checkboxAudio.isVisible=true
             compressVideo.isVisible = true
             showViews=true
-			 
+
         }
 		}
     private fun hideSpinner(spinner: Spinner) {

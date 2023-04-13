@@ -207,8 +207,31 @@ class VideoCompressionService : Service() {
             )
         )
         var duration = mediaInformation.mediaInformation.formatProperties.getString("duration")
+        var initialSize = fileSize(videoUri.length(contentResolver))
+        var initS=0.0
+        if (initialSize != null) {
+            var initSize = initialSize.substringBefore(" ")
+            var init = initSize.replace(",",".").toDouble()
 
+            if (initialSize.contains("M") )
+            {
+                 initS=init*1000000
+            }
+            if (initialSize.contains("G") )
+            {
+                 initS=init*1000000000
 
+            }
+            if (initialSize.contains("k") )
+            {
+                 initS=init*1000
+
+            }
+
+        }
+        var initS8=initS-initS*0.8
+        var initS5=initS-initS*0.5
+        var initS75=initS-initS*0.75
         when (selectedtype) {
             getString(R.string.ultrafast) -> {
                 /*command = "-y -i ${
@@ -222,7 +245,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx264 -fs $initS8 -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             "Ultrafast" -> {
                 command = "-y -i ${
@@ -230,7 +253,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx264 -fs $initS8  -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.good) -> {
                 command = "-y -i ${
@@ -238,7 +261,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -crf 30 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx264 -fs $initS5 -crf 30 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.best) -> {
                 command = "-y -i ${
@@ -246,7 +269,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx265 -crf 30 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags faststart -c:v libx265 -fs $initS75 -crf 30 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.custom_h) -> {
                 command = "-y -i ${
@@ -274,7 +297,7 @@ class VideoCompressionService : Service() {
 
                 val returnCode = session.returnCode
 
-                val initialSize = fileSize(videoUri.length(contentResolver))
+                //initialSize = fileSize(videoUri.length(contentResolver))
                 val compressedSize = uriPath?.length(contentResolver)
                     ?.let { fileSize(it) }
                 var sizeReduction = 0?.toBigDecimal()
