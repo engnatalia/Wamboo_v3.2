@@ -552,6 +552,9 @@ class HomeFragment : Fragment() {
           //  }
 
         }
+        rdOne.setOnClickListener{
+            isBatteryOptimizationDisabled()
+        }
 
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
         videoView.setMediaController(MediaController(requireActivity()))

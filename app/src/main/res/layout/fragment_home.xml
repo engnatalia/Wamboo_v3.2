@@ -31,7 +31,14 @@
                 android:text="@string/select_video"
                 android:textColor="@color/white"
                 android:textFontWeight="700" />
-
+            <RadioButton
+                android:id="@+id/rdOne"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:checked="false"
+                android:fontFamily="@font/bauhausitalic"
+                android:text="@string/background" />
 
             <VideoView
                 android:id="@+id/videoView"

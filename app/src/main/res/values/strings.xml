@@ -81,4 +81,5 @@
     <string name="no">No</string>
     <string name="estimated_size">Estimated size, smaller than:</string>
     <string name="compression">compression (at least)</string>
+    <string name="background">Allow background compression</string>
 </resources>
