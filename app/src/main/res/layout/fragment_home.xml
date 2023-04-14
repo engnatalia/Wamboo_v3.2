@@ -52,8 +52,42 @@
 
             <Spinner
                 android:id="@+id/spinner"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:textSize="30dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/dataTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/teal_700"
+                android:textSize="15dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/dataTV2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/teal_700"
+                android:textSize="20dp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/dataTV3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:textColor="@color/teal_700"
+                android:textSize="15dp"
+                android:visibility="gone"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/select_compression"
+                android:textFontWeight="1000"
+                android:textColor="@color/grey"
                 android:visibility="gone"/>
             <Spinner
                 android:id="@+id/spinner2"
@@ -96,14 +130,6 @@
                 android:text="@string/share_compressed_video"
                 android:textColor="@color/white"
                 android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/dataTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textColor="@color/black"
-                android:textSize="20dp" />										  
 
             <LinearLayout
                 android:id="@+id/statsContainer"

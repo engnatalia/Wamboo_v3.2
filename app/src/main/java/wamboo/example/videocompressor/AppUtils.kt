@@ -100,10 +100,10 @@ fun showMessage(context: Context, msg: String) {
 }
 
 fun showAlertDialog(context: Context, listener: OnClickListener) {
-    AlertDialog.Builder(context).setTitle(Resources.getSystem().getString(R.string.delete_data)+"!").setMessage(Resources.getSystem().getString(R.string.delete_message))
+    AlertDialog.Builder(context).setTitle(context.getResources().getString(R.string.delete_data)+"!").setMessage(context.getResources().getString(R.string.delete_message))
         .setPositiveButton(
-            Resources.getSystem().getString(R.string.yes), listener
-        ).setNegativeButton(Resources.getSystem().getString(R.string.no)) { p0, p1 ->
+            context.getResources().getString(R.string.yes), listener
+        ).setNegativeButton(context.getResources().getString(R.string.no)) { p0, p1 ->
             p0?.dismiss()
         }.setCancelable(false).create().show()
 }

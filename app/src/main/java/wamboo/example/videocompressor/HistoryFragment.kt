@@ -105,12 +105,13 @@ class HistoryFragment : Fragment() {
         }
 
         binding.rgTypes.setOnCheckedChangeListener { radioGroup, i ->
-            val isDailySelected = radioGroup.checkedRadioButtonId == R.id.rbDaily
-            val km = (pollutionAverage/0.140).toBigDecimal().setScale(2,
+            /*val km = (pollutionAverage/0.140).toBigDecimal().setScale(2,
                 RoundingMode.UP).toDouble()
+            binding.equivalence.text =getString(R.string.equivalences)+"$km"+"km"*/
+            val isDailySelected = radioGroup.checkedRadioButtonId == R.id.rbDaily
             binding.rvItems.isVisible = isDailySelected
             binding.finalLayout.isVisible = isDailySelected.not()
-            binding.equivalence.text =getString(R.string.equivalences)+"$km"+"km"
+
 
         }
 
@@ -154,7 +155,9 @@ class HistoryFragment : Fragment() {
             rowBinding.date.isVisible = false
             setUpLineChart(rowBinding.lineChart, finalChartListPollution)
             setUpLineChart(rowBinding.chartFile, finalChartListFile, true)
-
+            val km = (pollutionAverage/0.140).toBigDecimal().setScale(2,
+                RoundingMode.UP).toDouble()
+            binding.equivalence.text =getString(R.string.equivalences)+"$km"+"km"
             chartAdapter.updateData(compressChartViewList)
         }
 

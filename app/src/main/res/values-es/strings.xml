@@ -26,7 +26,7 @@
     <string name="notification_message">Compresión en progreso...</string>
     <string name="notification_message_success">Compresión completada con éxito!</string>
     <string name="notification_message_failure">La compresión ha fallado.</string>
-    <string name="select_compression">"Selecciona una opción "</string>
+    <string name="select_compression">Selecciona una opción</string>
     <string name="waiting">Por favor, espera...</string>
     <string name="scroll">Mira los resultados!</string>
     <string name="notification_background_title">Wamboo funciona en segundo plano!</string>
@@ -80,5 +80,7 @@
     <string name="delete_message">¿Seguro que quieres borrar la base de datos?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="estimated_size">Tamaño estimado, menor de:</string>
+    <string name="compression">compresión</string>
 
 </resources>

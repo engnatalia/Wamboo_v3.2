@@ -12,6 +12,7 @@ import android.os.PowerManager
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Html
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -53,10 +54,9 @@ class HomeFragment : Fragment() {
     lateinit var pref: SharedPreferences
     lateinit var editor: SharedPreferences.Editor
     lateinit var mediaInformation : MediaInformationSession
+    private var initialSize = ""
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
-    private lateinit var  frames : String
-    private lateinit var  frames2 : Any
     private var  videoResolution =""
     private var  showSpeed =""
     private var  showCodec =""
@@ -68,6 +68,10 @@ class HomeFragment : Fragment() {
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
     var showViews = true
+    var  initS8 = 0.0
+    var initS5= 0.0
+    var initS75= 0.0
+    var unidades = ""
     //this receiver will trigger when the compression is completed
     private val videoCompressionCompletedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -222,7 +226,7 @@ class HomeFragment : Fragment() {
 
     }
     private fun showStats(
-        initialSize: String?,
+        initialSize2: String?,
         compressedSize: String?,
         conversionTime: String?,
         initialBattery: String?,
@@ -230,7 +234,7 @@ class HomeFragment : Fragment() {
         co2: String?,
         showView: Boolean
     ) {
-
+        initialSize = initialSize2!!
         //showing stats data in the textviews
         if (!showView){
             binding.videoView.visibility = View.GONE
@@ -239,6 +243,9 @@ class HomeFragment : Fragment() {
             binding.spinner3.visibility = View.GONE
             binding.spinner4.visibility = View.GONE
             binding.checkboxAudio.visibility = View.GONE
+            binding.dataTV.visibility=View.GONE
+            binding.dataTV2.visibility=View.GONE
+            binding.dataTV3.visibility=View.GONE
             }
         binding.pickVideo.visibility = View.VISIBLE
         binding.reset.visibility = View.VISIBLE
@@ -260,7 +267,7 @@ class HomeFragment : Fragment() {
             binding.co2TV.text = co2+ "kgCO2"+ "\n"+getString(R.string.congrats)
 
         }
-        if (compressedSize != null && initialSize != null) {
+        if (compressedSize != null && initialSize != "") {
 
             var finalSize = compressedSize.substringBefore(" ")
             var finalS = finalSize.replace(",",".").toDouble()
@@ -512,7 +519,7 @@ class HomeFragment : Fragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        typesSpinner = arrayOf(getString(R.string.ultrafast),getString(R.string.good),getString(R.string.best),getString(R.string.custom_h),getString(R.string.custom_l))
+        typesSpinner = arrayOf(getString(R.string.select_compression),getString(R.string.ultrafast),getString(R.string.good),getString(R.string.best),getString(R.string.custom_h),getString(R.string.custom_l))
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_row, typesSpinner)
         spinner.adapter = arrayAdapter
         pickVideo.setOnClickListener {
@@ -565,6 +572,7 @@ class HomeFragment : Fragment() {
 
             }
 
+
         }
 
 
@@ -586,27 +594,63 @@ class HomeFragment : Fragment() {
                             hideSpinner(spinner2)
                             hideSpinner(spinner3)
                             hideSpinner(spinner4)
+                            binding.dataTV.visibility=View.VISIBLE
+                            binding.dataTV2.visibility=View.VISIBLE
+                            binding.dataTV3.visibility=View.VISIBLE
+                            binding.dataTV.text=getString(R.string.estimated_size)
+                            binding.dataTV2.text=Html.fromHtml("<b>"+"$initS5 "+" $unidades"+"</b>")
+                            binding.dataTV3.text="50% "+ getString(R.string.compression)
                         }
                     getString(R.string.best) ->{
 
                             hideSpinner(spinner2)
                             hideSpinner(spinner3)
                             hideSpinner(spinner4)
+                        binding.dataTV.visibility=View.VISIBLE
+                        binding.dataTV2.visibility=View.VISIBLE
+                        binding.dataTV3.visibility=View.VISIBLE
+                        binding.dataTV.text=getString(R.string.estimated_size)
+                        binding.dataTV2.text=Html.fromHtml("<b>"+"$initS75 "+" $unidades"+"</b>")
+                        binding.dataTV3.text="75% "+ getString(R.string.compression)
                         }
                     getString(R.string.ultrafast) ->{
 
                             hideSpinner(spinner2)
                             hideSpinner(spinner3)
                             hideSpinner(spinner4)
+                        binding.dataTV.visibility=View.VISIBLE
+                        binding.dataTV2.visibility=View.VISIBLE
+                        binding.dataTV3.visibility=View.VISIBLE
+                        binding.dataTV.text=getString(R.string.estimated_size)
+                        binding.dataTV2.text=Html.fromHtml("<b>"  +"$initS8 "+" $unidades"+"</b>")
+                        binding.dataTV3.text="80% "+ getString(R.string.compression)
                                         }
+
                     getString(R.string.custom_h) ->{
+                        dataTV.isVisible=false
+                        dataTV2.isVisible=false
+                        dataTV3.isVisible=false
 
                     }
                     getString(R.string.custom_l) ->{
-
+                        dataTV.isVisible=false
+                        dataTV2.isVisible=false
+                        dataTV3.isVisible=false
 
 
                     }
+                    else ->{
+
+                    hideSpinner(spinner2)
+                    hideSpinner(spinner3)
+                    hideSpinner(spinner4)
+                    binding.dataTV.visibility=View.VISIBLE
+                    binding.dataTV2.visibility=View.VISIBLE
+                    binding.dataTV3.visibility=View.VISIBLE
+                    binding.dataTV.text=getString(R.string.estimated_size)
+                    binding.dataTV2.text=Html.fromHtml("<b>"  +"$initS8 "+" $unidades"+"</b>")
+                    binding.dataTV3.text="80% "+ getString(R.string.compression)
+                }
                 }
 
 
@@ -693,6 +737,9 @@ private fun resetViews() {
         shareVideo.isVisible=false
         compressVideo.isVisible = false
         reset.isVisible = false
+        dataTV.isVisible=false
+        dataTV2.isVisible=false
+        dataTV3.isVisible=false
     }
 }
     private fun addSpinnerResolution():Spinner {
@@ -942,7 +989,8 @@ private fun resetViews() {
             compressVideo.isVisible = true
             showViews=true
 
-        }
+
+     }
 		}
     private fun hideSpinner(spinner: Spinner) {
         spinner.visibility= View.GONE
@@ -979,7 +1027,96 @@ If there is an error in the process, an error message is displayed to the user v
                         // setting up the retried video uri in
                         // VideoView, Start the VideoView to play that video
                         binding.videoView.start()
+                        initialSize = fileSize(videoUrl!!.length(requireActivity().contentResolver))
 
+                        var initS=0.0
+                        if (initialSize != "") {
+                            var initSize = initialSize.substringBefore(" ")
+                            var init = initSize.replace(",",".").toDouble()
+
+                            if (initialSize.contains("M") )
+                            {
+                                initS=init*1000000
+                            }
+                            if (initialSize.contains("G") )
+                            {
+                                initS=init*1000000000
+
+                            }
+                            if (initialSize.contains("k") )
+                            {
+                                initS=init*1000
+
+                            }
+
+                        }
+                        initS8=initS*0.8
+                        initS5=initS*0.5
+                        initS75=initS*0.75
+
+                        if (initialSize != "") {
+
+
+                            if (initialSize.contains("M") )
+                            {
+                                initS8 /= 1000000
+                                initS5 /= 1000000
+                                initS75 /= 1000000
+                                unidades = "MB"
+                                if (initS8.toString().contains("0.")){
+                                    initS8 *= 1000
+                                    unidades = "KB"
+                            }
+                                if (initS5.toString().contains("0.")){
+                                    initS5 *= 1000
+                                    unidades = "KB"
+                                }
+                                if (initS75.toString().contains("0.")){
+                                    initS75 *= 1000
+                                    unidades = "KB"
+                                }
+                            }
+                            if (initialSize.contains("G") )
+                            {
+                                initS8 /= 1000000000
+                                initS5 /= 1000000000
+                                initS75 /= 1000000000
+                                unidades = "GB"
+                                if (initS8.toString().contains("0.")){
+                                    initS8 *= 1000
+                                    unidades = "MB"
+                                }
+                                if (initS5.toString().contains("0.")){
+                                    initS5 *= 1000
+                                    unidades = "MB"
+                                }
+                                if (initS75.toString().contains("0.")){
+                                    initS75 *= 1000
+                                    unidades = "MB"
+                                }
+
+                            }
+                            if (initialSize.contains("k") )
+                            {
+                                initS8 /= 1000
+                                initS5 /= 1000
+                                initS75 /= 1000
+                                unidades = "KB"
+                                if (initS8.toString().contains("0.")){
+                                    initS8 *= 1000
+                                    unidades = "B"
+                                }
+                                if (initS5.toString().contains("0.")){
+                                    initS5 *= 1000
+                                    unidades = "B"
+                                }
+                                if (initS75.toString().contains("0.")){
+                                    initS75 *= 1000
+                                    unidades = "B"
+                                }
+                            }
+
+                        }
                     } catch (e: Exception) {
                         Toast.makeText(requireActivity(), "Error", Toast.LENGTH_SHORT).show()
                         e.printStackTrace()

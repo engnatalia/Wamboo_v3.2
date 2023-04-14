@@ -79,4 +79,6 @@
     <string name="equivalences">Equivalent to drive: </string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="estimated_size">Estimated size, smaller than:</string>
+    <string name="compression">compression (at least)</string>
 </resources>
