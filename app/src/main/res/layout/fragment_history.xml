@@ -134,9 +134,16 @@
                 android:drawablePadding="2dp"
                 ></TextView>
         </LinearLayout>
-
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rgTypes"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-6983852485981992/8859021238" />
     </LinearLayout>
     </ScrollView>
+
     <TextView
         android:id="@+id/tvNoData"
         android:layout_width="wrap_content"

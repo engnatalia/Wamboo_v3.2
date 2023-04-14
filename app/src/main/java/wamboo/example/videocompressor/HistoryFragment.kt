@@ -18,6 +18,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.github.mikephil.charting.data.Entry
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +42,7 @@ class HistoryFragment : Fragment() {
     lateinit var viewModel: CompressViewModel
     var pollutionAverage = 0.0
     lateinit var chartAdapter: ChartAdapter
-
+    private lateinit var mAdView3: AdView
     companion object {
         fun newInstance() = HistoryFragment()
     }
@@ -49,6 +53,13 @@ class HistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ) = FragmentHistoryBinding.inflate(inflater, container, false).run {
         binding = this
+
+        MobileAds.initialize(requireActivity()) {}
+        val adRequest = AdRequest.Builder().build()
+        mAdView3 = binding.root.findViewById(R.id.adView3)
+        //mAdView3.setAdSize(AdSize.BANNER)
+        //mAdView3.setAdUnitId("ca-app-pub-6983852485981992/8859021238")
+        mAdView3.loadAd(adRequest)
         return@run this.root
     }
 
