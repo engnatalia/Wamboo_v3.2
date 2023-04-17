@@ -43,6 +43,7 @@ import java.util.*
 @Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
     private lateinit var mAdView: AdView
+    private lateinit var logoH : ImageView
     private var videoUrl: Uri? = null
     private var compressedFilePath = ""
     private var typesSpinner=arrayOf("")
@@ -322,7 +323,14 @@ class HomeFragment : Fragment() {
                 }
 
             })
-
+        logoH =binding.root.findViewById(R.id.bottomImage)
+        logoH.setOnClickListener(){
+            val intent = Intent()
+            intent.action = Intent.ACTION_VIEW
+            intent.addCategory(Intent.CATEGORY_BROWSABLE)
+            intent.data = Uri.parse("https://www.instagram.com/harmonyvalley_official/")
+            startActivity(intent)
+        }
         return binding.root
     }
 

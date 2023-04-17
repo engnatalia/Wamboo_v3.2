@@ -378,7 +378,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
         android:background="@color/white"
-        android:src="@drawable/logo"
-        android:importantForAccessibility="no"/>
+        android:importantForAccessibility="no"
+        android:src="@drawable/logo" />
 
 </RelativeLayout>
