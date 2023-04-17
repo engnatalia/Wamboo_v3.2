@@ -13,18 +13,20 @@ android {
         applicationId "wamboo.example.videocompressor"
         minSdk 30
         targetSdk 33
-        versionCode 4
+        versionCode 5
         versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+
 
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             ndk {
-                debugSymbolLevel 'SYMBOL_TABLE'
+                debugSymbolLevel 'FULL'
             }
         }
     }
@@ -40,6 +42,7 @@ android {
     }
 
 }
+android.defaultConfig.ndk.debugSymbolLevel = 'FULL'
 
 dependencies {
 

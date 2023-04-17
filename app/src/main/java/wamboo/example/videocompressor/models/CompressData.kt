@@ -2,7 +2,6 @@ package wamboo.example.videocompressor.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.math.BigDecimal
 
 @Entity(tableName = "compression")
 class CompressData(

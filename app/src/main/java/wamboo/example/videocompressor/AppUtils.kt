@@ -3,7 +3,6 @@ package wamboo.example.videocompressor
 import android.content.ContentResolver
 import android.content.Context
 import android.content.DialogInterface.OnClickListener
-import android.content.res.Resources
 import android.graphics.DashPathEffect							  
 import android.net.Uri
 import android.provider.OpenableColumns
@@ -22,18 +21,17 @@ import wamboo.example.videocompressor.models.FinalChartData
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import wamboo.example.videocompressor.models.*
+import kotlin.math.log10
+import kotlin.math.pow
+
 // This function returns the file size in human readable format . Like it will take in size and return the size in kb or mb which can be
 // displayed to the user .
 fun fileSize(size2: Long): String {
-    val size = size2.toLong()
-    if (size <= 0) return "0"
+    if (size2 <= 0) return "0"
     val units = arrayOf("B", "kB", "MB", "GB", "TB")
-    val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+    val digitGroups = (log10(size2.toDouble()) / log10(1024.0)).toInt()
     return DecimalFormat("#,##0.#").format(
-        size / Math.pow(
-            1024.0, digitGroups.toDouble()
-        )
+        size2 / 1024.0.pow(digitGroups.toDouble())
     ) + " " + units[digitGroups]
 }
 
@@ -100,10 +98,10 @@ fun showMessage(context: Context, msg: String) {
 }
 
 fun showAlertDialog(context: Context, listener: OnClickListener) {
-    AlertDialog.Builder(context).setTitle(context.getResources().getString(R.string.delete_data)+"!").setMessage(context.getResources().getString(R.string.delete_message))
+    AlertDialog.Builder(context).setTitle(context.resources.getString(R.string.delete_data)+"!").setMessage(context.resources.getString(R.string.delete_message))
         .setPositiveButton(
-            context.getResources().getString(R.string.yes), listener
-        ).setNegativeButton(context.getResources().getString(R.string.no)) { p0, p1 ->
+            context.resources.getString(R.string.yes), listener
+        ).setNegativeButton(context.resources.getString(R.string.no)) { p0, _ ->
             p0?.dismiss()
         }.setCancelable(false).create().show()
 }
@@ -165,7 +163,7 @@ fun setUpLineChart(
         if (isFileChart) {
             yAxis.valueFormatter = object : ValueFormatter() {
                 override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                    return "${String.format("%.2f", value)}"
+                    return String.format("%.2f", value)
                 }
             }
         }
@@ -205,6 +203,6 @@ fun setUpLineChart(
     mChart.description.isEnabled = false
 
     mChart.data = data
-    mChart.notifyDataSetChanged();
-    mChart.invalidate();
+    mChart.notifyDataSetChanged()
+    mChart.invalidate()
 }

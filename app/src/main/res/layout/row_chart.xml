@@ -79,7 +79,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="4dp"
         android:visibility="gone"
-        app:srcCompat="@drawable/next_icon"></androidx.appcompat.widget.AppCompatImageView>
+        app:srcCompat="@drawable/next_icon" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivPrevIcon"
@@ -89,6 +89,6 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="4dp"
         android:visibility="gone"
-        app:srcCompat="@drawable/iv_prev"></androidx.appcompat.widget.AppCompatImageView>
+        app:srcCompat="@drawable/iv_prev" />
 
 </RelativeLayout>

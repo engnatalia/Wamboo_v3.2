@@ -83,5 +83,6 @@
     <string name="estimated_size">Tamaño estimado, menor de:</string>
     <string name="compression">compresión</string>
     <string name="background">Habilita el funcionamiento en segundo plano</string>
+    <string name="ok">OK</string>
 
 </resources>

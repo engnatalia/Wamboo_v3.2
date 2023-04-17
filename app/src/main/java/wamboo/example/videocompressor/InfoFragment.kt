@@ -12,11 +12,11 @@ import wamboo.example.videocompressor.databinding.FragmentInfoBinding
 
 class InfoFragment : Fragment() {
     private lateinit var mAdView2 : AdView
-    lateinit var binding: FragmentInfoBinding
+    private lateinit var binding: FragmentInfoBinding
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentInfoBinding.inflate(inflater, container, false)
         MobileAds.initialize(requireActivity()) {}
         val adRequest = AdRequest.Builder().build()

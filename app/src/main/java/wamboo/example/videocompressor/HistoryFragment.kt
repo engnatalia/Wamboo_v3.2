@@ -3,29 +3,20 @@ package wamboo.example.videocompressor
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import com.github.mikephil.charting.data.Entry
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import wamboo.example.videocompressor.databinding.FragmentHistoryBinding
 import wamboo.example.videocompressor.databinding.RowChartBinding
 import wamboo.example.videocompressor.models.*
@@ -168,7 +159,11 @@ class HistoryFragment : Fragment() {
             setUpLineChart(rowBinding.chartFile, finalChartListFile, true)
             val km = (pollutionAverage/0.140).toBigDecimal().setScale(2,
                 RoundingMode.UP).toDouble()
-            binding.equivalence.text =getString(R.string.equivalences)+"$km"+"km"
+            binding.equivalence.text = buildString {
+        append(getString(R.string.equivalences))
+        append(km)
+        append("km")
+    }
             chartAdapter.updateData(compressChartViewList)
         }
 

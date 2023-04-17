@@ -1,6 +1,6 @@
 package wamboo.example.videocompressor.vm
 
-import android.util.Log
+
 import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

@@ -2,17 +2,11 @@ package wamboo.example.videocompressor
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.CheckBox
-import android.widget.Toast
-import android.os.PowerManager								   
 import androidx.appcompat.app.ActionBar
-import androidx.activity.viewModels										   
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint											
 import wamboo.example.videocompressor.databinding.ActivityMainBinding
-import wamboo.example.videocompressor.vm.CompressViewModel														  
 
 @AndroidEntryPoint				  
 class MainActivity : AppCompatActivity() {
@@ -25,10 +19,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var hometab = getString(R.string.title_home)
-        var infotab = getString(R.string.title_information)
-		var historytab = getString(R.string.title_history)
-        var tabTitles = arrayOf(hometab, infotab, historytab)
+        val hometab = getString(R.string.title_home)
+        val infotab = getString(R.string.title_information)
+		val historytab = getString(R.string.title_history)
+        val tabTitles = arrayOf(hometab, infotab, historytab)
         setContentView(binding.root)
 
         /* adapter for viewpager to display tabs */

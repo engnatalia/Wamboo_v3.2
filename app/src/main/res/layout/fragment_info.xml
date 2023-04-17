@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginRight="10dp"
             android:text="@string/intro"
             android:textColor="@color/black"
             android:background="#F3F3F3"
@@ -32,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginRight="10dp"
             android:text="@string/body"
             android:textColor="@color/black"
             android:background="#F3F3F3"
@@ -42,7 +40,6 @@
             android:layout_height="match_parent"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginRight="10dp"
             android:text="@string/body2"
             android:textColor="@color/black"
             android:background="#F3F3F3"
@@ -52,7 +49,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginRight="10dp"
                 android:text="@string/end"
                 android:textColor="@color/black"
                 android:background="#F3F3F3"
@@ -62,27 +58,27 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginRight="10dp"
                 android:text="@string/contact"
                 android:textColor="@color/black"
                 android:fontStyle="italic"
                 android:background="#F3F3F3"
                 android:textFontWeight="700"/>
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            ads:adSize="BANNER"
-            ads:adUnitId="ca-app-pub-6983852485981992/7730687729"></com.google.android.gms.ads.AdView>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-6983852485981992/7730687729" />
             <ImageView
                 android:id="@+id/planet"
                 android:layout_width="wrap_content"
                 android:layout_height="250dp"
                 android:layout_marginTop="10dp"
-                android:layout_centerInParent="true"
                 android:background="#F3F3F3"
-                android:src="@drawable/info_tab" />
+                android:src="@drawable/info_tab"
+                android:contentDescription="@null"/>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>

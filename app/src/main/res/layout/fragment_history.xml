@@ -14,7 +14,7 @@
     <LinearLayout
         android:id="@+id/rootLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="visible">
 
@@ -31,7 +31,7 @@
                 android:layout_gravity="center"
                 android:text="@string/select_dates"
                 android:textAllCaps="false"
-                android:maxLines="2"></Button>
+                android:maxLines="2" />
 
             <Button
                 android:id="@+id/deleteSpec"
@@ -42,7 +42,7 @@
                 android:layout_marginEnd="4dp"
                 android:text="@string/delete_data"
                 android:textAllCaps="false"
-                android:maxLines="2"></Button>
+                android:maxLines="2" />
 
             <Button
                 android:id="@+id/delete"
@@ -51,7 +51,7 @@
                 android:layout_gravity="center"
                 android:text="@string/delete_all"
                 android:textAllCaps="false"
-                android:maxLines="2"></Button>
+                android:maxLines="2" />
 
         </LinearLayout>
 
@@ -123,16 +123,15 @@
                 <include layout="@layout/row_chart" />
 
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/equivalence"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:drawableLeft="@drawable/car"
                 android:drawablePadding="2dp"
-                ></TextView>
+                app:drawableStartCompat="@drawable/car" />
         </LinearLayout>
         <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             android:id="@+id/adView3"
@@ -152,7 +151,7 @@
         android:text="@string/no_history"
         android:textColor="@color/black"
         android:textSize="18sp"
-        android:visibility="gone"></TextView>
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tvRecords"
@@ -162,6 +161,6 @@
         android:text="@string/no_record"
         android:textColor="@color/black"
         android:textSize="18sp"
-        android:visibility="gone"></TextView>
+        android:visibility="gone" />
 
 </RelativeLayout>

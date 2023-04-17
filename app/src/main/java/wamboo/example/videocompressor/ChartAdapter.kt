@@ -2,13 +2,11 @@ package wamboo.example.videocompressor
 
 import android.content.Context
 import android.graphics.DashPathEffect
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.AxisBase
@@ -23,14 +21,13 @@ import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.roundToLong
 
 
 class ChartAdapter(
     var onNext: (Int) -> Unit,
     var onPrev: (Int) -> Unit,
     val context: Context,
-    var items: ArrayList<CompressChartView>
+    private var items: ArrayList<CompressChartView>
 ) :
     RecyclerView.Adapter<ChartAdapter.ViewHolder>() {
 
@@ -65,7 +62,7 @@ class ChartAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChartAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater: LayoutInflater = LayoutInflater.from(parent.context)
         val listItem: View = layoutInflater.inflate(R.layout.row_chart, parent, false)
         return ViewHolder(listItem)
@@ -119,8 +116,10 @@ class ChartAdapter(
                 val leftAxis = mChart.axisLeft
                 leftAxis.valueFormatter = object : ValueFormatter() {
                     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                        return "${value.toBigDecimal()?.setScale(2,
-                            RoundingMode.UP)}"
+                        return "${
+                            value.toBigDecimal().setScale(2,
+                                RoundingMode.UP)
+                        }"
                     }
                 }
 
@@ -172,7 +171,7 @@ class ChartAdapter(
 
     fun updateData(data: ArrayList<CompressChartView>) {
         for (item in items) {
-            item.compressDataList.forEach {
+            repeat(item.compressDataList.size) {
             }
         }
         items.apply {

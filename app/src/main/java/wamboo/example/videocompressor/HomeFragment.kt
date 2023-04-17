@@ -12,7 +12,6 @@ import android.os.PowerManager
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Html
-import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +22,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.work.*
@@ -36,13 +34,10 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.coroutines.*
 import wamboo.example.videocompressor.databinding.FragmentHomeBinding
-import wamboo.example.videocompressor.models.CompressData
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import wamboo.example.videocompressor.workers.VideoCompressionWorker
 import java.math.RoundingMode
 import kotlin.math.round
-import wamboo.example.videocompressor.repository.CompressRepository
-import java.text.SimpleDateFormat
 import java.util.*
 
 @Suppress("DEPRECATION")
@@ -51,9 +46,9 @@ class HomeFragment : Fragment() {
     private var videoUrl: Uri? = null
     private var compressedFilePath = ""
     private var typesSpinner=arrayOf("")
-    lateinit var pref: SharedPreferences
-    lateinit var editor: SharedPreferences.Editor
-    lateinit var mediaInformation : MediaInformationSession
+    private lateinit var pref: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+    private lateinit var mediaInformation : MediaInformationSession
     private var initialSize = ""
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
@@ -67,7 +62,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
-    var showViews = true
+    private var showViews = true
     var  initS8 = 0.0
     var initS5= 0.0
     var initS75= 0.0
@@ -82,12 +77,12 @@ class HomeFragment : Fragment() {
 
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
 
-                    var msg1 = getString(R.string.notification_message_success)
-                    Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
+                    val msg1 = getString(R.string.notification_message_success)
+                    Toast.makeText(context, msg1, Toast.LENGTH_SHORT).show()
                     AlertDialog.Builder(requireActivity()).apply {
-                        var msg2 = getString(R.string.scroll)
+                        val msg2 = getString(R.string.scroll)
 
-                        setMessage("$msg2").setPositiveButton(
+                        setMessage(msg2).setPositiveButton(
                             "OK"
                         ) { _, _ -> (requireActivity()) }
                     }.create().show()
@@ -95,20 +90,18 @@ class HomeFragment : Fragment() {
 
 
                 } else {
-                    var msg1 = getString(R.string.notification_message_failure)
-                    Toast.makeText(context, "$msg1", Toast.LENGTH_SHORT).show()
+                    val msg1 = getString(R.string.notification_message_failure)
+                    Toast.makeText(context, msg1, Toast.LENGTH_SHORT).show()
                 }
-                if (compressedFilePath.equals(intent.getStringExtra(URI_PATH))) {
+                if (compressedFilePath != intent.getStringExtra(URI_PATH)){
 
-                }else
-                {
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
                     if ( (selectedtype != getString(R.string.custom_h)) && (selectedtype != getString(R.string.custom_l))) {
                         binding.quality.text =""
                         binding.quality.visibility= View.VISIBLE
                         binding.qualityDescription.visibility= View.VISIBLE
                         binding.checkboxQuality.visibility= View.VISIBLE
-                        binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
+                        binding.checkboxQuality.setOnCheckedChangeListener{ _, _ ->
                             val checked: Boolean = binding.checkboxQuality.isChecked
                             if (checked) {
                                 /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
@@ -124,13 +117,13 @@ class HomeFragment : Fragment() {
 
                         }
                     }else if ((selectedtype == getString(R.string.custom_h)) || (selectedtype == getString(R.string.custom_l))) {
-                        var videoResolutionInit = "$videoWidth" + "x" + "$videoHeight"
+                        val videoResolutionInit = videoWidth + "x" + videoHeight
                         if (videoResolution == videoResolutionInit) {
                             binding.quality.text =""
                             binding.quality.visibility= View.VISIBLE
                             binding.qualityDescription.visibility= View.VISIBLE
                             binding.checkboxQuality.visibility= View.VISIBLE
-                            binding.checkboxQuality.setOnCheckedChangeListener{checkboxQuality, i ->
+                            binding.checkboxQuality.setOnCheckedChangeListener{ _, _ ->
                                 val checked: Boolean = binding.checkboxQuality.isChecked
                                 if (checked) {
                                     /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
@@ -171,14 +164,14 @@ class HomeFragment : Fragment() {
                 // For example, update UI, show a notification, etc.
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
                     val percentage = intent.getStringExtra("percentage")
-                    var msg = getString(R.string.waiting)
-                    progressDialog.setMessage("$msg" + "$percentage")
+                    val msg = getString(R.string.waiting)
+                    progressDialog.setMessage(msg + "$percentage")
                     if (progressDialog.isShowing.not()) {
                         progressDialog.show()
                     }
                 } else {
-                    var msg2 = getString(R.string.notification_message_failure)
-                    Toast.makeText(context, "$msg2", Toast.LENGTH_SHORT).show()
+                    val msg2 = getString(R.string.notification_message_failure)
+                    Toast.makeText(context, msg2, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -188,7 +181,7 @@ class HomeFragment : Fragment() {
         binding.qualityDescription.visibility= View.GONE
         binding.checkboxQuality.visibility= View.GONE
         binding.quality.text =""
-        var command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
+        val command2 = "-i ${FFmpegKitConfig.getSafParameterForRead(
             activity,
             videoUrl
         )} -i ${FFmpegKitConfig.getSafParameterForRead(
@@ -197,17 +190,20 @@ class HomeFragment : Fragment() {
         )} -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
         Toast.makeText(context,  Html.fromHtml("<font color='red' ><b>" +getString(R.string.quality_progress)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
-        var hola=FFmpegKit.execute(command2)
+        val hola=FFmpegKit.execute(command2)
         binding.quality.visibility = View.VISIBLE
-        var indexSsim = hola.logs.size
-        var ssimLine = hola.logs.get(indexSsim-2)
-        var ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
-        var quality = 0.0
-        var msg1 = ""
+        val indexSsim = hola.logs.size
+        val ssimLine = hola.logs.get(indexSsim-2)
+        val ssim=ssimLine.message.substringAfter("All:").substringBefore("(")
+        val quality: Double
+        val msg1: String
         if (ssim.contains("0.")){
             quality = ((1-ssim.toDouble())*100).toBigDecimal().setScale(2,
                 RoundingMode.UP).toDouble()
-            binding.quality.text = quality.toString()+"%"
+            binding.quality.text = buildString {
+        append(quality.toString())
+        append("%")
+    }
             msg1 = getString(R.string.quality_completed)+" "+quality.toString()+"%"}
         else{
             binding.quality.text =getString(R.string.poor_quality)
@@ -216,7 +212,7 @@ class HomeFragment : Fragment() {
         AlertDialog.Builder(requireActivity()).apply {
 
 
-            setMessage("$msg1").setPositiveButton(
+            setMessage(msg1).setPositiveButton(
                 "OK"
             ) { _, _ -> (requireActivity()) }
         }.create().show()
@@ -264,24 +260,32 @@ class HomeFragment : Fragment() {
 
         }else{
             binding.co2TV.setTextColor(Color.parseColor("#6F9F3A"))
-            binding.co2TV.text = co2+ "kgCO2"+ "\n"+getString(R.string.congrats)
+            binding.co2TV.text = buildString {
+        append(co2)
+        append("kgCO2")
+        append("\n")
+        append(getString(R.string.congrats))
+    }
 
         }
         if (compressedSize != null && initialSize != "") {
 
-            var finalSize = compressedSize.substringBefore(" ")
-            var finalS = finalSize.replace(",",".").toDouble()
+            val finalSize = compressedSize.substringBefore(" ")
+            val finalS = finalSize.replace(",",".").toDouble()
             var final = finalS
             if ((compressedSize.contains("k") && initialSize.contains("M") )||(compressedSize.contains("M") && initialSize.contains("G") ) ||(compressedSize.contains("B") && initialSize.contains("k") )){
                 final=finalS/1000
             }
-            var initSize = initialSize.substringBefore(" ")
-            var init = initSize.replace(",",".")
-            var sizeReduction = (100- (final?.times(100)?.div(init.toDouble())?.toBigDecimal()?.setScale(2,
-                RoundingMode.UP))?.toDouble()!!).toBigDecimal()?.setScale(2,
+            val initSize = initialSize.substringBefore(" ")
+            val init = initSize.replace(",",".")
+            val sizeReduction = (100- (final.times(100).div(init.toDouble()).toBigDecimal().setScale(2,
+                RoundingMode.UP))?.toDouble()!!).toBigDecimal().setScale(2,
                 RoundingMode.UP)
 
-            binding.reduction.text = sizeReduction.toString()+"%"
+            binding.reduction.text = buildString {
+        append(sizeReduction.toString())
+        append("%")
+    }
 
         }
 
@@ -401,10 +405,10 @@ class HomeFragment : Fragment() {
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
+            ) != PackageManager.PERMISSION_GRANTED -> {
                 // You can use the API that requires the permission.
-            }
-            else -> {
+
+
                 // You can directly ask for the permission.
                 // The registered ActivityResultCallback gets the result of this request.
 
@@ -443,10 +447,8 @@ class HomeFragment : Fragment() {
         )
         val inflater =
             requireContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        if (inflater != null) {
-            val dialogView = inflater.inflate(R.layout.progress_dialog_layout, null)
-            builder.setView(dialogView)
-        }
+        val dialogView = inflater.inflate(R.layout.progress_dialog_layout, null)
+        builder.setView(dialogView)
         builder.setCancelable(false)
         progressDialog = builder.create()
 
@@ -479,11 +481,11 @@ class HomeFragment : Fragment() {
 
     private fun showAlertDialog() {
         AlertDialog.Builder(requireActivity()).apply {
-            var msg1 = getString(R.string.notification_background_title)
-            var msg2 = getString(R.string.notification_background_body)
-            setTitle("$msg1")
-            setMessage("$msg2").setPositiveButton(
-                "OK"
+            val msg1 = getString(R.string.notification_background_title)
+            val msg2 = getString(R.string.notification_background_body)
+            setTitle(msg1)
+            setMessage(msg2).setPositiveButton(
+                getString(R.string.ok)
             ) { _, _ -> openBatteryUsagePage(requireActivity()) }
         }.create().show()
         noBattery = true
@@ -558,7 +560,7 @@ class HomeFragment : Fragment() {
 
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
         videoView.setMediaController(MediaController(requireActivity()))
-        checkboxAudio.setOnCheckedChangeListener{checkboxAudio, i ->
+        checkboxAudio.setOnCheckedChangeListener{ checkboxAudio, _ ->
             val checked: Boolean = checkboxAudio.isChecked
             if (checked) {
                 audio = "-an"
@@ -588,9 +590,9 @@ class HomeFragment : Fragment() {
                 position: Int,
                 id: Long
             ) { selectedtype =typesSpinner[position]
-                var spinner2 =addSpinnerSpeed()
-                var spinner4 =addSpinnerCodec()
-                var spinner3 =addSpinnerResolution()
+                val spinner2 =addSpinnerSpeed()
+                val spinner4 =addSpinnerCodec()
+                val spinner3 =addSpinnerResolution()
                 when (selectedtype) {
                     getString(R.string.good) ->{
 
@@ -783,7 +785,7 @@ private fun resetViews() {
                 }
 //check if video is rotated and swap resolution
                 if (side != null) {
-                    var rotation = side.substringAfter("rotation\":").substringBefore('}')
+                    val rotation = side.substringAfter("rotation\":").substringBefore('}')
                     if (rotation == "-90" || rotation == "270"){
                         videoHeight = mediaInformation.mediaInformation.streams[0].width.toString()
                         videoWidth = mediaInformation.mediaInformation.streams[0].height.toString()
@@ -797,18 +799,18 @@ private fun resetViews() {
 
                 }
 
-                videoResolution="$videoWidth" + "x" + "$videoHeight"
+                videoResolution= videoWidth + "x" + videoHeight
                 resolutionSpinner = arrayOf(
                     getString(R.string.select_resolution),
-                    "$videoWidth" + "x" + "$videoHeight" + "(Original)",
+                    videoWidth + "x" + videoHeight + "(Original)",
                     "${(round((videoWidth.toDouble() * 0.7)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.7)/2)*2).toInt()}" + " (70%)",
                     "${(round((videoWidth.toDouble() * 0.5)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.5)/2)*2).toInt()}" + " (50%)",
                     "${(round((videoWidth.toDouble() * 0.25)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.25)/2)*2).toInt()}" + " (25%)",
                     "${(round((videoWidth.toDouble() * 0.05)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.05)/2)*2).toInt()}" + " (5%)"
                 )
                 resolutionValues = arrayOf(
-                    "$videoWidth" + "x" + "$videoHeight",
-                    "$videoWidth" + "x" + "$videoHeight",
+                    videoWidth + "x" + videoHeight,
+                    videoWidth + "x" + videoHeight,
                     "${(round((videoWidth.toDouble() * 0.7)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.7)/2)*2).toInt()}",
                     "${(round((videoWidth.toDouble() * 0.5)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.5)/2)*2).toInt()}",
                     "${(round((videoWidth.toDouble() * 0.25)/2)*2).toInt()}" + "x" + "${(round((videoHeight.toDouble() * 0.25)/2)*2).toInt()}",
@@ -1034,8 +1036,8 @@ If there is an error in the process, an error message is displayed to the user v
 
                         var initS=0.0
                         if (initialSize != "") {
-                            var initSize = initialSize.substringBefore(" ")
-                            var init = initSize.replace(",",".").toDouble()
+                            val initSize = initialSize.substringBefore(" ")
+                            val init = initSize.replace(",",".").toDouble()
 
                             if (initialSize.contains("M") )
                             {

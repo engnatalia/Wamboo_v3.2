@@ -8,7 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 /// This class is used to inflate fragment as a tab by viewpager
 class ViewPagerAdapter(fragmentManager: FragmentActivity) : FragmentStateAdapter(fragmentManager) {
 
-    /// below function used to tell total number to tabs displyaed in viewpager
+    /// below function used to tell total number to tabs displayed in viewpager
     override fun getItemCount(): Int {
         return 3
     }

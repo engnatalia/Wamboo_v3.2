@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentResolver									  
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -12,11 +11,8 @@ import android.content.SharedPreferences
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
-import android.provider.OpenableColumns									   
 import android.util.Log
-import androidx.appcompat.app.AlertDialog										 
 import androidx.core.app.NotificationCompat
-import androidx.core.net.toFile
 import androidx.core.net.toUri
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.FFmpegKitConfig
@@ -25,20 +21,16 @@ import com.arthenica.ffmpegkit.ReturnCode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch							
+import kotlinx.coroutines.launch
 import wamboo.example.videocompressor.*
 import wamboo.example.videocompressor.models.CompressData
 import wamboo.example.videocompressor.repository.CompressRepository															   
 import wamboo.example.videocompressor.workers.ForegroundWorker
 import java.io.File
-import java.io.FileNotFoundException									
 import java.math.RoundingMode
 import kotlin.math.abs
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Executors
 import javax.inject.Inject								 
 @AndroidEntryPoint			  
 class VideoCompressionService : Service() {
@@ -57,7 +49,7 @@ class VideoCompressionService : Service() {
         const val CHANNEL_NAME = "Video Compression"
     }
 
-    lateinit var pref: SharedPreferences
+    private lateinit var pref: SharedPreferences
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -144,8 +136,8 @@ class VideoCompressionService : Service() {
     ) {
         val root: String = Environment.getExternalStorageDirectory().toString()
         val appFolder = "$root/GFG/"
-        var outPutSafeUri = ""
-        var command = ""
+        val outPutSafeUri: String
+        val command: String
         var uriPath: Uri? = null
         val filePrefix = "Compressed"
         val fileExtn = ".mp4"
@@ -206,32 +198,30 @@ class VideoCompressionService : Service() {
                 videoUri
             )
         )
-        var duration = mediaInformation.mediaInformation.formatProperties.getString("duration")
-        var initialSize = fileSize(videoUri.length(contentResolver))
+        val duration = mediaInformation.mediaInformation.formatProperties.getString("duration")
+        val initialSize = fileSize(videoUri.length(contentResolver))
         var initS=0.0
-        if (initialSize != null) {
-            var initSize = initialSize.substringBefore(" ")
-            var init = initSize.replace(",",".").toDouble()
+        val initSize = initialSize.substringBefore(" ")
+        val init = initSize.replace(",",".").toDouble()
 
-            if (initialSize.contains("M") )
-            {
-                 initS=init*1000000
-            }
-            if (initialSize.contains("G") )
-            {
-                 initS=init*1000000000
-
-            }
-            if (initialSize.contains("k") )
-            {
-                 initS=init*1000
-
-            }
+        if (initialSize.contains("M") )
+        {
+             initS=init*1000000
+        }
+        if (initialSize.contains("G") )
+        {
+             initS=init*1000000000
 
         }
-        var initS8=initS-initS*0.8
-        var initS5=initS-initS*0.5
-        var initS75=initS-initS*0.75
+        if (initialSize.contains("k") )
+        {
+             initS=init*1000
+
+        }
+
+        val initS8=initS-initS*0.8
+        val initS5=initS-initS*0.5
+        val initS75=initS-initS*0.75
         when (selectedtype) {
             getString(R.string.ultrafast) -> {
                 /*command = "-y -i ${
@@ -300,19 +290,20 @@ class VideoCompressionService : Service() {
                 //initialSize = fileSize(videoUri.length(contentResolver))
                 val compressedSize = uriPath?.length(contentResolver)
                     ?.let { fileSize(it) }
-                var sizeReduction = 0?.toBigDecimal()
+                var sizeReduction = 0.toBigDecimal()
                 if (compressedSize != null && initialSize != null) {
 
-                    var finalSize = compressedSize.substringBefore(" ")
-                    var finalS = finalSize.replace(",",".").toDouble()
+                    val finalSize = compressedSize.substringBefore(" ")
+                    val finalS = finalSize.replace(",",".").toDouble()
                     var final = finalS
                     if ((compressedSize.contains("k") && initialSize.contains("M") )||(compressedSize.contains("M") && initialSize.contains("G") ) ||(compressedSize.contains("B") && initialSize.contains("k") )){
                         final=finalS/1000
                     }
-                    var initSize = initialSize.substringBefore(" ")
-                    var init = initSize.replace(",",".")
-                    sizeReduction = (100- (final?.times(100)?.div(init.toDouble())?.toBigDecimal()?.setScale(2,
-                        RoundingMode.UP))?.toDouble()!!).toBigDecimal()?.setScale(2,
+                    val initSize = initialSize.substringBefore(" ")
+                    val init = initSize.replace(",",".")
+                    sizeReduction = (100- (final.times(100).div(init.toDouble()).toBigDecimal()
+                        .setScale(2,
+                            RoundingMode.UP))?.toDouble()!!).toBigDecimal().setScale(2,
                         RoundingMode.UP)
 
 
@@ -327,7 +318,7 @@ class VideoCompressionService : Service() {
                 val finalcapacity: Int = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
                 val processingtime = (session.duration / 1000).toDouble()
                 val dif=(initcapacity-finalcapacity).toDouble()
-                val power = abs(5*(dif/100)*current/1000).toDouble()
+                val power = abs(5*(dif/100)*current/1000)
                 val kwh= power*(processingtime/3600)/1000
                 //val pollution = round(kwh*0.519)
                 val pollution = kwh*519
@@ -342,16 +333,16 @@ class VideoCompressionService : Service() {
                 intent.putExtra(HomeFragment.BAT, "$finalcapacity")*/
 
                 pref.edit().apply {
-                    putString(HomeFragment.RETURN_CODE, returnCode.toString()).commit()
+                    putString(HomeFragment.RETURN_CODE, returnCode.toString()).apply()
                     //putString(HomeFragment.INITIAL_SIZE, initialSize).commit()
-                    putString(HomeFragment.COMPRESS_SZE, compressedSize).commit()
+                    putString(HomeFragment.COMPRESS_SZE, compressedSize).apply()
                     putString(
                         HomeFragment.CONVERSION_TIME,
                         getTime(session.duration / 1000)
-                    ).commit()
-                    putString(HomeFragment.INITIAL_BATTERY, "$initcapacity%").commit()
-                    putString(HomeFragment.REMAINING_BATTERY, "$finalcapacity%").commit()
-                    putString(HomeFragment.CO2, co2.toString()).commit()
+                    ).apply()
+                    putString(HomeFragment.INITIAL_BATTERY, "$initcapacity%").apply()
+                    putString(HomeFragment.REMAINING_BATTERY, "$finalcapacity%").apply()
+                    putString(HomeFragment.CO2, co2.toString()).apply()
                 }
 
 				CoroutineScope(Dispatchers.IO).launch {
@@ -359,7 +350,7 @@ class VideoCompressionService : Service() {
                     val date = SimpleDateFormat("dd/MM/yyyy").format(Date(millisecond))
                     compressRepo.insert(
                         CompressData(
-                            sizeReduction?.toLong()!!,
+                            sizeReduction.toLong(),
                             co2.toLong(),
                             millisecond,
                             date
@@ -378,11 +369,11 @@ class VideoCompressionService : Service() {
                 // CALLED WHEN SESSION PRINTS LOGS
             }, {
 
-                var progress = ((it.time.toDouble() / duration.toDouble()) / 10)
-                var percentage = progress.toBigDecimal().setScale(0, RoundingMode.CEILING).toInt()
-                var msg3 = "$percentage%"
+                val progress = ((it.time.toDouble() / duration.toDouble()) / 10)
+                val percentage = progress.toBigDecimal().setScale(0, RoundingMode.CEILING).toInt()
+                val msg3 = "$percentage%"
 
-                Log.d("service", "$msg3")
+                Log.d("service", msg3)
 
                 //builder2.setContentText("$msg3 completed")
 

@@ -9,9 +9,9 @@
         android:id="@+id/mytext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|center_horizontal"
+        android:layout_gravity="start|center_horizontal"
         android:fontFamily="@font/bauhaus93"
-        android:text="Wamboo"
+        android:text="@string/app_name"
         android:textColor="#FF5722"
         android:textSize="22sp" />
 </LinearLayout>
