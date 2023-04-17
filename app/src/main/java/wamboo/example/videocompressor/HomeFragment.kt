@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
     private var  showCodec =""
     private var  videoCodec =""
     private var  compressSpeed =""
-    private var noBattery = false
+
     private var audio = "-c:a copy"
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
@@ -279,8 +279,8 @@ class HomeFragment : Fragment() {
             }
             val initSize = initialSize.substringBefore(" ")
             val init = initSize.replace(",",".")
-            val sizeReduction = (100- (final.times(100).div(init.toDouble()).toBigDecimal().setScale(2,
-                RoundingMode.UP))?.toDouble()!!).toBigDecimal().setScale(2,
+            val sizeReduction = (100- final.times(100).div(init.toDouble()).toBigDecimal().setScale(2,
+                RoundingMode.UP)?.toDouble()!!).toBigDecimal().setScale(2,
                 RoundingMode.UP)
 
             binding.reduction.text = buildString {
@@ -473,18 +473,21 @@ class HomeFragment : Fragment() {
     private fun isBatteryOptimizationDisabled(): Boolean {
         val powerManager = requireActivity().getSystemService(Context.POWER_SERVICE) as PowerManager
         if (powerManager.isIgnoringBatteryOptimizations(requireActivity().packageName)) {
+
+            AlertDialog.Builder(requireActivity()).apply {
+                val msg2 = getString(R.string.background2)
+                setMessage(msg2).setPositiveButton(
+                    getString(R.string.ok)
+                ) { _, _ ->  }
+            }.create().show()
+
             return true
         } else {
-            when (noBattery) {
-                false -> {
                     showAlertDialog()
                     return false
-                }
-                true -> {
-                    return true
-                }
-            }
+
         }
+
     }
 
     private fun showAlertDialog() {
@@ -496,7 +499,6 @@ class HomeFragment : Fragment() {
                 getString(R.string.ok)
             ) { _, _ -> openBatteryUsagePage(requireActivity()) }
         }.create().show()
-        noBattery = true
     }
 
     fun openBatteryUsagePage(ctx: Context) {
@@ -624,7 +626,7 @@ class HomeFragment : Fragment() {
                         binding.dataTV3.visibility=View.VISIBLE
                         binding.dataTV.text=getString(R.string.estimated_size)
                         binding.dataTV2.text=Html.fromHtml("<b>"+"$initS75 "+" $unidades"+"</b>")
-                        binding.dataTV3.text="75% "+ getString(R.string.compression)
+                        binding.dataTV3.text="25% "+ getString(R.string.compression)
                         }
                     getString(R.string.ultrafast) ->{
 
@@ -636,7 +638,7 @@ class HomeFragment : Fragment() {
                         binding.dataTV3.visibility=View.VISIBLE
                         binding.dataTV.text=getString(R.string.estimated_size)
                         binding.dataTV2.text=Html.fromHtml("<b>"  +"$initS8 "+" $unidades"+"</b>")
-                        binding.dataTV3.text="80% "+ getString(R.string.compression)
+                        binding.dataTV3.text="20% "+ getString(R.string.compression)
                                         }
 
                     getString(R.string.custom_h) ->{
@@ -662,7 +664,7 @@ class HomeFragment : Fragment() {
                     binding.dataTV3.visibility=View.VISIBLE
                     binding.dataTV.text=getString(R.string.estimated_size)
                     binding.dataTV2.text=Html.fromHtml("<b>"  +"$initS8 "+" $unidades"+"</b>")
-                    binding.dataTV3.text="80% "+ getString(R.string.compression)
+                    binding.dataTV3.text="20% "+ getString(R.string.compression)
                 }
                 }
 
@@ -753,6 +755,8 @@ private fun resetViews() {
         dataTV.isVisible=false
         dataTV2.isVisible=false
         dataTV3.isVisible=false
+        rdOne.isChecked=false
+
     }
 }
     private fun addSpinnerResolution():Spinner {
