@@ -200,28 +200,7 @@ class VideoCompressionService : Service() {
         )
         val duration = mediaInformation.mediaInformation.formatProperties.getString("duration")
         val initialSize = fileSize(videoUri.length(contentResolver))
-        var initS=0.0
-        val initSize = initialSize.substringBefore(" ")
-        val init = initSize.replace(",",".").toDouble()
 
-        if (initialSize.contains("M") )
-        {
-             initS=init*1000000
-        }
-        if (initialSize.contains("G") )
-        {
-             initS=init*1000000000
-
-        }
-        if (initialSize.contains("k") )
-        {
-             initS=init*1000
-
-        }
-
-        val initS8=initS-initS*0.8
-        val initS5=initS-initS*0.5
-        val initS75=initS-initS*0.75
         when (selectedtype) {
             getString(R.string.ultrafast) -> {
                 /*command = "-y -i ${
@@ -235,7 +214,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -fs $initS8 -crf 40 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags +faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             "Ultrafast" -> {
                 command = "-y -i ${
@@ -243,7 +222,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -fs $initS8  -crf 40 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags +faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.good) -> {
                 command = "-y -i ${
@@ -251,7 +230,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx264 -fs $initS5 -crf 30 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags +faststart -c:v libx265 -crf 25 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.best) -> {
                 command = "-y -i ${
@@ -259,7 +238,7 @@ class VideoCompressionService : Service() {
                         applicationContext,
                         videoUri
                     )
-                } -movflags faststart -c:v libx265 -fs $initS75 -crf 30 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags +faststart -c:v libx265 -crf 30 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.custom_h) -> {
                 command = "-y -i ${
@@ -380,7 +359,7 @@ class VideoCompressionService : Service() {
                 //Update notification information:
                 //builder2.setProgress(100, percentage, false);
 
-                builder2.setContentText("$msg3 compressed")
+                builder2.setContentText(msg3+" " +getString(R.string.compressed))
 
                 //updateNotificationMessage()
                 notificationManager.notify(1, builder2.build())

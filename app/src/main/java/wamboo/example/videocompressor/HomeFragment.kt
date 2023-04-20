@@ -64,9 +64,9 @@ class HomeFragment : Fragment() {
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
     private var showViews = true
-    var  initS8 = 0.0
-    var initS5= 0.0
-    var initS75= 0.0
+    var  init75 = 0.0
+    var init40= 0.0
+    var init70= 0.0
     var unidades = ""
     //this receiver will trigger when the compression is completed
     private val videoCompressionCompletedReceiver = object : BroadcastReceiver() {
@@ -254,6 +254,7 @@ class HomeFragment : Fragment() {
         binding.initialBatteryTV.text = initialBattery
         binding.remainingBatteryTV.text = remainingBattery
         showViews = false
+        selectedtype = typesSpinner[0]
         val pollution= co2!!.toDouble()
         if (pollution > 0) {
             binding.co2TV.setTextColor(Color.parseColor("#FF0000"))
@@ -361,7 +362,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadAd()
-        checkNotificationPermission()
+        //checkNotificationPermission()
         checkCameraPermission()
         initUI()
         showLoader()
@@ -565,6 +566,7 @@ class HomeFragment : Fragment() {
 
         }
         rdOne.setOnClickListener{
+            checkNotificationPermission()
             isBatteryOptimizationDisabled()
         }
 
@@ -613,8 +615,8 @@ class HomeFragment : Fragment() {
                             binding.dataTV2.visibility=View.VISIBLE
                             binding.dataTV3.visibility=View.VISIBLE
                             binding.dataTV.text=getString(R.string.estimated_size)
-                            binding.dataTV2.text=Html.fromHtml("<b>"+"$initS5 "+" $unidades"+"</b>")
-                            binding.dataTV3.text="50% "+ getString(R.string.compression)
+                            binding.dataTV2.text=Html.fromHtml("<b>"+init40.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades"+"</b>")
+                            binding.dataTV3.text="40% "+ getString(R.string.compression)
                         }
                     getString(R.string.best) ->{
 
@@ -625,8 +627,8 @@ class HomeFragment : Fragment() {
                         binding.dataTV2.visibility=View.VISIBLE
                         binding.dataTV3.visibility=View.VISIBLE
                         binding.dataTV.text=getString(R.string.estimated_size)
-                        binding.dataTV2.text=Html.fromHtml("<b>"+"$initS75 "+" $unidades"+"</b>")
-                        binding.dataTV3.text="25% "+ getString(R.string.compression)
+                        binding.dataTV2.text=Html.fromHtml("<b>"+init70.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades"+"</b>")
+                        binding.dataTV3.text="70% "+ getString(R.string.compression)
                         }
                     getString(R.string.ultrafast) ->{
 
@@ -637,8 +639,8 @@ class HomeFragment : Fragment() {
                         binding.dataTV2.visibility=View.VISIBLE
                         binding.dataTV3.visibility=View.VISIBLE
                         binding.dataTV.text=getString(R.string.estimated_size)
-                        binding.dataTV2.text=Html.fromHtml("<b>"  +"$initS8 "+" $unidades"+"</b>")
-                        binding.dataTV3.text="20% "+ getString(R.string.compression)
+                        binding.dataTV2.text=Html.fromHtml("<b>"  +init75.toBigDecimal().setScale(2,RoundingMode.UP).toDouble() +" $unidades"+"</b>")
+                        binding.dataTV3.text="75% "+ getString(R.string.compression)
                                         }
 
                     getString(R.string.custom_h) ->{
@@ -663,8 +665,8 @@ class HomeFragment : Fragment() {
                     binding.dataTV2.visibility=View.VISIBLE
                     binding.dataTV3.visibility=View.VISIBLE
                     binding.dataTV.text=getString(R.string.estimated_size)
-                    binding.dataTV2.text=Html.fromHtml("<b>"  +"$initS8 "+" $unidades"+"</b>")
-                    binding.dataTV3.text="20% "+ getString(R.string.compression)
+                    binding.dataTV2.text=Html.fromHtml("<b>"  +init75.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades"+"</b>")
+                    binding.dataTV3.text="75% "+ getString(R.string.compression)
                 }
                 }
 
@@ -1067,68 +1069,68 @@ If there is an error in the process, an error message is displayed to the user v
                             }
 
                         }
-                        initS8=initS*0.8
-                        initS5=initS*0.5
-                        initS75=initS*0.75
+                        init75=initS*(1-0.75)
+                        init40=initS*(1-0.4)
+                        init70=initS*(1-0.7)
 
                         if (initialSize != "") {
 
 
                             if (initialSize.contains("M") )
                             {
-                                initS8 /= 1000000
-                                initS5 /= 1000000
-                                initS75 /= 1000000
+                                init75 /= 1000000
+                                init40 /= 1000000
+                                init70 /= 1000000
                                 unidades = "MB"
-                                if (initS8.toString().contains("0.")){
-                                    initS8 *= 1000
+                                if (init75.toString().contains("0.")){
+                                    init75 *= 1000
                                     unidades = "KB"
                             }
-                                if (initS5.toString().contains("0.")){
-                                    initS5 *= 1000
+                                if (init40.toString().contains("0.")){
+                                    init40 *= 1000
                                     unidades = "KB"
                                 }
-                                if (initS75.toString().contains("0.")){
-                                    initS75 *= 1000
+                                if (init70.toString().contains("0.")){
+                                    init70 *= 1000
                                     unidades = "KB"
                                 }
                             }
                             if (initialSize.contains("G") )
                             {
-                                initS8 /= 1000000000
-                                initS5 /= 1000000000
-                                initS75 /= 1000000000
+                                init75 /= 1000000000
+                                init40 /= 1000000000
+                                init70 /= 1000000000
                                 unidades = "GB"
-                                if (initS8.toString().contains("0.")){
-                                    initS8 *= 1000
+                                if (init75.toString().contains("0.")){
+                                    init75 *= 1000
                                     unidades = "MB"
                                 }
-                                if (initS5.toString().contains("0.")){
-                                    initS5 *= 1000
+                                if (init40.toString().contains("0.")){
+                                    init40 *= 1000
                                     unidades = "MB"
                                 }
-                                if (initS75.toString().contains("0.")){
-                                    initS75 *= 1000
+                                if (init70.toString().contains("0.")){
+                                    init70 *= 1000
                                     unidades = "MB"
                                 }
 
                             }
                             if (initialSize.contains("k") )
                             {
-                                initS8 /= 1000
-                                initS5 /= 1000
-                                initS75 /= 1000
+                                init75 /= 1000
+                                init40 /= 1000
+                                init70 /= 1000
                                 unidades = "KB"
-                                if (initS8.toString().contains("0.")){
-                                    initS8 *= 1000
+                                if (init75.toString().contains("0.")){
+                                    init75 *= 1000
                                     unidades = "B"
                                 }
-                                if (initS5.toString().contains("0.")){
-                                    initS5 *= 1000
+                                if (init40.toString().contains("0.")){
+                                    init40 *= 1000
                                     unidades = "B"
                                 }
-                                if (initS75.toString().contains("0.")){
-                                    initS75 *= 1000
+                                if (init70.toString().contains("0.")){
+                                    init70 *= 1000
                                     unidades = "B"
                                 }
                             }
