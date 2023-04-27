@@ -54,6 +54,7 @@ class HomeFragment : Fragment() {
     private lateinit var videoHeight : String
     private lateinit var  videoWidth : String
     private var  videoResolution =""
+    private var videoResolutionInit = ""
     private var  showSpeed =""
     private var  showCodec =""
     private var  videoCodec =""
@@ -97,28 +98,7 @@ class HomeFragment : Fragment() {
                 if (compressedFilePath != intent.getStringExtra(URI_PATH)){
 
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
-                    if ( (selectedtype != getString(R.string.custom_h)) && (selectedtype != getString(R.string.custom_l))) {
-                        binding.quality.text =""
-                        binding.quality.visibility= View.VISIBLE
-                        binding.qualityDescription.visibility= View.VISIBLE
-                        binding.checkboxQuality.visibility= View.VISIBLE
-                        binding.checkboxQuality.setOnCheckedChangeListener{ _, _ ->
-                            val checked: Boolean = binding.checkboxQuality.isChecked
-                            if (checked) {
-                                /*val snack = Snackbar.make(binding.compressVideo,getString(R.string.waiting),Toast.LENGTH_SHORT)
-                                snack.setAnchorView(binding.compressVideo)
-                                snack.show()*/
 
-
-
-                                calculateQuality()
-
-                            }
-
-
-                        }
-                    }else if ((selectedtype == getString(R.string.custom_h)) || (selectedtype == getString(R.string.custom_l))) {
-                        val videoResolutionInit = videoWidth + "x" + videoHeight
                         if (videoResolution == videoResolutionInit) {
                             binding.quality.text =""
                             binding.quality.visibility= View.VISIBLE
@@ -145,11 +125,6 @@ class HomeFragment : Fragment() {
                             binding.checkboxQuality.visibility= View.GONE
                             binding.quality.text =""
                         }
-                    }
-
-
-
-
                 }
             }
 
@@ -758,7 +733,10 @@ private fun resetViews() {
         dataTV2.isVisible=false
         dataTV3.isVisible=false
         rdOne.isChecked=false
-
+        binding.quality.visibility= View.GONE
+        binding.qualityDescription.visibility= View.GONE
+        binding.checkboxQuality.visibility= View.GONE
+        binding.quality.text =""
     }
 }
     private fun addSpinnerResolution():Spinner {
@@ -814,6 +792,7 @@ private fun resetViews() {
                 }
 
                 videoResolution= videoWidth + "x" + videoHeight
+                videoResolutionInit = videoResolution
                 resolutionSpinner = arrayOf(
                     getString(R.string.select_resolution),
                     videoWidth + "x" + videoHeight + "(Original)",

@@ -57,7 +57,7 @@
     <string name="audio">Eliminar audio</string>
     <string name="quality">Calidad perdida =</string>
     <string name="reduction">"Reducción del tamaño = "</string>
-    <string name="poor_quality">Mala calidad; cambia los parámeteros de compresión!</string>
+    <string name="poor_quality">Mala calidad o no pudo calcularse; cambia los parámeteros de compresión!</string>
     <string name="get_quality">Calcula la diferencia en la calidad (beta)</string>
     <string name="quality_completed">"Calidad calculada correctamente. Diferencia de: "</string>
     <string name="quality_progress">Por favor, espera a que aparezca el resultado.</string>
