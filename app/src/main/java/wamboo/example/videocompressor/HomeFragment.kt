@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
 
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
 
-                        if (videoResolution == videoResolutionInit) {
+                    if (videoResolution == videoResolutionInit) {
                             binding.quality.text =""
                             binding.quality.visibility= View.VISIBLE
                             binding.qualityDescription.visibility= View.VISIBLE
@@ -229,7 +229,6 @@ class HomeFragment : Fragment() {
         binding.initialBatteryTV.text = initialBattery
         binding.remainingBatteryTV.text = remainingBattery
         showViews = false
-        selectedtype = typesSpinner[0]
         val pollution= co2!!.toDouble()
         if (pollution > 0) {
             binding.co2TV.setTextColor(Color.parseColor("#FF0000"))
@@ -258,12 +257,19 @@ class HomeFragment : Fragment() {
             val sizeReduction = (100- final.times(100).div(init.toDouble()).toBigDecimal().setScale(2,
                 RoundingMode.UP)?.toDouble()!!).toBigDecimal().setScale(2,
                 RoundingMode.UP)
-
-            binding.reduction.text = buildString {
-        append(sizeReduction.toString())
-        append("%")
-    }
-
+            if (sizeReduction<1.toBigDecimal()){
+                binding.reduction.text = buildString {
+                    append(sizeReduction.toString())
+                    append("%")
+                    append(" ")
+                    append(getString(R.string.noreduction))
+                }
+            } else {
+                binding.reduction.text = buildString {
+                    append(sizeReduction.toString())
+                    append("%")
+                }
+            }
         }
 
 
@@ -275,7 +281,9 @@ class HomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
+        savedInstanceState?.let {
+            videoUrl = it.getParcelable("videoUrl")
+        }
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         pref = requireActivity().getSharedPreferences(
@@ -309,7 +317,12 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
 
+        // Save state
+        outState.putParcelable("videoUrl", videoUrl)
+    }
     private fun showDataFromPref() {
 
         if (pref.getString(RETURN_CODE, "")?.isNotEmpty() == true) {
@@ -514,7 +527,7 @@ class HomeFragment : Fragment() {
 
 
            // if (isBatteryOptimizationDisabled()) {
-
+                resetViews()
                 shareVideo.visibility = View.GONE
                 when {
                     ContextCompat.checkSelfPermission(
@@ -563,7 +576,6 @@ class HomeFragment : Fragment() {
                 Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
             }
-
 
         }
 
@@ -737,6 +749,7 @@ private fun resetViews() {
         binding.qualityDescription.visibility= View.GONE
         binding.checkboxQuality.visibility= View.GONE
         binding.quality.text =""
+        spinner.setSelection(0)
     }
 }
     private fun addSpinnerResolution():Spinner {
@@ -757,42 +770,7 @@ private fun resetViews() {
 
             }
             else -> {
-                mediaInformation = FFprobeKit.getMediaInformation(
-                    FFmpegKitConfig.getSafParameterForRead(
-                        activity,
-                        videoUrl
-                    )
-                )
 
-
-                videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
-                videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
-                var side = mediaInformation.mediaInformation.streams[0].getStringProperty("side_data_list")
-                when (videoHeight){
-                    "null" ->{
-                        videoHeight = mediaInformation.mediaInformation.streams[1].height.toString()
-                        videoWidth = mediaInformation.mediaInformation.streams[1].width.toString()
-                        side = mediaInformation.mediaInformation.streams[1].getStringProperty("side_data_list")
-                    }
-                }
-//check if video is rotated and swap resolution
-                if (side != null) {
-                    val rotation = side.substringAfter("rotation\":").substringBefore('}')
-                    if (rotation == "-90" || rotation == "270"){
-                        videoHeight = mediaInformation.mediaInformation.streams[0].width.toString()
-                        videoWidth = mediaInformation.mediaInformation.streams[0].height.toString()
-                        when (videoHeight){
-                            "null" ->{
-                                videoHeight = mediaInformation.mediaInformation.streams[1].width.toString()
-                                videoWidth = mediaInformation.mediaInformation.streams[1].height.toString()
-                            }
-                        }
-                    }
-
-                }
-
-                videoResolution= videoWidth + "x" + videoHeight
-                videoResolutionInit = videoResolution
                 resolutionSpinner = arrayOf(
                     getString(R.string.select_resolution),
                     videoWidth + "x" + videoHeight + "(Original)",
@@ -1016,7 +994,47 @@ If there is an error in the process, an error message is displayed to the user v
                         // get the file from the Uri using getFileFromUri() method present
                         // in FileUils.java
                         videoUrl = uri
+                        if (videoUrl != null) {
 
+                            mediaInformation = FFprobeKit.getMediaInformation(
+                                FFmpegKitConfig.getSafParameterForRead(
+                                    activity,
+                                    videoUrl
+                                )
+                            )
+
+
+                            videoHeight = mediaInformation.mediaInformation.streams[0].height.toString()
+                            videoWidth = mediaInformation.mediaInformation.streams[0].width.toString()
+                            var side = mediaInformation.mediaInformation.streams[0].getStringProperty("side_data_list")
+                            when (videoHeight){
+                                "null" ->{
+                                    videoHeight = mediaInformation.mediaInformation.streams[1].height.toString()
+                                    videoWidth = mediaInformation.mediaInformation.streams[1].width.toString()
+                                    side = mediaInformation.mediaInformation.streams[1].getStringProperty("side_data_list")
+                                }
+                            }
+                            //check if video is rotated and swap resolution
+                            if (side != null) {
+                                val rotation = side.substringAfter("rotation\":").substringBefore('}')
+                                if (rotation == "-90" || rotation == "270"){
+                                    videoHeight = mediaInformation.mediaInformation.streams[0].width.toString()
+                                    videoWidth = mediaInformation.mediaInformation.streams[0].height.toString()
+                                    when (videoHeight){
+                                        "null" ->{
+                                            videoHeight = mediaInformation.mediaInformation.streams[1].width.toString()
+                                            videoWidth = mediaInformation.mediaInformation.streams[1].height.toString()
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            videoResolution= videoWidth + "x" + videoHeight
+                            videoResolutionInit = videoResolution
+
+
+                        }
                         binding.videoView.visibility=View.VISIBLE
                         // now set the video uri in the VideoView
                         binding.videoView.setVideoURI(uri)
@@ -1061,15 +1079,15 @@ If there is an error in the process, an error message is displayed to the user v
                                 init40 /= 1000000
                                 init70 /= 1000000
                                 unidades = "MB"
-                                if (init75.toString().contains("0.")){
+                                if (init75<1){
                                     init75 *= 1000
                                     unidades = "KB"
                             }
-                                if (init40.toString().contains("0.")){
+                                if (init40<1){
                                     init40 *= 1000
                                     unidades = "KB"
                                 }
-                                if (init70.toString().contains("0.")){
+                                if (init70<1){
                                     init70 *= 1000
                                     unidades = "KB"
                                 }
@@ -1080,15 +1098,15 @@ If there is an error in the process, an error message is displayed to the user v
                                 init40 /= 1000000000
                                 init70 /= 1000000000
                                 unidades = "GB"
-                                if (init75.toString().contains("0.")){
+                                if (init75<1){
                                     init75 *= 1000
                                     unidades = "MB"
                                 }
-                                if (init40.toString().contains("0.")){
+                                if (init40<1){
                                     init40 *= 1000
                                     unidades = "MB"
                                 }
-                                if (init70.toString().contains("0.")){
+                                if (init70<1){
                                     init70 *= 1000
                                     unidades = "MB"
                                 }
@@ -1100,15 +1118,15 @@ If there is an error in the process, an error message is displayed to the user v
                                 init40 /= 1000
                                 init70 /= 1000
                                 unidades = "KB"
-                                if (init75.toString().contains("0.")){
+                                if (init75<1){
                                     init75 *= 1000
                                     unidades = "B"
                                 }
-                                if (init40.toString().contains("0.")){
+                                if (init40<1){
                                     init40 *= 1000
                                     unidades = "B"
                                 }
-                                if (init70.toString().contains("0.")){
+                                if (init70<1){
                                     init70 *= 1000
                                     unidades = "B"
                                 }

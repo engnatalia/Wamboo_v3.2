@@ -80,11 +80,12 @@
     <string name="delete_message">¿Seguro que quieres borrar la base de datos?</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
-    <string name="estimated_size">Tamaño estimado, menor de:</string>
+    <string name="estimated_size">Tamaño tras comprimir, menos de:</string>
     <string name="compression">de reducción (al menos)</string>
     <string name="background">Habilita el funcionamiento en segundo plano</string>
     <string name="ok">OK</string>
     <string name="background2">Compresión en segundo plano ya habilitada</string>
     <string name="compressed">comprimido</string>
+    <string name="noreduction">Mayor tamaño que original porque ya fue comprimido o la calidad era muy baja!</string>
 
 </resources>
