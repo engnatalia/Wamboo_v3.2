@@ -62,6 +62,16 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/contact1"
+                android:textColor="@color/black"
+                android:background="#F3F3F3"
+                android:textFontWeight="700"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
                 android:text="@string/contact"
                 android:autoLink="web|email"
                 android:textColor="@color/black"
