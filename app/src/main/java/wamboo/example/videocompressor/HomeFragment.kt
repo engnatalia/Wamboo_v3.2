@@ -39,6 +39,9 @@ import wamboo.example.videocompressor.workers.VideoCompressionWorker
 import java.math.RoundingMode
 import kotlin.math.round
 import java.util.*
+import com.google.android.ump.*
+import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateFailureListener
+import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateSuccessListener
 
 @Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
@@ -65,6 +68,8 @@ class HomeFragment : Fragment() {
     private var selectedtype = "Ultrafast"
     private lateinit var progressDialog: AlertDialog
     private var showViews = true
+    private lateinit var consentInformation: ConsentInformation
+    private lateinit var consentForm: ConsentForm
     var  init75 = 0.0
     var init40= 0.0
     var init70= 0.0
@@ -347,8 +352,55 @@ class HomeFragment : Fragment() {
     private fun clearPref() {
         editor.clear().commit()
     }
+    private fun loadForm() {
+        // Loads a consent form. Must be called on the main thread.
+        UserMessagingPlatform.loadConsentForm(
+            requireActivity(),
+            UserMessagingPlatform.OnConsentFormLoadSuccessListener { form ->
+                consentForm = form
+                if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.REQUIRED) {
+                    consentForm.show(
+                        requireActivity(),
+                        ConsentForm.OnConsentFormDismissedListener { dismissal ->
+                            if (consentInformation.consentStatus == ConsentInformation.ConsentStatus.OBTAINED) {
+                                // App can start requesting ads.
+                            }
 
+                            // Handle dismissal by reloading form.
+                            loadForm()
+                        }
+                    )
+                }
+            },
+            UserMessagingPlatform.OnConsentFormLoadFailureListener {
+                // Handle the error.
+            }
+        )
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        if (view != null) {
+            super.onViewCreated(view, savedInstanceState)
+            super.onViewCreated(view, savedInstanceState)
+            // Set tag for under age of consent. false means users are not under age.
+            val params = ConsentRequestParameters.Builder()
+                .setTagForUnderAgeOfConsent(false)
+                .build()
+
+            consentInformation = UserMessagingPlatform.getConsentInformation(requireContext())
+            consentInformation.requestConsentInfoUpdate(
+                requireActivity(),
+                params,
+                OnConsentInfoUpdateSuccessListener {
+                    // The consent information state was updated.
+                    // You are now ready to check if a form is available.
+                    if (consentInformation.isConsentFormAvailable) {
+                        loadForm()
+                    }
+                },
+                OnConsentInfoUpdateFailureListener {
+                    // Handle the error.
+                })
+        }
         loadAd()
         //checkNotificationPermission()
         checkCameraPermission()
