@@ -637,10 +637,12 @@ class HomeFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
-            ) { selectedtype =typesSpinner[position]
+            ) {
+                if (view!=null){
+                selectedtype =typesSpinner[position]
                 val spinner2 =addSpinnerSpeed()
                 val spinner4 =addSpinnerCodec()
                 val spinner3 =addSpinnerResolution()
@@ -710,7 +712,7 @@ class HomeFragment : Fragment() {
                 }
 
 
-            }
+            }}
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
             }
@@ -850,25 +852,30 @@ private fun resetViews() {
         binding.spinner3.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
-            ) { videoResolution =resolutionValues[position]
+            ) {
+                if (view!=null) {
+                    videoResolution = resolutionValues[position]
 
-                when (position) {
-                    0->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.no_selected_resolution),
-                        Toast.LENGTH_SHORT
-                    ).show()}
-                    else ->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.selected_resolution) + " " + resolutionSpinner[position],
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    when (position) {
+                        0 -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.no_selected_resolution),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.selected_resolution) + " " + resolutionSpinner[position],
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
-
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
@@ -914,25 +921,30 @@ private fun resetViews() {
         binding.spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
-            ) { compressSpeed =speedValues[position]
-                showSpeed = speedsSpinner[position]
-                when (position) {
-                    0->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.no_selected_speed),
-                        Toast.LENGTH_SHORT
-                    ).show()}
-                    else ->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.selected_speed) + " " + showSpeed,
-                        Toast.LENGTH_SHORT
-                    ).show()
+            ) {
+                if (view!=null) {
+                    compressSpeed = speedValues[position]
+                    showSpeed = speedsSpinner[position]
+                    when (position) {
+                        0 -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.no_selected_speed),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.selected_speed) + " " + showSpeed,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
-
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
@@ -977,25 +989,30 @@ private fun resetViews() {
         binding.spinner4.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View,
+                view: View?,
                 position: Int,
                 id: Long
-            ) { videoCodec =codecValues[position]
-                showCodec = codecSpinner[position]
-                when (position) {
-                    0->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.no_selected_codec),
-                        Toast.LENGTH_SHORT
-                    ).show()}
-                    else ->{Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.selected_codec) + " " + showCodec,
-                        Toast.LENGTH_SHORT
-                    ).show()
+            ) {
+                if (view!=null) {
+                    videoCodec = codecValues[position]
+                    showCodec = codecSpinner[position]
+                    when (position) {
+                        0 -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.no_selected_codec),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.selected_codec) + " " + showCodec,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
-
             }
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Code to perform some action when nothing is selected
