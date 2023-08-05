@@ -88,5 +88,6 @@
     <string name="compressed">comprimido</string>
     <string name="noreduction">Mayor tamaño que original porque ya fue comprimido o la calidad era muy baja!</string>
     <string name="contact1">¿Comentarios o preguntas? ¿Qué características te gustaría que tuviera la siguiente versión de Wamboo?</string>
+    <string name="quality_error">Esta vez no fue posible calcular la calidad. Envía un email a contact.harmonyvalley@gmail.com describiendo el problema, por favor!</string>
 
 </resources>

@@ -9,12 +9,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8657652c-175c-4ae3-8120-7be546b5f0c9" name="Changes" comment="added RGPD message for customized ads and changed app version">
+    <list default="true" id="8657652c-175c-4ae3-8120-7be546b5f0c9" name="Changes" comment="added message to contact in case quality button fails">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/obfuscation/mapping.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/obfuscation/mapping.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/release/app-release.aab" beforeDir="false" afterPath="$PROJECT_DIR$/app/release/app-release.aab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HomeFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HomeFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values-es/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
   </component>
   <component name="GenerateSignedApkSettings">
     <option name="EXPORT_PRIVATE_KEY" value="false" />
-    <option name="KEY_STORE_PATH" value="C:\Users\matlab\Documents\HV\Papers\GOAL 1\Paper 4\Wamboo MVP\Version1.1\key\wamboo.jks" />
+    <option name="KEY_STORE_PATH" value="D:\HV\Papers\GOAL 1\Paper 4\Wamboo MVP\Version1.1\key\wamboo.jks" />
     <option name="KEY_ALIAS" value="wamboo" />
     <option name="REMEMBER_PASSWORDS" value="true" />
   </component>
@@ -102,13 +103,13 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "BundleExportedModule": "VideoCompressor.app",
-    "ExportBundle.BundlePathForVideoCompressor.app": "C:\\Users\\matlab\\Documents\\HV\\Papers\\GOAL 1\\Paper 4\\Wamboo MVP\\Version2.0\\Wamboo_v2.0\\app",
+    "ExportBundle.BundlePathForVideoCompressor.app": "D:\\HV\\Papers\\GOAL 1\\Paper 4\\Wamboo MVP\\Version2.0\\Wamboo_v2.0\\app",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
     "com.google.services.firebase.aqiPopupShown": "true",
-    "last_opened_file_path": "D:/HV/Papers/GOAL 1/Paper 4/Wamboo MVP/Version2.2/Wamboo_v2.2",
+    "last_opened_file_path": "D:/HV/Papers/GOAL 1/Paper 4/Wamboo MVP/Version3.0/Wamboo_v3.0",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.17",
     "project.structure.side.proportion": "0.2",
@@ -499,7 +500,14 @@
       <option name="project" value="LOCAL" />
       <updated>1687585209494</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="corrected View onSelectedItem">
+      <created>1690901431766</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1690901431766</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -518,8 +526,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$" />
     </ignored-roots>
-    <MESSAGE value="changed descriptions colour to green and improved video visibility" />
-    <MESSAGE value="corrected when to obtain quality (same resolution) visibility" />
     <MESSAGE value="message added to computation" />
     <MESSAGE value="message added to toast (waiting for quality computation)" />
     <MESSAGE value="message added to toast (waiting for quality computation) and corrected visibility and reset values" />
@@ -543,7 +549,9 @@
     <MESSAGE value="added license info and text in the Info tab" />
     <MESSAGE value="license not needed removed" />
     <MESSAGE value="added RGPD message for customized ads and changed app version" />
-    <option name="LAST_COMMIT_MESSAGE" value="added RGPD message for customized ads and changed app version" />
+    <MESSAGE value="corrected View onSelectedItem" />
+    <MESSAGE value="added message to contact in case quality button fails" />
+    <option name="LAST_COMMIT_MESSAGE" value="added message to contact in case quality button fails" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -575,7 +583,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="kotlin-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/wamboo/example/videocompressor/HomeFragment.kt</url>
-          <line>1064</line>
+          <line>1096</line>
           <option name="timeStamp" value="265" />
         </line-breakpoint>
       </breakpoints>

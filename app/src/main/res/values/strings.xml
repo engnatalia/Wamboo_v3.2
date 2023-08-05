@@ -87,4 +87,5 @@
     <string name="background">Allow background compression</string>
     <string name="background2">Background compression already enabled!</string>
     <string name="noreduction">Bigger file because original was already compressed or had poor quality!</string>
+    <string name="quality_error">Not possible to obtain the quality this time. Send an email to contact.harmonyvalley@gmail.com describing the issue, please!</string>
 </resources>
