@@ -202,7 +202,7 @@ class VideoCompressionService : Service() {
         val initialSize = fileSize(videoUri.length(contentResolver))
 
         when (selectedtype) {
-            getString(R.string.ultrafast) -> {
+            getString(R.string.ultrafast), getString(R.string.select_compression) -> {
                 /*command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,

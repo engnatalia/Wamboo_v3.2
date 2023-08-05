@@ -47,7 +47,22 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone"
                 android:contentDescription="video view"/>
-
+            <VideoView
+                android:id="@+id/videoView1"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:contentDescription="video view"/>
+            <VideoView
+                android:id="@+id/videoView2"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:contentDescription="video view"/>
             <CheckBox android:id="@+id/checkbox_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,7 +151,19 @@
                 android:text="@string/share_compressed_video"
                 android:textColor="@color/white"
                 android:visibility="gone" />
-
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/deleteVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/custum_button"
+                android:fontFamily="@font/bauhausregular"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/delete_video"
+                android:textColor="@color/white"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/statsContainer"
                 android:layout_width="match_parent"

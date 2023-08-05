@@ -42,7 +42,7 @@ import java.util.*
 import com.google.android.ump.*
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateFailureListener
 import com.google.android.ump.ConsentInformation.OnConsentInfoUpdateSuccessListener
-
+private const val REQUEST_PICK_VIDEO = 1
 @Suppress("DEPRECATION")
 class HomeFragment : Fragment() {
     private lateinit var mAdView: AdView
@@ -62,7 +62,8 @@ class HomeFragment : Fragment() {
     private var  showCodec =""
     private var  videoCodec =""
     private var  compressSpeed =""
-
+    private lateinit var videoView1: VideoView
+    private lateinit var videoView2: VideoView
     private var audio = "-c:a copy"
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
@@ -79,7 +80,6 @@ class HomeFragment : Fragment() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == Constants.WORK_COMPLETED_ACTION) {
                 progressDialog.dismiss()
-
                 Log.d("Service", "Broadcast run")
 
                 if (intent.getStringExtra(RETURN_CODE).equals("0")) { //0 means success
@@ -103,7 +103,13 @@ class HomeFragment : Fragment() {
                 if (compressedFilePath != intent.getStringExtra(URI_PATH)){
 
                     compressedFilePath = intent.getStringExtra(URI_PATH).toString()
+                    binding.videoView2.setVideoURI(Uri.parse(compressedFilePath))
 
+                    // after successful retrieval of the video and properly
+                    // setting up the retried video uri in
+                    // VideoView, Start the VideoView to play that video
+                    binding.videoView2.start()
+                    binding.videoView2.isVisible=true
                     if (videoResolution == videoResolutionInit) {
                             binding.quality.text =""
                             binding.quality.visibility= View.VISIBLE
@@ -247,6 +253,9 @@ class HomeFragment : Fragment() {
         //showing stats data in the textviews
         if (!showView){
             binding.videoView.visibility = View.GONE
+            binding.videoView1.visibility = View.GONE
+            binding.deleteVideo.visibility = View.GONE
+            binding.videoView2.visibility = View.GONE
             binding.spinner.visibility = View.GONE
             binding.spinner2.visibility = View.GONE
             binding.spinner3.visibility = View.GONE
@@ -256,6 +265,21 @@ class HomeFragment : Fragment() {
             binding.dataTV2.visibility=View.GONE
             binding.dataTV3.visibility=View.GONE
             }
+        when (videoUrl) {
+            null -> {
+                binding.videoView1.visibility = View.GONE
+                binding.deleteVideo.visibility = View.GONE
+                binding.videoView2.visibility = View.VISIBLE
+                binding.videoView2.start()
+            }
+            else -> {
+                binding.videoView1.visibility = View.VISIBLE
+                binding.videoView2.visibility = View.VISIBLE
+                binding.deleteVideo.visibility = View.VISIBLE
+                binding.videoView1.start()
+                binding.videoView2.start()
+            }
+        }
         binding.pickVideo.visibility = View.VISIBLE
         binding.reset.visibility = View.VISIBLE
         binding.shareVideo.visibility = View.VISIBLE
@@ -437,6 +461,8 @@ class HomeFragment : Fragment() {
         //checkNotificationPermission()
         checkCameraPermission()
         initUI()
+        videoView1 = binding.root.findViewById(R.id.videoView1)
+        videoView2 = binding.root.findViewById(R.id.videoView2)
         showLoader()
     }
 
@@ -613,6 +639,7 @@ class HomeFragment : Fragment() {
            // if (isBatteryOptimizationDisabled()) {
                 resetViews()
                 shareVideo.visibility = View.GONE
+                deleteVideo.visibility = View.GONE
                 when {
                     ContextCompat.checkSelfPermission(
                         requireContext(),
@@ -637,13 +664,22 @@ class HomeFragment : Fragment() {
           //  }
 
         }
+
         rdOne.setOnClickListener{
             checkNotificationPermission()
             isBatteryOptimizationDisabled()
         }
+        when (videoUrl) {
+            null -> {
+                binding.videoView1.visibility = View.GONE
 
+            }
+        }
         // Setting media controller to the video . So the user can pause and play the video . They will appear when user tap on video
         videoView.setMediaController(MediaController(requireActivity()))
+		videoView1.setMediaController(MediaController(requireActivity()))
+        videoView2.setMediaController(MediaController(requireActivity()))
+
         checkboxAudio.setOnCheckedChangeListener{ checkboxAudio, _ ->
             val checked: Boolean = checkboxAudio.isChecked
             if (checked) {
@@ -762,6 +798,7 @@ class HomeFragment : Fragment() {
             //clearPref()
             statsContainer.visibility = View.GONE
             shareVideo.visibility = View.GONE
+            deleteVideo.visibility = View.GONE
             binding.checkboxQuality.isChecked = false
             if (videoUrl != null) {
 
@@ -775,7 +812,12 @@ class HomeFragment : Fragment() {
                 if (videoView.isPlaying) {
                     videoView.pause()
                 }
-
+				if (videoView1.isPlaying) {
+                    videoView1.pause()
+                }
+                if (videoView2.isPlaying) {
+                    videoView2.pause()
+                }
                 // Set up the input data for the worker
 
                 val data2 =
@@ -796,7 +838,9 @@ class HomeFragment : Fragment() {
             } else {
 
                 // If picked video is null or video is not picked
-                binding.videoView.visibility = View.GONE
+				binding.videoView.visibility = View.GONE
+                binding.videoView1.visibility = View.GONE
+                binding.videoView2.visibility = View.GONE
                 Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
             }
 
@@ -809,6 +853,29 @@ class HomeFragment : Fragment() {
             binding.videoView.visibility = View.GONE
 
         }
+
+        binding.deleteVideo.setOnClickListener {
+            deleteOriginalVideoFromGallery(videoUrl)
+
+
+        }
+    }
+    private fun deleteOriginalVideoFromGallery(videoUri: Uri?) {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "video/*"
+        startActivityForResult(intent, REQUEST_PICK_VIDEO)
+        videoUri?.let { videoUri2 ->
+            val deleteIntent = Intent(Intent.ACTION_VIEW)
+            deleteIntent.setDataAndType(videoUri2, "video/*")
+            deleteIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false)
+            deleteIntent.putExtra(Intent.EXTRA_LOCAL_ONLY, true)
+
+            startActivity(deleteIntent)
+        }
+
+
+        videoUrl = intent.data
+
 
 
     }
@@ -823,6 +890,9 @@ private fun resetViews() {
         spinner4.isVisible=false
         statsContainer.isVisible = false
         videoView.isVisible = false
+        videoView1.isVisible = false
+        videoView2.isVisible = false
+        deleteVideo.isVisible=false
         checkboxAudio.isVisible=false
         shareVideo.isVisible=false
         compressVideo.isVisible = false
@@ -836,6 +906,9 @@ private fun resetViews() {
         binding.checkboxQuality.visibility= View.GONE
         binding.quality.text =""
         spinner.setSelection(0)
+        /*spinner2.setSelection(0)
+        spinner3.setSelection(0)
+        spinner4.setSelection(0)*/
     }
 }
     private fun addSpinnerResolution():Spinner {
@@ -932,6 +1005,7 @@ private fun resetViews() {
         when (videoUrl) {
             null -> {
                 binding.videoView.visibility = View.GONE
+                binding.videoView1.visibility = View.GONE
                 Toast.makeText(context, Html.fromHtml("<font color='red' ><b>" +getString(R.string.select_video)+ "</b></font>"), Toast.LENGTH_SHORT).show()
 
 
@@ -1061,6 +1135,8 @@ private fun resetViews() {
      with(binding) {
             pickVideo.isVisible = false
             videoView.isVisible = true
+            videoView1.visibility = View.GONE
+            videoView2.visibility = View.GONE
             spinner.isVisible=true
             checkboxAudio.isVisible=true
             compressVideo.isVisible = true
@@ -1087,7 +1163,18 @@ If there is an error in the process, an error message is displayed to the user v
                 // There are no request codes
                 visibleViews()
                 val data: Intent? = result.data
+                val videoUri: Uri? = result.data?.data
+                videoUri?.let {
+                    videoView1.setVideoURI(it)
+                    videoView1.start()
+                    binding.spinner.isVisible = true
+                    //binding.spinner5.isVisible = true
 
+                    binding.checkboxAudio.isVisible=true
+                    videoUrl=it
+
+                    //binding.compressVideo.isVisible = true
+                }
                 if (data != null) {
                     // get the video Uri
                     val uri: Uri? = data.data
@@ -1118,7 +1205,7 @@ If there is an error in the process, an error message is displayed to the user v
                             //check if video is rotated and swap resolution
                             if (side != null) {
                                 val rotation = side.substringAfter("rotation\":").substringBefore('}')
-                                if (rotation == "-90" || rotation == "270"){
+                                if (rotation == "-90" || rotation == "-270" || rotation == "90"){
                                     videoHeight = mediaInformation.mediaInformation.streams[0].width.toString()
                                     videoWidth = mediaInformation.mediaInformation.streams[0].height.toString()
                                     when (videoHeight){

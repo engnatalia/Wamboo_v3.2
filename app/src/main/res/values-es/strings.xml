@@ -28,7 +28,7 @@
     <string name="notification_message_failure">La compresión ha fallado.</string>
     <string name="select_compression">Selecciona una opción</string>
     <string name="waiting">Por favor, espera...</string>
-    <string name="scroll">Mira los resultados!</string>
+    <string name="scroll">Desplázate hacia abajo y mira los resultados!</string>
     <string name="notification_background_title">Wamboo funciona en segundo plano!</string>
     <string name="notification_background_body">Presiona "OK", ve a la opción de "Batería" y selecciona la opción "No restringido" o similar y empieza a comprimir incluso con la app cerrada. Wamboo trabaja más rápido si la mantienes abierta!</string>
     <string name="title_home">Eco-compresor</string>
@@ -89,5 +89,6 @@
     <string name="noreduction">Mayor tamaño que original porque ya fue comprimido o la calidad era muy baja!</string>
     <string name="contact1">¿Comentarios o preguntas? ¿Qué características te gustaría que tuviera la siguiente versión de Wamboo?</string>
     <string name="quality_error">Esta vez no fue posible calcular la calidad. Envía un email a contact.harmonyvalley@gmail.com describiendo el problema, por favor!</string>
+    <string name="delete_video">Borrar video no comprimido</string>
 
 </resources>
