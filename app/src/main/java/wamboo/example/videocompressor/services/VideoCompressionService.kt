@@ -41,8 +41,8 @@ class VideoCompressionService : Service() {
     private lateinit var  frames : String
     private lateinit var  frames2 : Any
     @Inject
-    lateinit var compressRepo: CompressRepository		   
-
+    lateinit var compressRepo: CompressRepository
+    private var libx="libx265"
     companion object {
         const val NOTIFICATION_ID = 1
         const val CHANNEL_ID = "VideoCompressionChannel"
@@ -58,11 +58,12 @@ class VideoCompressionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val videoUri = intent?.getStringExtra(ForegroundWorker.VideoURI)
         val selectedtype = intent?.getStringExtra(ForegroundWorker.SELECTION_TYPE)
+        val selectedformat = intent?.getStringExtra(ForegroundWorker.SELECTION_FORMAT)
         val videoResolution =intent?.getStringExtra(ForegroundWorker.VIDEO_RESOLUTION)
         val videoCodec =intent?.getStringExtra(ForegroundWorker.VIDEO_CODEC)
         val compressSpeed =intent?.getStringExtra(ForegroundWorker.COMPRESS_SPEED)
         val audio =intent?.getStringExtra(ForegroundWorker.VIDEO_AUDIO)
-        compressVideo(Uri.parse(videoUri), selectedtype.toString(),videoResolution, videoCodec, compressSpeed,audio)
+        compressVideo(Uri.parse(videoUri), selectedtype.toString(),selectedformat.toString(),videoResolution, videoCodec, compressSpeed,audio)
 
         return START_NOT_STICKY
     }
@@ -128,6 +129,7 @@ class VideoCompressionService : Service() {
     private fun compressVideo(
         videoUri: Uri,
         selectedtype: String,
+        selectedformat: String,
         videoResolution: String?,
         videoCodec: String?,
         compressSpeed: String?,
@@ -140,11 +142,11 @@ class VideoCompressionService : Service() {
         val command: String
         var uriPath: Uri? = null
         val filePrefix = "Compressed"
-        val fileExtn = ".mp4"
+        val fileExtn = "."+selectedformat
         val bm = getSystemService(BATTERY_SERVICE) as BatteryManager
         val initcapacity: Int = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+
             // With introduction of scoped storage in Android Q the primitive method gives error
             // So, it is recommended to use the below method to create a video file in storage.
             val valuesVideos = ContentValues()
@@ -155,13 +157,29 @@ class VideoCompressionService : Service() {
                 filePrefix + System.currentTimeMillis() + fileExtn
             )
 
-            if (fileExtn == ".webm") {
-                valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/webm")
-            } else {
+        when (fileExtn) {
+            ".mkv"->{
+                valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mkv")
+            }
+            ".3gp"->{
+                valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/3gp")
+            }
+            ".mp4"->{
                 valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
             }
+            ".avi"->{
+                valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/avi")
+            }
+            ".mov"->{
+                valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mov")
+            }
+            else->{
+                valuesVideos.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+            }
+        }
 
-            valuesVideos.put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
+
+        valuesVideos.put(MediaStore.Video.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
             valuesVideos.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis())
             val uri = contentResolver.insert(
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -173,24 +191,7 @@ class VideoCompressionService : Service() {
             }
 
             outPutSafeUri = FFmpegKitConfig.getSafParameterForWrite(this, uri)
-        } else {
-            // This else statement will work for devices with Android version lower than 10
-            // Here, "app_folder" is the path to your app's root directory in device storage
-            var dest = File(File(appFolder), filePrefix + fileExtn)
-            var fileNo = 0
-            // check if the file name previously exist. Since we don't want
-            // to overwrite the video files
-            while (dest.exists()) {
-                fileNo++
-                dest = File(File(appFolder), filePrefix + fileNo + fileExtn)
-            }
 
-            outPutSafeUri =
-                FFmpegKitConfig.getSafParameterForWrite(this, dest.toUri())
-
-            // Get the filePath once the file is successfully created.
-            uriPath = dest.toUri()
-        }
         //get the input video duration
         val mediaInformation = FFprobeKit.getMediaInformation(
             FFmpegKitConfig.getSafParameterForRead(
@@ -225,20 +226,26 @@ class VideoCompressionService : Service() {
                 } -movflags +faststart -c:v libx264 -crf 40 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.good) -> {
+                if (selectedformat=="3gp" || selectedformat=="avi")
+                { libx="libx264"}
+                else{ libx="libx265"}
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
                         videoUri
                     )
-                } -movflags +faststart -c:v libx265 -crf 25 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags +faststart -c:v $libx -crf 25 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.best) -> {
+                if (selectedformat=="3gp"|| selectedformat=="avi")
+                { libx="libx264"}
+                else{ libx="libx265"}
                 command = "-y -i ${
                     FFmpegKitConfig.getSafParameterForRead(
                         applicationContext,
                         videoUri
                     )
-                } -movflags +faststart -c:v libx265 -crf 30 $audio -preset ultrafast $outPutSafeUri"
+                } -movflags +faststart -c:v $libx -crf 30 $audio -preset ultrafast $outPutSafeUri"
             }
             getString(R.string.custom_h) -> {
                 command = "-y -i ${
@@ -273,7 +280,9 @@ class VideoCompressionService : Service() {
                 if (compressedSize != null && initialSize != null) {
 
                     val finalSize = compressedSize.substringBefore(" ")
-                    val finalS = finalSize.replace(",",".").toDouble()
+                    Log.d("finalSize", finalSize.toString())
+                    val finalS = finalSize.replace(".", "").replace(",", ".").toDouble()
+                    Log.d("finalS", finalS.toString())
                     var final = finalS
                     if ((compressedSize.contains("k") && initialSize.contains("M") )||(compressedSize.contains("M") && initialSize.contains("G") ) ||(compressedSize.contains("B") && initialSize.contains("k") )){
                         final=finalS/1000
@@ -398,7 +407,5 @@ class VideoCompressionService : Service() {
             mn
         ) + ":" + String.format("%02d", sec)
     }
-	override fun onDestroy() {
-        super.onDestroy()
-    }
+
 }

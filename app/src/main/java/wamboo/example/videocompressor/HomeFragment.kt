@@ -3,6 +3,7 @@ package wamboo.example.videocompressor
 import android.Manifest
 import android.app.*
 import android.content.*
+import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
@@ -50,6 +51,8 @@ class HomeFragment : Fragment() {
     private var videoUrl: Uri? = null
     private var compressedFilePath = ""
     private var typesSpinner=arrayOf("")
+    private var formatsSpinner=arrayOf("")
+    private var formatsValues=arrayOf("")
     private lateinit var pref: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var mediaInformation : MediaInformationSession
@@ -67,6 +70,8 @@ class HomeFragment : Fragment() {
     private var audio = "-c:a copy"
     private lateinit var binding: FragmentHomeBinding
     private var selectedtype = "Ultrafast"
+    private var selectedformat = "mp4"
+    private var videoformat = "mp4"
     private lateinit var progressDialog: AlertDialog
     private var showViews = true
     private lateinit var consentInformation: ConsentInformation
@@ -164,61 +169,90 @@ class HomeFragment : Fragment() {
         }
     }
     private fun calculateQuality() {
-        if (activity != null && videoUrl != null && compressedFilePath != "")  {
-        binding.quality.visibility = View.GONE
-        binding.qualityDescription.visibility = View.GONE
-        binding.checkboxQuality.visibility = View.GONE
-        binding.quality.text = ""
-        val command2 = "-i ${
-            FFmpegKitConfig.getSafParameterForRead(
-                activity,
-                videoUrl
-            )
-        } -i ${
-            FFmpegKitConfig.getSafParameterForRead(
-                activity,
-                Uri.parse(compressedFilePath)
-            )
-        } -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
-        Toast.makeText(
-            context,
-            Html.fromHtml("<font color='red' ><b>" + getString(R.string.quality_progress) + "</b></font>"),
-            Toast.LENGTH_SHORT
-        ).show()
+        if (activity != null && videoUrl != null && compressedFilePath.isNotEmpty()) {
+            binding.quality.visibility = View.GONE
+            binding.qualityDescription.visibility = View.GONE
+            binding.checkboxQuality.visibility = View.GONE
+            binding.quality.text = ""
 
-        val hola = FFmpegKit.execute(command2)
-        binding.quality.visibility = View.VISIBLE
-        val indexSsim = hola.logs.size
-        val ssimLine = hola.logs.get(indexSsim - 2)
-        val ssim = ssimLine.message.substringAfter("All:").substringBefore("(")
-        val quality: Double
-        val msg1: String
-        if (ssim.contains("0.")) {
-            quality = ((1 - ssim.toDouble()) * 100).toBigDecimal().setScale(
-                2,
-                RoundingMode.UP
-            ).toDouble()
-            binding.quality.text = buildString {
-                append(quality.toString())
-                append("%")
+            // Check the FFmpeg command
+            val command2 = "-i ${
+                FFmpegKitConfig.getSafParameterForRead(
+                    activity,
+                    videoUrl
+                )
+            } -i ${
+                FFmpegKitConfig.getSafParameterForRead(
+                    activity,
+                    Uri.parse(compressedFilePath)
+                )
+            } -lavfi \"ssim;[0:v][1:v]psnr\" -f null -"
+            Log.d(TAG, "Comando FFmpeg: $command2")
+
+            // Show a proggress message
+            Toast.makeText(
+                context,
+                Html.fromHtml("<font color='red' ><b>" + getString(R.string.quality_progress) + "</b></font>"),
+                Toast.LENGTH_SHORT
+            ).show()
+
+            try {
+                // Run the FFmpeg command
+                val hola = FFmpegKit.execute(command2)
+
+                // Verificar los logs de FFmpeg
+                val indexSsim = hola.logs.size
+                val ssimLine = hola.logs.get(indexSsim - 2)
+                val ssim = ssimLine.message.substringAfter("All:").substringBefore("(")
+                val quality: Double
+                val msg1: String
+                if (ssim.contains("0.")) {
+                    quality = ((1 - ssim.toDouble()) * 100).toBigDecimal().setScale(
+                        2,
+                        RoundingMode.UP
+                    ).toDouble()
+                    binding.quality.text = buildString {
+                        append(quality.toString())
+                        append("%")
+                    }
+                    msg1 = getString(R.string.quality_completed) + " " + quality.toString() + "%"
+                } else {
+                    binding.quality.text = getString(R.string.poor_quality)
+                    msg1 = getString(R.string.poor_quality)
+                }
+                AlertDialog.Builder(requireActivity()).apply {
+                    setMessage(msg1).setPositiveButton("OK") { _, _ -> (requireActivity()) }
+                }.create().show()
+                binding.quality.visibility = View.VISIBLE
+                binding.qualityDescription.visibility = View.VISIBLE
+                binding.checkboxQuality.visibility = View.VISIBLE
+            } catch (e: Exception) {
+                // Handle the FFmpeg running errors
+                Log.e(TAG, "Error al ejecutar FFmpeg: ${e.message}", e)
+
+                // Mostrar un mensaje de error
+                val msg1 = getString(R.string.quality_error)
+                val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                    data = Uri.parse("mailto:contact.harmonyvalley@gmail.com")
+                    putExtra(Intent.EXTRA_SUBJECT, "Quality Error")
+                    putExtra(Intent.EXTRA_TEXT, msg1)
+                }
+
+                AlertDialog.Builder(requireActivity()).apply {
+                    setMessage(msg1)
+                    setPositiveButton("OK") { _, _ ->
+                        // Try to open the mail app
+                        try {
+                            startActivity(emailIntent)
+                        } catch (e: Exception) {
+                            // If mail app can't open, show a message
+                            Toast.makeText(context, R.string.quality_error, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }.create().show()
             }
-            msg1 = getString(R.string.quality_completed) + " " + quality.toString() + "%"
         } else {
-            binding.quality.text = getString(R.string.poor_quality)
-            msg1 = getString(R.string.poor_quality)
-        }
-        AlertDialog.Builder(requireActivity()).apply {
-
-
-            setMessage(msg1).setPositiveButton(
-                "OK"
-            ) { _, _ -> (requireActivity()) }
-        }.create().show()
-        binding.quality.visibility = View.VISIBLE
-        binding.qualityDescription.visibility = View.VISIBLE
-        binding.checkboxQuality.visibility = View.VISIBLE
-    } else
-        {
+            // Handle if activity, videoUrl o compressedFilePath rare null of empty
             val msg1 = getString(R.string.quality_error)
             val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:contact.harmonyvalley@gmail.com")
@@ -229,17 +263,18 @@ class HomeFragment : Fragment() {
             AlertDialog.Builder(requireActivity()).apply {
                 setMessage(msg1)
                 setPositiveButton("OK") { _, _ ->
-                    // Open email application with "contact.harmonyvalley@gmail.com" in the "To" field
+                    // Try to open the mail app
                     try {
                         startActivity(emailIntent)
                     } catch (e: Exception) {
-                        // Handle the case when no email application is available or other issues occur
-                        // For example, show a toast or a dialog saying that no email app is available
+                        // If mail app can't open, show a message
+                        Toast.makeText(context, R.string.quality_error, Toast.LENGTH_SHORT).show()
                     }
                 }
             }.create().show()
         }
     }
+
     private fun showStats(
         initialSize2: String?,
         compressedSize: String?,
@@ -257,6 +292,7 @@ class HomeFragment : Fragment() {
             binding.deleteVideo.visibility = View.GONE
             binding.videoView2.visibility = View.GONE
             binding.spinner.visibility = View.GONE
+            binding.spinner5.visibility = View.GONE
             binding.spinner2.visibility = View.GONE
             binding.spinner3.visibility = View.GONE
             binding.spinner4.visibility = View.GONE
@@ -306,10 +342,15 @@ class HomeFragment : Fragment() {
 
         }
         if (compressedSize != null && initialSize != "") {
-
             val finalSize = compressedSize.substringBefore(" ")
-            val finalS = finalSize.replace(",",".").toDouble()
-            var final = finalS
+            val finalSizeCheck = finalSize.replace(",", "").toDoubleOrNull()
+            var finalS= 100.0
+            if (finalSizeCheck != null) {
+                if (finalSizeCheck >1000 ) {
+                    finalS = finalSize.replace(".", "").replace(",", ".").toDouble()
+                }else {finalS = finalSize.replace(",", ".").toDouble()}
+            }
+                var final = finalS
             if ((compressedSize.contains("k") && initialSize.contains("M") )||(compressedSize.contains("M") && initialSize.contains("G") ) ||(compressedSize.contains("B") && initialSize.contains("k") )){
                 final=finalS/1000
             }
@@ -450,7 +491,10 @@ class HomeFragment : Fragment() {
                     // The consent information state was updated.
                     // You are now ready to check if a form is available.
                     if (consentInformation.isConsentFormAvailable) {
-                        loadForm()
+                        // Make sure loadForm() is called in the main thread
+                        requireActivity().runOnUiThread {
+                            loadForm()
+                        }
                     }
                 },
                 OnConsentInfoUpdateFailureListener {
@@ -633,6 +677,15 @@ class HomeFragment : Fragment() {
         typesSpinner = arrayOf(getString(R.string.select_compression),getString(R.string.ultrafast),getString(R.string.good),getString(R.string.best),getString(R.string.custom_h),getString(R.string.custom_l))
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_row, typesSpinner)
         spinner.adapter = arrayAdapter
+        spinner5.layoutParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        formatsSpinner =
+            arrayOf(getString(R.string.select_format), "mp4", "avi", "mov", "mkv", "3gp")
+        formatsValues = arrayOf("mp4", "mp4", "avi", "mov", "mkv", "3gp")
+        val arrayAdapter2 = ArrayAdapter(requireContext(), R.layout.spinner_list, formatsSpinner)
+        spinner5.adapter = arrayAdapter2
         pickVideo.setOnClickListener {
 
 
@@ -689,7 +742,58 @@ class HomeFragment : Fragment() {
             }
         }
 
+        spinner5.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (view!=null){
+                    selectedformat = formatsValues[position]
+                    videoformat = formatsSpinner[position]
+                    if (videoformat == "3gp" && videoCodec=="libx265")  {
+                        videoCodec = "libx264"
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.h265_3gp),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    if (videoformat == "avi" && videoCodec=="libx265")  {
+                        videoCodec = "libx264"
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.h265_avi),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
 
+                    when (position) {
+                        0 -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.no_selected_format),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        else -> {
+                            Toast.makeText(
+                                requireActivity(),
+                                getString(R.string.selected_format) + " " + videoformat,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                }
+
+            }
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Code to perform some action when nothing is selected
+            }
+
+        }
         when (videoUrl) {
             null -> {
                 binding.videoView.visibility = View.GONE
@@ -823,6 +927,7 @@ class HomeFragment : Fragment() {
                 val data2 =
                     Data.Builder().putString(ForegroundWorker.VideoURI, videoUrl?.toString())
                         .putString(ForegroundWorker.SELECTION_TYPE, selectedtype)
+                        .putString(ForegroundWorker.SELECTION_FORMAT, selectedformat)
                         .putString(ForegroundWorker.VIDEO_RESOLUTION, videoResolution)
                         .putString(ForegroundWorker.COMPRESS_SPEED, compressSpeed)
                         .putString(ForegroundWorker.VIDEO_CODEC, videoCodec)
@@ -849,7 +954,7 @@ class HomeFragment : Fragment() {
 
         binding.shareVideo.setOnClickListener {
             ShareCompat.IntentBuilder(requireActivity()).setStream(Uri.parse(compressedFilePath))
-                .setType("video/mp4").setChooserTitle(getString(R.string.share_compressed_video)).startChooser()
+                .setType("video/" + selectedformat).setChooserTitle(getString(R.string.share_compressed_video)).startChooser()
             binding.videoView.visibility = View.GONE
 
         }
@@ -884,6 +989,7 @@ private fun resetViews() {
 
         clearPref()
         pickVideo.isVisible = true
+        spinner5.isVisible=false
         spinner.isVisible=false
         spinner2.isVisible=false
         spinner3.isVisible=false
@@ -906,6 +1012,7 @@ private fun resetViews() {
         binding.checkboxQuality.visibility= View.GONE
         binding.quality.text =""
         spinner.setSelection(0)
+        spinner5.setSelection(0)
         /*spinner2.setSelection(0)
         spinner3.setSelection(0)
         spinner4.setSelection(0)*/
@@ -1102,6 +1209,22 @@ private fun resetViews() {
                 if (view!=null) {
                     videoCodec = codecValues[position]
                     showCodec = codecSpinner[position]
+                    if (videoformat == "3gp" && videoCodec=="libx265")  {
+                        videoCodec = "libx264"
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.h265_3gp),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    if (videoformat == "avi" && videoCodec=="libx265")  {
+                        videoCodec = "libx264"
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.h265_avi),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     when (position) {
                         0 -> {
                             Toast.makeText(
@@ -1138,6 +1261,7 @@ private fun resetViews() {
             videoView1.visibility = View.GONE
             videoView2.visibility = View.GONE
             spinner.isVisible=true
+            spinner5.visibility = View.GONE
             checkboxAudio.isVisible=true
             compressVideo.isVisible = true
             showViews=true
@@ -1168,7 +1292,7 @@ If there is an error in the process, an error message is displayed to the user v
                     videoView1.setVideoURI(it)
                     videoView1.start()
                     binding.spinner.isVisible = true
-                    //binding.spinner5.isVisible = true
+                    binding.spinner5.isVisible = true
 
                     binding.checkboxAudio.isVisible=true
                     videoUrl=it
