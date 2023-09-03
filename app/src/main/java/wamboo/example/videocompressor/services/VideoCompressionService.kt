@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2023 Natalia Molinero Mingorance
+ * All rights reserved.
+ */
+
 package wamboo.example.videocompressor.services
 
 import android.app.NotificationChannel
