@@ -84,7 +84,9 @@ class HomeFragment : Fragment() {
     var  init75 = 0.0
     var init40= 0.0
     var init70= 0.0
-    var unidades = ""
+    var unidades75 = "MB"
+    var unidades40 = "MB"
+    var unidades70 = "MB"
     //this receiver will trigger when the compression is completed
     private val videoCompressionCompletedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -833,7 +835,7 @@ class HomeFragment : Fragment() {
                             binding.dataTV2.visibility=View.VISIBLE
                             binding.dataTV3.visibility=View.VISIBLE
                             binding.dataTV.text=getString(R.string.estimated_size)
-                            binding.dataTV2.text=Html.fromHtml("<b>"+init40.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades"+"</b>")
+                            binding.dataTV2.text=Html.fromHtml("<b>"+init40.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades40"+"</b>")
                             binding.dataTV3.text="40% "+ getString(R.string.compression)
                         }
                     getString(R.string.best) ->{
@@ -845,7 +847,7 @@ class HomeFragment : Fragment() {
                         binding.dataTV2.visibility=View.VISIBLE
                         binding.dataTV3.visibility=View.VISIBLE
                         binding.dataTV.text=getString(R.string.estimated_size)
-                        binding.dataTV2.text=Html.fromHtml("<b>"+init70.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades"+"</b>")
+                        binding.dataTV2.text=Html.fromHtml("<b>"+init70.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades70"+"</b>")
                         binding.dataTV3.text="70% "+ getString(R.string.compression)
                         }
                     getString(R.string.ultrafast) ->{
@@ -857,7 +859,7 @@ class HomeFragment : Fragment() {
                         binding.dataTV2.visibility=View.VISIBLE
                         binding.dataTV3.visibility=View.VISIBLE
                         binding.dataTV.text=getString(R.string.estimated_size)
-                        binding.dataTV2.text=Html.fromHtml("<b>"  +init75.toBigDecimal().setScale(2,RoundingMode.UP).toDouble() +" $unidades"+"</b>")
+                        binding.dataTV2.text=Html.fromHtml("<b>"  +init75.toBigDecimal().setScale(2,RoundingMode.UP).toDouble() +" $unidades75"+"</b>")
                         binding.dataTV3.text="75% "+ getString(R.string.compression)
                                         }
 
@@ -883,7 +885,7 @@ class HomeFragment : Fragment() {
                     binding.dataTV2.visibility=View.VISIBLE
                     binding.dataTV3.visibility=View.VISIBLE
                     binding.dataTV.text=getString(R.string.estimated_size)
-                    binding.dataTV2.text=Html.fromHtml("<b>"  +init75.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades"+"</b>")
+                    binding.dataTV2.text=Html.fromHtml("<b>"  +init75.toBigDecimal().setScale(2,RoundingMode.UP).toDouble()+" $unidades75"+"</b>")
                     binding.dataTV3.text="75% "+ getString(R.string.compression)
                 }
                 }
@@ -1395,18 +1397,20 @@ If there is an error in the process, an error message is displayed to the user v
                                 init75 /= 1000000
                                 init40 /= 1000000
                                 init70 /= 1000000
-                                unidades = "MB"
+                                unidades75 = "MB"
+                                unidades40 = "MB"
+                                unidades70 = "MB"
                                 if (init75<1){
                                     init75 *= 1000
-                                    unidades = "KB"
+                                    unidades75 = "KB"
                             }
                                 if (init40<1){
                                     init40 *= 1000
-                                    unidades = "KB"
+                                    unidades40 = "KB"
                                 }
                                 if (init70<1){
                                     init70 *= 1000
-                                    unidades = "KB"
+                                    unidades70 = "KB"
                                 }
                             }
                             if (initialSize.contains("G") )
@@ -1414,18 +1418,20 @@ If there is an error in the process, an error message is displayed to the user v
                                 init75 /= 1000000000
                                 init40 /= 1000000000
                                 init70 /= 1000000000
-                                unidades = "GB"
+                                unidades75 = "GB"
+                                unidades40 = "GB"
+                                unidades70 = "GB"
                                 if (init75<1){
                                     init75 *= 1000
-                                    unidades = "MB"
+                                    unidades75 = "MB"
                                 }
                                 if (init40<1){
                                     init40 *= 1000
-                                    unidades = "MB"
+                                    unidades40 = "MB"
                                 }
                                 if (init70<1){
                                     init70 *= 1000
-                                    unidades = "MB"
+                                    unidades70 = "MB"
                                 }
 
                             }
@@ -1434,18 +1440,20 @@ If there is an error in the process, an error message is displayed to the user v
                                 init75 /= 1000
                                 init40 /= 1000
                                 init70 /= 1000
-                                unidades = "KB"
+                                unidades75 = "KB"
+                                unidades40 = "KB"
+                                unidades70 = "KB"
                                 if (init75<1){
                                     init75 *= 1000
-                                    unidades = "B"
+                                    unidades75 = "B"
                                 }
                                 if (init40<1){
                                     init40 *= 1000
-                                    unidades = "B"
+                                    unidades40 = "B"
                                 }
                                 if (init70<1){
                                     init70 *= 1000
-                                    unidades = "B"
+                                    unidades70 = "B"
                                 }
                             }
 
